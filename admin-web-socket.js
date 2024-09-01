@@ -64,12 +64,13 @@ stompClient.onStompError = function(frame) {
     console.error('Additional details: ' + frame.body);
 }
 
-stompClient.error
 //Kết nối STOMP sau khi đã thiết lập hoàn tất cấu hình: onConnect, onWebSocketClose, onStompError
 stompClient.activate();// khi gọi hàm này nó sẽ bắt đầu quá trình kết nối với máy chủ (Backend) qua websocket và thiết lập giao thức STOMP.
 
 // Hàm cập nhật vị trí của tài xế trên bản đồ
-function updateDriverLocationOnMap(locationData) {
+async function updateDriverLocationOnMap(locationData) {
+    const { Marker } = await google.maps.importLibrary("marker");
+
     const driverId = locationData.driverId;
     const latLng = new google.maps.LatLng(locationData.latitude, locationData.longitude);
 
@@ -78,7 +79,7 @@ function updateDriverLocationOnMap(locationData) {
         markers[driverId].setPosition(latLng);
     } else {
         // Nếu chưa có, tạo một marker mới
-        markers[driverId] = new google.maps.Marker({
+        markers[driverId] = new Marker({
             position: latLng,
             map: map,
             title: 'Driver ID: ' + driverId,
@@ -87,5 +88,5 @@ function updateDriverLocationOnMap(locationData) {
 
     // Di chuyển bản đồ tới vị trí mới (có thể tắt đi nếu không muốn tự động di chuyển bản đồ)
     map.panTo(latLng);
-    
 }
+
