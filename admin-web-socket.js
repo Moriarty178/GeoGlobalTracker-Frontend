@@ -19,7 +19,7 @@ window.onload = initMap;
 // const socket = new SockJS('ws://your-backend-url/ws/admin');
 const socket = new WebSocket('ws://your-backend-url/ws/admin');
 // Sử dụng kết nối SocketJS để thiết lập một giao thức nhắn tin nâng cao giữa client và server. (admin web - backend)
-const stompClient1 = Stomp.over(socket);//tạo 1 STOMP client trên kết nối SocketJS-(client này sẽ quản lý tất cả các giao thức STOMP: nhắn tín, pub/sub, topic):
+// const stompClient1 = Stomp.over(socket);//tạo 1 STOMP client trên kết nối SocketJS-(client này sẽ quản lý tất cả các giao thức STOMP: nhắn tín, pub/sub, topic):
 const stompClient = new Client ({//tạo 1 STOMP client trên kết nối WebSocket
     webSocketFactory: () => socket,
     debug: function (str) {
