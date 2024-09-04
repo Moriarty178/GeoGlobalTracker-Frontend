@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #status {
+            margin-bottom: 20px;
+        }
+
+        #location {
+            margin-bottom: 20px;
+        }
+
+        #alerts {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="status">Status: Disconnected</div>
+    <div id="location">Location: Unknown</div>
+    <div id="alerts">Alerts: None</div>
+
+    <!-- Bao gồm STOMP.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="driver_web.js"></script>
+</body>
+</html>
