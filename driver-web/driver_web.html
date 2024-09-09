@@ -23,12 +23,56 @@
             color: red;
             font-weight: bold;
         }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-container input {
+            margin: 5px;
+            padding: 10px;
+            width: 200px;
+        }
+
+        .form-container button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div id="status">Status: Disconnected</div>
-    <div id="location">Location: Unknown</div>
-    <div id="alerts">Alerts: None</div>
+
+    <h1>Driver Web</h1>
+
+    <!-- Đăng nhập form -->
+    <div id="login-form" class="form-container">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button onclick="login()">Login</button>
+        <div id="login-message"></div>
+    </div>
+
+    <!-- Đăng ký form -->
+    <div id="signup-form" class="form-container">
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-firstname" placeholder="First Name" required />
+        <input type="text" id="signup-lastname" placeholder="Last Name" required />
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <input type="text" id="signup-phone" placeholder="Phone Number" required />
+        <button onclick="signup()">Sign Up</button>
+        <div id="signup-message"></div>
+    </div>
+
+    <!-- Giao diện theo dõi vị trí -->
+    <div id="status" class="hidden">Status: Disconnected</div>
+    <div id="location" class="hidden">Location: Unknown</div>
+    <div id="alerts" class="hidden">Alerts: None</div>
 
     <!-- Bao gồm STOMP.js từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
