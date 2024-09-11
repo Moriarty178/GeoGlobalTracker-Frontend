@@ -105,9 +105,32 @@ function initMap() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
+    // Gọi API lấy danh sách tất cả tài xế + vị trí trong mạng lưới GlobalTrackerGeo
+    // Gọi API lấy danh sách tất cả tài xế + vị trí trong mạng lưới GlobalTrackerGeo
+    fetch('http://localhost:8080/api/all-driver-location')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (Array.isArray(data)) {
+                // Duyệt qua danh sách và hiển thị lên bản đồ
+                data.forEach(locationData => {
+                    if (locationData.driverId && locationData.latitude && locationData.longitude) {
+                        updateDriverLocationOnMap(locationData);
+                    }
+                });
+            } else {
+                console.error('Unexpected data format:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching driver locations:', error));
 }
 
-// Khởi tạo bản đồ khi trang được load
+// Khi trang được load -> call initMap()
 window.onload = initMap;
 
 const socket = new WebSocket('ws://localhost:8080/ws/admin');
@@ -133,6 +156,15 @@ stompClient.onConnect = function (frame) {
         // Cập nhật vị trí của tài xế trên bản đồ
         updateDriverLocationOnMap(locationData);
     });
+
+    // Đăng ký nhận thông tin khi tài xế đăng xuất
+    stompClient.subscribe('/topic/remove-driver', function(message) {
+        const driverId = JSON.parse(message.body);
+        // console.log('Received info driver logout: ', driverId);
+
+        //Cập nhật lại bản đồ
+        removeDriverFromMap(driverId);
+    })
 };
 
 // Xử lý khi kết nối WebSocket bị đóng
@@ -169,4 +201,20 @@ function updateDriverLocationOnMap(locationData) {
 
     // Di chuyển bản đồ tới vị trí mới (có thể tắt đi nếu không muốn tự động di chuyển bản đồ)
     map.panTo(latLng);
+}
+
+// Hàm xóa vị trí của tài xế khỏi bản đồ
+function removeDriverFromMap(driverId) {
+    // Kiểm tra xem marker của tài xế có tồn tại không
+    if (markers[driverId]) {
+        // Xóa marker khỏi bản đồ
+        map.removeLayer(markers[driverId]);
+
+        // Xóa marker khỏi đối tượng lưu trữ (bộ nhớ)
+        delete markers[driverId];
+
+        console.log(`Driver with ID ${driverId} has been removed from the map.`);
+    } else {
+        console.log(`No marker found for Driver ID ${driverId}`);
+    }
 }

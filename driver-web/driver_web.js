@@ -2,6 +2,7 @@
 
 // URL của backend API cho đăng nhập và đăng ký
 const API_BASE_URL = 'http://localhost:8080/api/auth';//AuthController(BE)
+let watchId = null; // Lưu trữ ID theo dõi vị trí
 
 // Hàm đăng nhập
 function login() {
@@ -13,27 +14,34 @@ function login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     })
-    .then(response => response.text())
-    .then(jwt => {
-        // if (jwt.startsWith('Bearer ')) {
+    .then(response => response.json())
+    .then(data => {
+        const jwt = data.jwt;
+        const driverId = data.driverId;
+
+        if (jwt && driverId) {
             localStorage.setItem('jwt', jwt);
+            localStorage.setItem('driverId', driverId);//lưu driverId
             document.getElementById('login-message').textContent = 'Login successful!';
-            initializeWebSocket(); // Gọi hàm kết nối WebSocket sau khi đăng nhập thành công
+
+            initializeWebSocket(driverId); // Gọi hàm kết nối WebSocket sau khi đăng nhập thành công
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('signup-form').classList.add('hidden');
             document.getElementById('status').classList.remove('hidden');
             document.getElementById('location').classList.remove('hidden');
             document.getElementById('alerts').classList.remove('hidden');
-        // } else {
-        //     document.getElementById('login-message').textContent = 'Login failed!';
-        // }
-        // // console.log(jwt);
+        } else {
+            document.getElementById('login-message').textContent = 'Login failed!';
+        }
+        // console.log(jwt);
     })
     .catch(error => {
         console.error('Error during login:', error);
         document.getElementById('login-message').textContent = 'Login failed!';
     });
 }
+
+// window.onload giữ nguyên trạng thái trước khi reload sau khi tải lại trang.
 
 // Hàm đăng ký
 function signup() {
@@ -61,14 +69,54 @@ function signup() {
     });
 }
 
+// Hàm đăng xuất
+function logout() {
+    const driverId = localStorage.getItem('driverId');
+    fetch(`http://localhost:8080/api/logout`, {
+        method: 'POST',
+        headers: {
+            'Authorization':  `Bearer ${localStorage.getItem('jwt')}`,
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({driverId})
+    })
+    .then(response => {
+        if (response.ok) {
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('driverId');
+
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('status').classList.add('hidden');
+            document.getElementById('location').classList.add('hidden');
+            document.getElementById('alerts').classList.add('hidden');
+
+            console.log('Logout successful');
+
+            if (watchId != null) { // Tắt theo dõi vị trí khi tài xế đăng xuất
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                console.log("Stopped watching geolocation after logout.");
+            }
+        }
+    })
+    .catch(error => console.error('Logout failed:', error));
+}
+
+//Sự kiện trước khi thoát hoặc đóng tab
+window.addEventListener('beforeunload', function (e) {
+    logout();
+});
+
+
+
+
 //----------------------------- WebSocket sau khi đăng nhập thành công -------------------------------
 
 
 const locationElement = document.getElementById('location');
-let driverId = 5;
 
 // Hàm để khởi tạo WebSocket sau khi đăng nhập thành công
-function initializeWebSocket() {
+function initializeWebSocket(driverId) {
 
     const statusElement = document.getElementById('status');
     const alertsElement = document.getElementById('alerts');
@@ -99,7 +147,7 @@ function initializeWebSocket() {
         });
 
         // Bắt đầu gửi thông tin vị trí khi WebSocket kết nối thành công
-        startTracking(stompClient);
+        startTracking(stompClient, driverId);
     };
 
     // Khi kết nối WebSocket bị đóng
@@ -133,9 +181,10 @@ function showAlert(alertData) {
 }
 
 // Hàm để bắt đầu theo dõi và gửi thông tin vị trí
-function startTracking(stompClient) {
+function startTracking(stompClient, driverId) {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(function(position) {
+
+        watchId = navigator.geolocation.watchPosition(function(position) {
             const locationData = {
                 driverId: driverId, // Thêm ID tài xế vào dữ liệu vị trí
                 latitude: position.coords.latitude,
