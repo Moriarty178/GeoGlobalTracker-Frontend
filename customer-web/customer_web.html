@@ -38,7 +38,13 @@
         <input type="text" id="loc_destination" placeholder="Nhập điểm trả">
         <ul id="destinationSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý -->
         <br>
+        <!-- Nút Search -->
         <button id="searchBtn">Search</button>
+
+        <!-- Phần hiển thị danh sách tài xế gần nhât backend gửi lên -->
+         <ul id="driverList"></ul>
+         
+        
     </div>
 
     <div id="map"></div>
@@ -145,9 +151,6 @@
                 });
         }
 
-        
-       
-
         function displaySuggestions(data, suggestionBox, isSource) {
             suggestionBox.innerHTML = '';
             data.forEach(item => {
@@ -203,6 +206,68 @@
         //     }
         // });
 
+
+
+        // ----------------------------- Sau khi customer ấn "Search" -----------------------------
+
+        // Hàm gửi loc_source và loc_destination đến Backend
+        async function searchDrivers() {
+            const loc_source = JSON.parse(localStorage.getItem('loc_source'));
+            const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
+            
+            if (loc_source && loc_destination) {
+                console.log("loc_source: ", loc_source);
+                console.log("loc_destination: ", loc_destination);
+
+                const response = await fetch('http://localhost:8080/api/search-drivers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        loc_source: loc_source,  // Snake case để phù hợp với @JsonProperty trên backend
+                        loc_destination: loc_destination  // Snake case để phù hợp với @JsonProperty trên backend
+                    })
+                });
+
+                const drivers = await response.json();
+                // Log dữ liệu tài xế nhận được từ Backend
+                console.log("Drivers received from backend:", drivers);
+                displayDriversOnMap(drivers);
+                displayDriverList(drivers);
+            }
+        }
+
+
+
+        // Hàm hiển thị vị trí các tài xế gần nhất trên bản đồ
+        function displayDriversOnMap(drivers) {
+            drivers.forEach(driver => {                       //1 driver có dạng: {name: 'Tony', location: {lat:20.8824514, lon:106.0375673}, distance: 24.239102445215433}
+                // Kiểm tra xem driver có dữ liệu lat và lon không
+                if (driver.location.lat && driver.location.lon) {
+                    L.marker([driver.location.lat, driver.location.lon])
+                        .addTo(map)
+                        .bindPopup(`Driver: ${driver.name}`)
+                        .openPopup();
+                } else {
+                    console.error(`Driver with ID ${driver.name} has invalid coordinates: lat = ${driver.lat}, lon = ${driver.lon}`);
+                }
+            });
+        }
+        
+        // Hàm hiển thị danh sách tài xế gần nhất để chọn 
+        function displayDriverList(drivers) {
+            const driverList = document.getElementById('driverList');
+            driverList.innerHTML='';// xóa ds cũ
+            drivers.forEach(driver => {
+                const li = document.createElement('li');
+                li.textContent = `Tài xế: ${driver.name} - Khoảng cách: ${driver.distance} km`;
+                driverList.appendChild(li);
+            });
+        }
+
+        // Xử lý khi người dùng ấn nút Search
+        document.getElementById('searchBtn').addEventListener('click', searchDrivers);
     </script>
 </body>
 </html>
