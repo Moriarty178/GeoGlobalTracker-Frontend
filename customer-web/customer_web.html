@@ -43,7 +43,7 @@
 
         <!-- Phần hiển thị danh sách tài xế gần nhât backend gửi lên -->
          <ul id="driverList"></ul>
-         
+        
         
     </div>
 
@@ -60,7 +60,7 @@
         let locSourceMarker, locDestinationMarker, routeLayer;
 
         // Hàm đánh dấu vị trí
-        function markLocation(lat, lon, isSource) {
+        function markLocation(lat, lon, display_name, isSource) {
             if (isSource) {
                 // Xóa marker cũ của điểm đón nếu có
                 if (locSourceMarker) {
@@ -69,7 +69,7 @@
                 }
                 // Thêm marker mới cho điểm đón
                 locSourceMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm đón').openPopup();
-                localStorage.setItem('loc_source', JSON.stringify({ lat, lon }));
+                localStorage.setItem('loc_source', JSON.stringify({ lat, lon, display_name }));
 
                 // Xóa tuyến đường cũ khi thay đổi điểm đón: nếu không thì vẫn sẽ thấy điểm đón cũ BỞI VÌ marker thì đã mất(do xóa ở trên) nhưng route thì vẫn còn đó (route và 2 điểm đón, trả là dộc lập với nhau. Xóa đón trả ko đồng nghĩa xóa được route)
                 if (routeLayer) {
@@ -83,7 +83,7 @@
                 }
                 // Thêm marker mới cho điểm trả
                 locDestinationMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm trả').openPopup();
-                localStorage.setItem('loc_destination', JSON.stringify({ lat, lon }));
+                localStorage.setItem('loc_destination', JSON.stringify({ lat, lon, display_name }));
 
                 // Xóa tuyến đường cũ khi thay đổi điểm trả
                 if (routeLayer) {
@@ -119,9 +119,9 @@
         window.onload = function () {
             const storedSource = JSON.parse(localStorage.getItem('loc_source'));
             const storedDestination = JSON.parse(localStorage.getItem('loc_destination'));
-            if (storedSource) markLocation(storedSource.lat, storedSource.lon, true);
-            if (storedDestination) markLocation(storedDestination.lat, storedDestination.lon, false);
-            if (storedSource && storedDestination) drawRoute(storedSource, storedDestination);
+            if (storedSource) markLocation(storedSource.lat, storedSource.lon, storedSource.display_name, true);
+            if (storedDestination) markLocation(storedDestination.lat, storedDestination.lon, storedDestination.display_name, false);
+            if (storedSource && storedDestination) drawRoute(storedSource,  storedDestination);
         };
 
         
@@ -158,7 +158,7 @@
                 li.className = 'suggestion-item';
                 li.textContent = `${item.display_name}`;
                 li.addEventListener('click', () => {
-                    markLocation(item.lat, item.lon, isSource);
+                    markLocation(item.lat, item.lon, item.display_name, isSource);
                     suggestionBox.innerHTML = ''; // Xóa gợi ý khi chọn
                 });
                 suggestionBox.appendChild(li);
@@ -242,7 +242,7 @@
 
         // Hàm hiển thị vị trí các tài xế gần nhất trên bản đồ
         function displayDriversOnMap(drivers) {
-            drivers.forEach(driver => {                       //1 driver có dạng: {name: 'Tony', location: {lat:20.8824514, lon:106.0375673}, distance: 24.239102445215433}
+            drivers.forEach(driver => {                       //1 driver có dạng: {driverId: 10, name: 'Tony', location: {lat:20.8824514, lon:106.0375673}, distance: 24.239102445215433}
                 // Kiểm tra xem driver có dữ liệu lat và lon không
                 if (driver.location.lat && driver.location.lon) {
                     L.marker([driver.location.lat, driver.location.lon])
@@ -262,7 +262,38 @@
             drivers.forEach(driver => {
                 const li = document.createElement('li');
                 li.textContent = `Tài xế: ${driver.name} - Khoảng cách: ${driver.distance} km`;
+                li.addEventListener('click', () => handleDriverSelection(driver)); // Thêm sự kiện khi click vào tài xế
                 driverList.appendChild(li);
+            });
+        }
+
+        // Hàm xử lý khi customer chọn tài xế từ danh sách
+        function handleDriverSelection(driver) {
+            const loc_source = JSON.parse(localStorage.getItem('loc_source'));
+            const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
+
+            fetch('http://localhost:8080/api/request-driver', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    driverId: driver.driverId,
+                    loc_source: loc_source,// lấy tên địa điểm mà customer chọn từ photon đề xuất
+                    loc_destination: loc_destination, // lấy tên địa điểm
+                    distance: driver.distance
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'accepted') {
+                    alert (`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
+                } else if (result.status === 'declined') {
+                    alert (`Tài xế ${driver.name} đã từ chối yêu cầu. Vui lòng chọn tài xế khác.`);
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
             });
         }
 

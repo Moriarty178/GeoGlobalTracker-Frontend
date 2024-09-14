@@ -80,8 +80,16 @@
     <div id="location" class="hidden">Location: Unknown</div>
     <div id="alerts" class="hidden">Alerts: None</div>
 
+    <!-- Hiển thị thông tin driverRequest mà backend gửi đến -->
+    <div id="request-info"></div>
+
+    <button id="accept-button" style="display: none;">Chấp nhận</button>
+    <button id="deny-button" style="display: none;">Từ chối</button>
+
     <!-- Bao gồm STOMP.js từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="driver_web.js"></script>
+
+    
 </body>
 </html>
