@@ -147,7 +147,9 @@ function initializeWebSocket(driverId) {
             // showAlert(alertData);
             // Hiển thị thông tin driverRequest mà Backend gửi đến và cung câp tùy chọn chấp nhận hoặc từ chối
             const driverRequest = JSON.parse(message.body);
-            handleDriverRequest(driverRequest);
+            console.log('loc_source driverRequest received from backend:', driverRequest.loc_source);
+            console.log('loc_destination driverRequest received from backend:', driverRequest.loc_destination);
+            handleDriverRequest(driverRequest); //driverRequest : {driverId:123, loc_source:{lat:..., lon:..., name:...}, loc_destination: {...}, distance: 15.7}
         });
 
         // Bắt đầu gửi thông tin vị trí khi WebSocket kết nối thành công
@@ -157,9 +159,13 @@ function initializeWebSocket(driverId) {
     // Hàm xử lý driverRequest được backend gửi đến, cung cấp tùy chọn chấp nhận hoặc từ chối
     function handleDriverRequest(driverRequest) {
         // Hiển thị thông tin loc_source, loc_destination và distance cho tài xế
+        // const requestInfo = `Yêu cầu từ khách hàng:
+        // Điểm đón: ${driverRequest.loc_source.lat}, ${driverRequest.loc_source.lon}
+        // Điểm trả: ${driverRequest.loc_destination.lat}, ${driverRequest.loc_destination.lon}
+        // Khoảng cách: ${driverRequest.distance} km`;
         const requestInfo = `Yêu cầu từ khách hàng:
-        Điểm đón: ${driverRequest.loc_source.lat}, ${driverRequest.loc_source.lon}
-        Điểm trả: ${driverRequest.loc_destination.lat}, ${driverRequest.loc_destination.lon}
+        Điểm đón: ${driverRequest.loc_source.display_name}
+        Điểm trả: ${driverRequest.loc_destination.display_name}
         Khoảng cách: ${driverRequest.distance} km`;
 
         document.getElementById('request-info').textContent = requestInfo; // Hiển thị thông tin yêu cầu trên giao diện
