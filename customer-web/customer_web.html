@@ -73,7 +73,9 @@
 
 
         <button id="myTripBtn">My Trip</button>
+        <button id="backBtn" style="display: none;">Back</button>
         <button id="loadMoreBtn" style="display: none;">Load More</button>
+        <button id="nextBtn" style="display: none;">Next</button>
 
         <!-- Hiển thị danh sách các chuyến đi -->
         <!-- Hiển thị danh sách các chuyến đi -->
@@ -86,6 +88,7 @@
                         <th>Source</th>
                         <th>Destination</th>
                         <th>Created At</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -364,6 +367,7 @@
                     // console.log(data);
                     updateTripsTable(data);
 
+                    document.getElementById("backBtn").style.display = 'block'; // Hiển thị nút "Load More" nếu còn dữ liệu
                     if (data.length === 10) {
                         document.getElementById("loadMoreBtn").style.display = 'block'; // Hiển thị nút "Load More" nếu còn dữ liệu
                     } else {
@@ -391,15 +395,78 @@
                     <td>${destinationLocation.display_name}</td>
                     <td>${new Date(trip.createdAt).toLocaleString()}</td>
                 `;
+
+                const actionTd = document.createElement('td');
+
+                // Nút SeeDetail
+                const seeDetailButton = document.createElement('button');
+                seeDetailButton.textContent = 'SeeDetail';
+                seeDetailButton.addEventListener('click', function () {
+                    alert('Displaying details for trip: ' + trip.tripId);
+                    // function seeDetail();
+                });
+                actionTd.appendChild(seeDetailButton);
+
+                // Nút Cancel cho status 1 hoặc 2
+                if (trip.status === '1' || trip.status === '2') {
+                    const cancelButton = document.createElement('button');
+                    cancelButton.textContent = 'Cancel';
+                    cancelButton.addEventListener('click', function () {
+                        cancelTrip(trip.tripId);
+                    });
+                    actionTd.appendChild(cancelButton);
+                }
+
+                // Nút Rating cho status 4
+                if (trip.status === '4') {
+                    const ratingButton = document.createElement('button');
+                    ratingButton.textContent = 'Rating';
+                    ratingButton.addEventListener('click', function () {
+                        alert('Rating driver for trip: ' + trip.tripId);
+                        // function rating();
+                    });
+                    actionTd.appendChild(ratingButton);
+                }
+
+                row.appendChild(actionTd);
                 tableBody.appendChild(row);
             });
         }
+        // Hàm xử lý yêu cầu hủy chuyến đi đến Backend (cancel trip)
+        function cancelTrip(tripId) {
+            fetch('http://localhost:8080/trips/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    tripId: tripId
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('Trip canceled successfully!');
+                cosnole.log(data);
+                // Refresh lại danh sách chuyesn đi sau khi hủy
+                document.getElementById("myTripBtn").click();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
 
         // Hàm để tải thêm chuyến đi khi ấn nút "Load More"
         document.getElementById("loadMoreBtn").addEventListener("click", function () {
             offset += 1; // Tăng offset (currentPage)
             fetchTrips(); // Lấy thêm các chuyến đi
         });
+
+        document.getElementById("backBtn").addEventListener("click", function () {
+            offset -= 1; // Tăng offset (currentPage)
+            fetchTrips(); // Lấy thêm các chuyến đi
+        });
+
 
 
 

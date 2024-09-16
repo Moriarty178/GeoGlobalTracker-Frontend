@@ -146,6 +146,7 @@ function initializeWebSocket(driverId) {
             // Hiển thị cảnh báo cho tài xế tab
             // showAlert(alertData);
             // Hiển thị thông tin driverRequest mà Backend gửi đến và cung câp tùy chọn chấp nhận hoặc từ chối
+            // Thêm description: name vào đối tượng gủi sang "topic/alert/ + driverId" => khi parse sẽ check request.descripton = "requestTrip" hay là "cancelTrip" vv...
             const driverRequest = JSON.parse(message.body);
             console.log('loc_source driverRequest received from backend:', driverRequest.loc_source);
             console.log('loc_destination driverRequest received from backend:', driverRequest.loc_destination);
