@@ -96,6 +96,7 @@
                 </tbody>
             </table>
         </div>
+        <div id="tripDetail"></div>
 
     </div>
 
@@ -390,7 +391,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${trip.tripId}</td>
-                    <td>${trip.status}</td>
+                    <td>${getTripStatus(trip.status)}</td>
                     <td>${sourceLocation.display_name}</td>
                     <td>${destinationLocation.display_name}</td>
                     <td>${new Date(trip.createdAt).toLocaleString()}</td>
@@ -402,8 +403,9 @@
                 const seeDetailButton = document.createElement('button');
                 seeDetailButton.textContent = 'SeeDetail';
                 seeDetailButton.addEventListener('click', function () {
-                    alert('Displaying details for trip: ' + trip.tripId);
+                    // alert('Displaying details for trip: ' + trip.tripId);
                     // function seeDetail();
+                    seeTripDetail(trip.tripId);
                 });
                 actionTd.appendChild(seeDetailButton);
 
@@ -431,6 +433,7 @@
                 row.appendChild(actionTd);
                 tableBody.appendChild(row);
             });
+
         }
         // Hàm xử lý yêu cầu hủy chuyến đi đến Backend (cancel trip)
         function cancelTrip(tripId) {
@@ -439,20 +442,64 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     tripId: tripId
                 })
             })
-            .then(response => response.text())
-            .then(data => {
-                alert('Trip canceled successfully!');
-                cosnole.log(data);
-                // Refresh lại danh sách chuyesn đi sau khi hủy
-                document.getElementById("myTripBtn").click();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => response.text())
+                .then(data => {
+                    alert('Trip canceled successfully!');
+                    // document.getElementById("myTripBtn").click();
+                    // Refresh lại danh sách sau khi hủy
+                    offset = 0;
+                    fetchTrips();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function getTripStatus(status) {
+            switch (status) {
+                case '1': return 'in-progress';
+                case '2': return 'Accepted';
+                case '3': return 'Received Guest';
+                case '4': return 'Completed';
+                default: return 'Canceled';
+            }
+        }
+
+        // Hàm xử lý hiển thị chi tiết đơn hàng (SeeDetail)
+        function seeTripDetail(tripId) {
+            fetch(`http://localhost:8080/payments/trip/${tripId}`)
+                .then(response => response.json())
+                .then(payment => {
+                    displayTripDetail(payment);
+                    console.log("payment: ", payment);
+                    console.log("payment detail: ", payment.price, payment.total, payment.voucher,payment.paymentStatus, payment.paymentMethod);
+                })
+                .catch(error => {
+                    console.error('Error fetching trip detail:', error);
+                });
+        }
+
+        function displayTripDetail(payment) {
+            const detailDiv = document.getElementById('tripDetail');
+            detailDiv.innerHTML = `
+                <p>Price: ${payment.price} $</p>
+                <p>Voucher: - ${payment.voucher || 0} $</p>
+                <p>Total: ${payment.total} $</p>
+                <p>Payment Status: ${payment.paymentStatus}</p>
+                <p>Payment Method: ${getPaymentMethod(payment.paymentMethod)}</p>`;
+        }
+
+        function getPaymentMethod(method) {
+            switch (method) {
+                case '1': return 'Cash';
+                case '2': return 'E-Wallet';
+                case '3': return 'Online Banking';
+                default: return 'Unknown';
+            }
         }
 
 
