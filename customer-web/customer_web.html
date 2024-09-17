@@ -79,7 +79,7 @@
 
         <!-- Hiển thị danh sách các chuyến đi -->
         <!-- Hiển thị danh sách các chuyến đi -->
-        <div id="tripList">
+        <div id="tripList" style="display: none;">
             <table id="tripTable" class="trip-table">
                 <thead>
                     <tr>
@@ -96,7 +96,28 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Hiển thị thông tin chi tiết chuyến đi -->
         <div id="tripDetail"></div>
+        
+        <!-- Hiển thị form đánh giá -->
+        <div id="tripRating" style="display: none;">
+            <div id="ratingForm">
+                <label for="rating">Rating:</label>
+                <select id="rating">
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select><br>
+
+                <label for="feedback">Feedback:</label>
+                <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+
+                <button id="sendRatingBtn">Send</button>
+            </div>
+        </div>
 
     </div>
 
@@ -179,17 +200,6 @@
             if (storedSource && storedDestination) drawRoute(storedSource, storedDestination);
         };
 
-
-        // function searchLocation(query, callback) {
-        //     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;//dùng api nominatim để đề xuất địa điểm 
-        //     fetch(url)
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data && data.length > 0) {
-        //                 callback(data);
-        //             }
-        //         });
-        // }
 
         function searchLocation(query, callback) {
             const url = `https://photon.komoot.io/api/?q=${query}&limit=5`;//dùng photon cho đề xuất địa điểm 
@@ -366,9 +376,11 @@
                 .then(response => response.json())
                 .then(data => {
                     // console.log(data);
+                    document.getElementById("tripList").style.display = 'block';
                     updateTripsTable(data);
 
-                    document.getElementById("backBtn").style.display = 'block'; // Hiển thị nút "Load More" nếu còn dữ liệu
+                    offset == 0 ? document.getElementById("backBtn").style.display = 'none' : document.getElementById("backBtn").style.display = 'block';
+
                     if (data.length === 10) {
                         document.getElementById("loadMoreBtn").style.display = 'block'; // Hiển thị nút "Load More" nếu còn dữ liệu
                     } else {
@@ -391,7 +403,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${trip.tripId}</td>
-                    <td>${getTripStatus(trip.status)}</td>
+                    <td>${trip.status}</td>
                     <td>${sourceLocation.display_name}</td>
                     <td>${destinationLocation.display_name}</td>
                     <td>${new Date(trip.createdAt).toLocaleString()}</td>
@@ -425,7 +437,9 @@
                     ratingButton.textContent = 'Rating';
                     ratingButton.addEventListener('click', function () {
                         alert('Rating driver for trip: ' + trip.tripId);
-                        // function rating();
+                        document.getElementById('tripRating').style.display = 'block'; // Hiện form đánh giá
+
+                        showRatingForm(trip.tripId); // Hàm xử lý sau khi gửi đánh giá
                     });
                     actionTd.appendChild(ratingButton);
                 }
@@ -476,7 +490,7 @@
                 .then(payment => {
                     displayTripDetail(payment);
                     console.log("payment: ", payment);
-                    console.log("payment detail: ", payment.price, payment.total, payment.voucher,payment.paymentStatus, payment.paymentMethod);
+                    console.log("payment detail: ", payment.price, payment.total, payment.voucher, payment.paymentStatus, payment.paymentMethod);
                 })
                 .catch(error => {
                     console.error('Error fetching trip detail:', error);
@@ -500,6 +514,59 @@
                 case '3': return 'Online Banking';
                 default: return 'Unknown';
             }
+        }
+
+        // Hàm xử lý form đánh giá (Rating) 
+        function showRatingForm(tripId) {
+            // const formHtml = `
+            //     <div id="ratingForm">
+            //         <label for="rating">Rating:</label>
+            //         <select id="rating">
+            //             <option value="1">1 Star</option>
+            //             <option value="2">2 Stars</option>
+            //             <option value="3">3 Stars</option>
+            //             <option value="4">4 Stars</option>
+            //             <option value="5">5 Stars</option>
+            //         </select><br>
+
+            //         <label for="feedback">Feedback:</label>
+            //         <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+
+            //         <button id="sendRatingBtn">Send</button>
+            //     </div>
+            // `;
+
+            // const formContainer = document.getElementById('tripRating');
+            // formContainer.innerHTML = formHtml;
+
+            document.getElementById('sendRatingBtn').addEventListener('click', function () {
+                const ratingValue = document.getElementById('rating').value;
+                const feedbackValue = document.getElementById('feedback').value;
+                sendRating(tripId, ratingValue, feedbackValue);
+            });
+        }
+
+        function sendRating(tripId, rating, feedback) {
+            fetch('http://localhost:8080/trips/rate-trip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tripId: tripId,
+                    rating: rating,
+                    feedback: feedback
+                })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // alert('Rating submitted successfully!');
+                    console.log(data);
+                    // Optionally reload the table to reflect the updated state
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
 
 
