@@ -354,6 +354,7 @@
                 li.addEventListener('click', function () {
                     document.getElementById('tripPayment').style.display = 'block'; // Corrected display logic
                     const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
+                    detailDiv.innerHTML = ''; // xóa ds cũ
                     detailDiv.innerHTML = `
                         <p>Price: ${routeInfo.distance * 1.2} $</p>
                         <p>Voucher: -${1.5} $</p>
@@ -391,6 +392,8 @@
                     status: "Paid"
                 };
 
+                document.getElementById('tripPayment').style.display = 'none'; 
+
                 handleDriverSelection(driver, paymentRequest);
             });
 
@@ -404,6 +407,8 @@
                     method: methodValue,
                     status: "Unpaid"
                 };
+                
+                document.getElementById('tripPayment').style.display = 'none'; 
 
                 handleDriverSelection(driver, paymentRequest);
             });
