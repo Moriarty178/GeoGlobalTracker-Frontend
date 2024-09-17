@@ -67,7 +67,8 @@
         <br>
         <!-- Nút Search -->
         <button id="searchBtn">Search</button>
-
+        <div id="routeInfo">
+        </div>
         <!-- Phần hiển thị danh sách tài xế gần nhât backend gửi lên -->
         <ul id="driverList"></ul>
 
@@ -99,7 +100,7 @@
 
         <!-- Hiển thị thông tin chi tiết chuyến đi -->
         <div id="tripDetail"></div>
-        
+
         <!-- Hiển thị form đánh giá -->
         <div id="tripRating" style="display: none;">
             <div id="ratingForm">
@@ -119,6 +120,24 @@
             </div>
         </div>
 
+        <!-- Hiển thị form payment khi click vào tài xế -->
+        <div id="tripPayment" style="display: none;">
+            <div id="paymentForm">
+                <label for="payment">Payment</label>
+                <div id="paymentDetail">
+                    <!-- Price, Voucher, Total  -->
+                </div>
+                <select id="method">
+                    <option value="1">Cash</option>
+                    <option value="2">E-Wallet</option>
+                    <option value="3">Banking Online</option>
+                </select>
+
+                <!-- Button Confirm -->
+                <button id="payNowBtn">Pay Now</button>
+                <button id="okBtn">Ok</button>
+            </div>
+        </div>
     </div>
 
     <div id="map"></div>
@@ -189,6 +208,22 @@
                     L.latLng(destination.lat, destination.lon)
                 ],
                 routeWhileDragging: true
+            }).on('routesfound', function (e) {
+                const routes = e.routes;
+                const summary = routes[0].summary; // Láy dữ liệu từ tuyến đường đầu tiên
+
+                // Khoảng cách (mét) và thời gian dự kiến (giây)
+                const distance = summary.totalDistance / 1000; // Đổi sang km
+                const time = summary.totalTime / 60; // đổi ra phút
+
+                // Hiển thị khoảng cách và thời gian dự kiến
+                document.getElementById('routeInfo').innerHTML = `Khoảng cách: ${distance.toFixed(2)} km, Thời gian dự kiến: ${time.toFixed(2)} phút`;
+
+                // Lưu vào localStorage
+                localStorage.setItem('route_info', JSON.stringify({
+                    distance: distance.toFixed(2),
+                    time: time.toFixed(2)
+                }));
             }).addTo(map);
         }
 
@@ -202,7 +237,7 @@
 
 
         function searchLocation(query, callback) {
-            const url = `https://photon.komoot.io/api/?q=${query}&limit=5`;//dùng photon cho đề xuất địa điểm 
+            const url = `https://photon.komoot.io/api/?q=${query}&limit=5`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -284,6 +319,7 @@
                 const drivers = await response.json();
                 // Log dữ liệu tài xế nhận được từ Backend
                 console.log("Drivers received from backend:", drivers);
+                // Trả lại price dựa theo khoảng cách loc_source, loc_destination (backend || price = distance *)
                 displayDriversOnMap(drivers);
                 displayDriverList(drivers);
             }
@@ -308,23 +344,76 @@
 
         // Hàm hiển thị danh sách tài xế gần nhất để chọn 
         function displayDriverList(drivers) {
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
             const driverList = document.getElementById('driverList');
-            driverList.innerHTML = '';// xóa ds cũ
+            driverList.innerHTML = ''; // xóa ds cũ
             drivers.forEach(driver => {
                 const li = document.createElement('li');
-                li.textContent = `Tài xế: ${driver.name} - Khoảng cách: ${driver.distance} km`;
-                li.addEventListener('click', () => handleDriverSelection(driver)); // Thêm sự kiện khi click vào tài xế
+                li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance} km - Price: ${routeInfo.distance * 1.2} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
+
+                li.addEventListener('click', function () {
+                    document.getElementById('tripPayment').style.display = 'block'; // Corrected display logic
+                    const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
+                    detailDiv.innerHTML = `
+                        <p>Price: ${routeInfo.distance * 1.2} $</p>
+                        <p>Voucher: -${1.5} $</p>
+                        <p>Total: ${routeInfo.distance * 1.2 - 1.5} $</p>                        
+                    `;
+
+                    showPaymentForm(driver); // Attach event listeners to payment buttons
+                });
                 driverList.appendChild(li);
             });
         }
 
+        // Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form
+        function showPaymentForm(driver) {
+            const payNowBtn = document.getElementById('payNowBtn');
+            const okBtn = document.getElementById('okBtn');
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
+
+
+            // Remove existing event listeners to avoid duplication
+            payNowBtn.replaceWith(payNowBtn.cloneNode(true));
+            okBtn.replaceWith(okBtn.cloneNode(true));
+
+            const newPayNowBtn = document.getElementById('payNowBtn');
+            const newOkBtn = document.getElementById('okBtn');
+
+            // Attach event listener for "Pay Now"
+            newPayNowBtn.addEventListener('click', function () {
+                const methodValue = document.getElementById('method').value;
+                const paymentRequest = {
+                    price: routeInfo.distance * 1.2,
+                    voucher: 1.5,
+                    total: routeInfo.distance * 1.2 - 1.5,
+                    method: methodValue,
+                    status: "Paid"
+                };
+
+                handleDriverSelection(driver, paymentRequest);
+            });
+
+            // Attach event listener for "Ok"
+            newOkBtn.addEventListener('click', function () {
+                const methodValue = document.getElementById('method').value;
+                const paymentRequest = {
+                    price: routeInfo.distance * 1.2,
+                    voucher: 1.5,
+                    total: routeInfo.distance * 1.2 - 1.5,
+                    method: methodValue,
+                    status: "Unpaid"
+                };
+
+                handleDriverSelection(driver, paymentRequest);
+            });
+        }
+
         // Hàm xử lý khi customer chọn tài xế từ danh sách
-        function handleDriverSelection(driver) {
+        function handleDriverSelection(driver, paymentRequest) {
             const loc_source = JSON.parse(localStorage.getItem('loc_source'));
             const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
-
-            // console.log("loc_source : ", loc_source);
-            // console.log("loc_destination: ", loc_destination);
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
 
 
             fetch('http://localhost:8080/api/request-driver', {
@@ -335,9 +424,10 @@
                 body: JSON.stringify({
                     driverId: driver.driverId,
                     customerId: customerId,
-                    loc_source: loc_source,// lấy tên địa điểm mà customer chọn từ photon đề xuất
-                    loc_destination: loc_destination, // lấy tên địa điểm
-                    distance: driver.distance
+                    loc_source: loc_source,
+                    loc_destination: loc_destination,
+                    distance: routeInfo.distance,
+                    payment_request: paymentRequest
                 })
             })
                 .then(response => response.json())
@@ -352,6 +442,7 @@
                     console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
                 });
         }
+
 
         // Xử lý khi người dùng ấn nút Search
         document.getElementById('searchBtn').addEventListener('click', searchDrivers);
@@ -436,10 +527,10 @@
                     const ratingButton = document.createElement('button');
                     ratingButton.textContent = 'Rating';
                     ratingButton.addEventListener('click', function () {
-                        alert('Rating driver for trip: ' + trip.tripId);
+                        // alert('Rating driver for trip: ' + trip.tripId);
                         document.getElementById('tripRating').style.display = 'block'; // Hiện form đánh giá
 
-                        showRatingForm(trip.tripId); // Hàm xử lý sau khi gửi đánh giá
+                        showRatingForm(trip.tripId); // Hàm xử lý sau khi gửi đánh giá (lắng nghe sự kiến ấn nút Send Rating)
                     });
                     actionTd.appendChild(ratingButton);
                 }
@@ -518,27 +609,6 @@
 
         // Hàm xử lý form đánh giá (Rating) 
         function showRatingForm(tripId) {
-            // const formHtml = `
-            //     <div id="ratingForm">
-            //         <label for="rating">Rating:</label>
-            //         <select id="rating">
-            //             <option value="1">1 Star</option>
-            //             <option value="2">2 Stars</option>
-            //             <option value="3">3 Stars</option>
-            //             <option value="4">4 Stars</option>
-            //             <option value="5">5 Stars</option>
-            //         </select><br>
-
-            //         <label for="feedback">Feedback:</label>
-            //         <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
-
-            //         <button id="sendRatingBtn">Send</button>
-            //     </div>
-            // `;
-
-            // const formContainer = document.getElementById('tripRating');
-            // formContainer.innerHTML = formHtml;
-
             document.getElementById('sendRatingBtn').addEventListener('click', function () {
                 const ratingValue = document.getElementById('rating').value;
                 const feedbackValue = document.getElementById('feedback').value;
@@ -600,3 +670,92 @@
 </body>
 
 </html>
+
+
+<!-- // Hàm hiển thị danh sách tài xế gần nhất để chọn 
+function displayDriverList(drivers) {
+    const driverList = document.getElementById('driverList');
+    driverList.innerHTML = ''; // Xóa danh sách cũ
+
+    drivers.forEach(driver => {
+        const li = document.createElement('li');
+        li.textContent = `Tài xế: ${driver.name} - Khoảng cách: ${driver.distance} km - Price: ${driver.price} $`;
+
+        li.addEventListener('click', function () {
+            document.getElementById('tripPayment').style.display = 'block'; // Hiển thị form thanh toán
+            const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
+            detailDiv.innerHTML = `
+                <p>Price: ${driver.price} $</p>
+                <p>Voucher: -${1.5} $</p>
+                <p>Total: ${driver.price - 1.5} $</p>                        
+            `;
+            showPaymentForm(driver); // Gọi hàm để xử lý thanh toán
+        });
+        driverList.appendChild(li);
+    });
+}
+
+// Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form 
+function showPaymentForm(driver) {
+    // Khi ấn nút "Pay Now"
+    document.getElementById('payNowBtn').addEventListener('click', function () {
+        const methodValue = document.getElementById('method').value;
+        // Tạo đối tượng paymentRequest
+        const paymentRequest = JSON.stringify({
+            price: driver.price, 
+            voucher: 1.5, 
+            total: driver.price - 1.5, 
+            method: methodValue, 
+            status: "Paid"
+        });
+
+        handleDriverSelection(driver, paymentRequest);
+    });
+
+    // Khi ấn nút "Ok"
+    document.getElementById("okBtn").addEventListener('click', function () {
+        const methodValue = document.getElementById('method').value;
+        // Tạo đối tượng paymentRequest
+        const paymentRequest = JSON.stringify({
+            price: driver.price,
+            voucher: 1.5,
+            total: driver.price - 1.5,
+            method: methodValue,
+            status: "Unpaid"
+        });
+
+        handleDriverSelection(driver, paymentRequest);
+    });
+}
+
+// Hàm xử lý khi customer chọn tài xế từ danh sách
+function handleDriverSelection(driver, paymentRequest) {
+    const loc_source = JSON.parse(localStorage.getItem('loc_source'));
+    const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
+
+    fetch('http://localhost:8080/api/request-driver', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            driverId: driver.driverId,
+            customerId: customerId,
+            loc_source: loc_source,
+            loc_destination: loc_destination, 
+            distance: driver.distance,
+            payment_request: paymentRequest
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'accepted') {
+            alert(`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
+        } else if (result.status === 'declined') {
+            alert(`Tài xế ${driver.name} đã từ chối yêu cầu. Vui lòng chọn tài xế khác.`);
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
+    });
+} -->
