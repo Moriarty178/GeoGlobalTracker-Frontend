@@ -67,6 +67,8 @@
         <br>
         <!-- Nút Search -->
         <button id="searchBtn">Search</button>
+        <!-- Nút Create -->
+        <button id="createBtn">Create</button>
         <div id="routeInfo">
         </div>
         <!-- Phần hiển thị danh sách tài xế gần nhât backend gửi lên -->
@@ -414,7 +416,7 @@
             });
         }
 
-        // Hàm xử lý khi customer chọn tài xế từ danh sách
+        // Hàm xử lý sau khi customer chọn tài xế từ danh sách rồi nhập payment form
         function handleDriverSelection(driver, paymentRequest) {
             const loc_source = JSON.parse(localStorage.getItem('loc_source'));
             const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
@@ -441,6 +443,8 @@
                         alert(`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
                     } else if (result.status === 'declined') {
                         alert(`Tài xế ${driver.name} đã từ chối yêu cầu. Vui lòng chọn tài xế khác.`);
+                    } else if (result.status === 'timeout') {
+                        alert(`Tài xế ${driver.name} không phản hồi.`);
                     }
                 })
                 .catch(error => {
@@ -448,8 +452,108 @@
                 });
         }
 
+        // Xử lý khi người dùng ấn nút Create thay vì nút Search
 
-        // Xử lý khi người dùng ấn nút Search
+        document.getElementById('createBtn').addEventListener('click', function () {
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
+            document.getElementById('tripPayment').style.display = 'block'; 
+            const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
+            detailDiv.innerHTML = ''; //xóa ds cũ
+            detailDiv.innerHTML = `
+                <p>Price: ${routeInfo.distance * 1.2} $</p>
+                <p>Price: -${1.5} $</p>
+                <p>Price: ${routeInfo.distance * 1.2 - 1.5} $</p>
+            `;
+
+            // Hàm xử lý khi customer nhập payment form xong và ấn "Pay Now" hoặc "Ok"
+            showPaymentFormV2();
+
+        });
+
+
+        // Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form
+        function showPaymentFormV2() {
+            const payNowBtn = document.getElementById('payNowBtn');
+            const okBtn = document.getElementById('okBtn');
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
+
+
+            // Remove existing event listeners to avoid duplication
+            payNowBtn.replaceWith(payNowBtn.cloneNode(true));
+            okBtn.replaceWith(okBtn.cloneNode(true));
+
+            const newPayNowBtn = document.getElementById('payNowBtn');
+            const newOkBtn = document.getElementById('okBtn');
+
+            // Attach event listener for "Pay Now"
+            newPayNowBtn.addEventListener('click', function () {
+                const methodValue = document.getElementById('method').value;
+                const paymentRequest = {
+                    price: routeInfo.distance * 1.2,
+                    voucher: 1.5,
+                    total: routeInfo.distance * 1.2 - 1.5,
+                    method: methodValue,
+                    status: "Paid"
+                };
+
+                document.getElementById('tripPayment').style.display = 'none'; 
+
+                handleDriverSelectionV2(paymentRequest);
+            });
+
+            // Attach event listener for "Ok"
+            newOkBtn.addEventListener('click', function () {
+                const methodValue = document.getElementById('method').value;
+                const paymentRequest = {
+                    price: routeInfo.distance * 1.2,
+                    voucher: 1.5,
+                    total: routeInfo.distance * 1.2 - 1.5,
+                    method: methodValue,
+                    status: "Unpaid"
+                };
+                
+                document.getElementById('tripPayment').style.display = 'none'; 
+
+                handleDriverSelectionV2(paymentRequest);
+            });
+        }
+
+        // Hàm xử lý sau khi customer chọn tài xế từ danh sách rồi nhập payment form
+        function handleDriverSelectionV2(paymentRequest) {
+            const loc_source = JSON.parse(localStorage.getItem('loc_source'));
+            const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
+            const routeInfo = JSON.parse(localStorage.getItem('route_info'));
+
+
+            fetch('http://localhost:8080/api/request-driver-v2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    driverId: 0,// ko có do đang để hệ thống tự chọn 
+                    customerId: customerId,
+                    loc_source: loc_source,
+                    loc_destination: loc_destination,
+                    distance: routeInfo.distance,
+                    payment_request: paymentRequest
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'accepted') {
+                        alert(`Đã có tài xế nhận yêu cầu chuyến đi. Đang cách điểm đón: ${result.distance} km, Dự kiến đến nơi sau: ${result.estimatedTime} phút`);
+                    } else {
+                        alert(`${result.status}`);// ko ai nhận (tất cả tài xế ấn deny)
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
+                });
+        }
+        
+        // =================================================================
+        // Xử lý khi người dùng ấn nút Search ---------------------
         document.getElementById('searchBtn').addEventListener('click', searchDrivers);
 
         // ------------------------- Lịch sử chuyến đi "My Trip" ---------------------------
