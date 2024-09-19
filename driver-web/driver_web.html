@@ -86,10 +86,198 @@
     <button id="accept-button" style="display: none;">Chấp nhận</button>
     <button id="deny-button" style="display: none;">Từ chối</button>
 
+     <!-- Nút Trip Received -->
+    <button id="myTripBtn">Trip Received</button>
+    <button id="backBtn" style="display: none;">Back</button>
+    <button id="loadmoreBtn" style="display: none;">Load More</button>
+
+    <!-- Hiển thị danh sách chuyến đi đã nhận (Trip Received) -->
+    <div id="tripReceived" style="display: none;">
+        <table id="tripTable" class="trip-table">
+            <thead>
+                <tr>
+                    <th>Trip ID</th>
+                    <th>Status</th>
+                    <th>Source</th>
+                    <th>Destiantion</th>
+                    <th>Distance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Hàng dữ liệu sẽ được chèn vào đây -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Hiển thị thông tin chi tiết chuyến đi (SeeDetail) -->
+     <div id="tripDetail"></div>
+
     <!-- Bao gồm STOMP.js từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="driver_web.js"></script>
 
+    <script>
+        let offset = 0;
+
+        document.getElementById('myTripBtn').addEventListener('click', function() {
+            fetchTripsReceived();
+        });
+
+        function fetchTripsReceived() {
+            const driverId = localStorage.getItem('driverId');
+            fetch('http://localhost:8080/trips/trips-received', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: driverId, offset: offset })
+            })
+                .then(response => response.json())
+                .then(data =>{ // trips received
+                    console.log(data);
+
+                    document.getElementById('tripReceived').style.display = 'block';
+                    updateTripsTable(data);
+
+                    offset == 0? document.getElementById('backBtn').style.display = 'none' : document.getElementById('backBtn').style.display = 'block';
+
+                    if (data.length === 10) {
+                        document.getElementById('loadmoreBtn').style.display = 'block';
+                    } else {
+                        document.getElementById('loadmoreBtn').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+        }
+
+        function updateTripsTable(trips) {
+            const tableBody = document.querySelector('#tripTable tbody');
+            tableBody.innerHTML = ''; // Xóa dữ liệu cũ trong bảng
+
+            trips.forEach(trip => {
+                const sourceLocation = JSON.parse(trip.source);
+                const destinationLocation = JSON.parse(trip.destination);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${trip.tripId}</td>
+                    <td>${trip.status}</td>
+                    <td>${sourceLocation.display_name}</td>
+                    <td>${destinationLocation.display_name}</td>
+                    <td>${trip.distance}</td>
+                `;
+
+                const actionId = document.createElement('td'); // tạo cột action
+
+                // Nút SeeDetail cho statu "1" -> "4"
+                const seeDetailButton = document.createElement('button');
+                seeDetailButton.textContent = 'SeeDetail';
+                seeDetailButton.addEventListener('click', function() {
+                   seeTripDetail(trip.tripId); 
+                });
+                actionId.appendChild(seeDetailButton);
+
+                // Nút Cancel và "đã đến điểm đón" cho status "2"
+                if (trip.status === "2") {
+
+                    // Nút "Cancel"
+                    const cancelButton = document.createElement('button');
+                    cancelButton.textContent = 'Cancel';
+                    cancelButton.addEventListener('click', function() {
+                        updateStatusTrip(trip.tripId, "1");
+                    });
+                    actionId.appendChild(cancelButton);
+
+                    // Nút "Đã đến điểm đón"
+                    const receivedButton = document.createElement('button');
+                    receivedButton.textContent = 'Received';
+                    receivedButton.addEventListener('click', function() {
+                        updateStatusTrip(trip.tripId, "3");
+                    });
+                    actionId.appendChild(receivedButton);
+                }
+                
+                // Nút "Hoàn thành/đã đến điểm trả" cho status "3"
+                if (trip.status === "3") {
+                    const completeButton = document.createElement('button');
+                    completeButton.textContent = 'Complete';
+                    completeButton.addEventListener('click', function() {
+                        updateStatusTrip(trip.tripId, "4");
+                    });
+                    actionId.appendChild(completeButton);
+                }
+
+                row.appendChild(actionId);
+                tableBody.appendChild(row);
+            });
+
+        }
+
+        function updateStatusTrip(tripId, status) {
+            const driverId = JSON.parse(localStorage.getItem('driverId'));
+            
+            fetch('http://localhost:8080/trips/update-status-trip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tripId: tripId,
+                    driverId: driverId,
+                    status: status
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('Ok.');
+
+                offset = 0;
+                fetchTripsReceived();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Hàm xử lý hiển thị chi tiết đơn hàng (SeeDetail)
+        function seeTripDetail(tripId) {
+            fetch(`http://localhost:8080/payments/trip/${tripId}`)
+                .then(response => response.json())
+                .then(payment => {
+                    // displayTripDetail(payment);
+                    console.log("payment: ", payment);
+                    console.log("payment detail: ", payment.price, payment.total, payment.voucher, payment.paymentStatus, payment.paymentMethod);
+                })
+                .catch(error => {
+                    console.error('Error fetching trip detail:', error);
+                });
+        }
+
+        function getTripStatus(status) {
+            switch (status) {
+                case '2' : return 'Accepted';
+                case '3' : return 'Received Guest';
+                case '4' : return 'Completed';
+                default: return 'Unknow';
+            }
+        }
+
+        // Khi click nút "Load More"
+        document.getElementById('loadmoreBtn').addEventListener('click', function() {{
+            offset += 1;
+            fetchTripsReceived();
+        }});
+
+        // Khi click nút "Back"
+        document.getElementById('backBtn').addEventListener('click', function() {
+            offset -= 1;
+            fetchTripsReceived();
+        });
+
+    </script>
     
 </body>
 </html>

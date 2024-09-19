@@ -81,7 +81,6 @@
         <button id="nextBtn" style="display: none;">Next</button>
 
         <!-- Hiển thị danh sách các chuyến đi -->
-        <!-- Hiển thị danh sách các chuyến đi -->
         <div id="tripList" style="display: none;">
             <table id="tripTable" class="trip-table">
                 <thead>
@@ -571,11 +570,11 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ customerId: customerId, offset: offset })
+                body: JSON.stringify({ id: customerId, offset: offset })
             })
                 .then(response => response.json())
                 .then(data => {
-                    // console.log(data);
+                    console.log(data);
                     document.getElementById("tripList").style.display = 'block';
                     updateTripsTable(data);
 
