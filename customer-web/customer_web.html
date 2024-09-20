@@ -141,6 +141,7 @@
         </div>
     </div>
 
+    <button id="escBtn" style="display: none;">Esc</button>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -591,6 +592,9 @@
                 });
         }
 
+        let stompClient = null; // Biến stompClient toàn cục
+        let subcription = null; // Lưu các kênh đã đăng ký
+
         function updateTripsTable(trips) {
             const tableBody = document.querySelector('#tripTable tbody');
             tableBody.innerHTML = ''; // Xóa dữ liệu cũ trong bảng
@@ -634,8 +638,24 @@
                     const viewDriver = document.createElement('button');
                     viewDriver.textContent = 'View Driver';
                     viewDriver.addEventListener('click', function () {
+                        // hiển thị nút "Esc"
+                        document.getElementById('escBtn').style.display = 'block'; 
+                        
                         // Hàm hiển thị route của chuyến đi, và hiển thị vị trí tài xế được cập nhật
                         viewDriverLocation(trip.driverId, sourceLocation, destinationLocation);
+                        
+                        document.getElementById('escBtn').addEventListener('click', function() {
+                            // Hàm ngắt kết nối websocket, unsubcribe kênh đã đăng ký
+                            if (stompClient !== null) {
+                                if (subcription !== null) {
+                                    subcription.unsubscribe(); // Hủy đăng ký kênh
+                                    console.log('Unsubcribed from the channel.');
+                                }
+                                stompClient.deactivate(); // Ngắt kết nối WebSocket
+                                console.log('WebSocket connection closed.');
+                            }
+                            document.getElementById('escBtn').style.display = 'none';
+                        });
                     });
                     actionTd.appendChild(viewDriver);
                 }
@@ -666,7 +686,7 @@
 
             // Kết nối đến WebSocket endpoint của backend
             const socket = new WebSocket('ws://localhost:8080/ws/customer');
-            const stompClient = new StompJs.Client({ //tạo 1 STOMP client trên kết nối WebSocket
+            stompClient = new StompJs.Client({ //tạo 1 STOMP client trên kết nối WebSocket
                 webSocketFactory: () => socket,
                 debug: function (str) {
                     console.log(str);
@@ -679,7 +699,7 @@
             stompClient.onConnect = function (frame) {
                 console.log('Connected: ' + frame);
                 // Đăng ký nhận vị trí từ tài xế khi kết nối websocket được bật
-                stompClient.subscribe('/topic/location-send-to-customer-web/' + driverId, function (message) {  
+                subcription = stompClient.subscribe('/topic/location-send-to-customer-web/' + driverId, function (message) {  
                     const driverRequest = JSON.parse(message.body); // message(driverRequestDTO) có dạng : {driverId: 1234, latitude: 21.0285, longitude: 105.8542, speed: 50.0, timestamp: "02:54:15 09/20/2024"}
 
                     displayDriverOnMapV2(driverRequest.driverId, driverRequest.latitude, driverRequest.longitude); // marker lại vị trí tài xế trên bản đồ, mỗi khi nhận được vị trí mới từ tài xế -> Backend -> Customer Web.

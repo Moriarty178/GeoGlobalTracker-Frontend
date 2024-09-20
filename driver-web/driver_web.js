@@ -183,7 +183,7 @@ function initializeWebSocket(driverId) {
 
 
             // Khi tài xế ấn accept thì bắt đầu auto publish vị trí đến backend "/app/driver-location-with-trip"". Ngừng gửi khi tất cả chuyến đi đã nhận đều có status "4"
-            startTracking(stompClient, driverId, "2"); // status "2" đại diện cho chuyến đi vừa được nhận (ấn nút "Accept" hoặc nút "Get It").
+            // startTracking(stompClient, driverId, "2"); // status "2" đại diện cho chuyến đi vừa được nhận (ấn nút "Accept" hoặc nút "Get It").
         });
 
         // Xử lý khi tài xế ấn nút "deny"

@@ -198,7 +198,7 @@
                 getItButton.textContent = 'Get It';
                 getItButton.addEventListener('click', function() {
                     updateStatusTrip(trip.tripId, "2");
-                    startTracking(stompClient, driverId, "2"); // gửi vị trí cho backend để gửi cho customer web, khi nhận chuyến đi (ấn nút "Get It").
+                    // startTracking(stompClient, driverId, "2"); // gửi vị trí cho backend để gửi cho customer web, khi nhận chuyến đi (ấn nút "Get It").=> bỏ, chỉ cần updateStatus lên "2" thì sẽ có nút "View Driver" trên Customer Web -> xem được vị trí
                 });
 
                 actionTd.appendChild(getItButton);
