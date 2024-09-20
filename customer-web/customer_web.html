@@ -393,7 +393,7 @@
                     status: "Paid"
                 };
 
-                document.getElementById('tripPayment').style.display = 'none'; 
+                document.getElementById('tripPayment').style.display = 'none';
 
                 handleDriverSelection(driver, paymentRequest);
             });
@@ -408,8 +408,8 @@
                     method: methodValue,
                     status: "Unpaid"
                 };
-                
-                document.getElementById('tripPayment').style.display = 'none'; 
+
+                document.getElementById('tripPayment').style.display = 'none';
 
                 handleDriverSelection(driver, paymentRequest);
             });
@@ -455,7 +455,7 @@
 
         document.getElementById('createBtn').addEventListener('click', function () {
             const routeInfo = JSON.parse(localStorage.getItem('route_info'));
-            document.getElementById('tripPayment').style.display = 'block'; 
+            document.getElementById('tripPayment').style.display = 'block';
             const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
             detailDiv.innerHTML = ''; //xóa ds cũ
             detailDiv.innerHTML = `
@@ -495,7 +495,7 @@
                     status: "Paid"
                 };
 
-                document.getElementById('tripPayment').style.display = 'none'; 
+                document.getElementById('tripPayment').style.display = 'none';
 
                 handleDriverSelectionV2(paymentRequest);
             });
@@ -510,8 +510,8 @@
                     method: methodValue,
                     status: "Unpaid"
                 };
-                
-                document.getElementById('tripPayment').style.display = 'none'; 
+
+                document.getElementById('tripPayment').style.display = 'none';
 
                 handleDriverSelectionV2(paymentRequest);
             });
@@ -550,12 +550,12 @@
                     console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
                 });
         }
-        
+
         // =================================================================
         // Xử lý khi người dùng ấn nút Search ---------------------
         document.getElementById('searchBtn').addEventListener('click', searchDrivers);
 
-        // ------------------------- Lịch sử chuyến đi "My Trip" ---------------------------
+        // ------------------------- Lịch sử chuyến đi "My Trip" ------------------------------------------------------------------
         // Hàm lấy ra tất cả trips khi người dùng click vào "My Trip"
 
         let offset = 0;
@@ -630,6 +630,16 @@
                     actionTd.appendChild(cancelButton);
                 }
 
+                if (trip.status === '2' || trip.status === '3') {
+                    const viewDriver = document.createElement('button');
+                    viewDriver.textContent = 'View Driver';
+                    viewDriver.addEventListener('click', function () {
+                        // Hàm hiển thị route của chuyến đi, và hiển thị vị trí tài xế được cập nhật
+                        viewDriverLocation(trip.driverId, sourceLocation, destinationLocation);
+                    });
+                    actionTd.appendChild(viewDriver);
+                }
+
                 // Nút Rating cho status 4
                 if (trip.status === '4') {
                     const ratingButton = document.createElement('button');
@@ -648,6 +658,129 @@
             });
 
         }
+
+        // =============================================Hàm kết nối web socket trên Customer Web (khi customer click vào nút "View Driver" của chuyến đi thì mới kết nối)===========================================================================================
+        let markers = {};
+        function viewDriverLocation(driverId, loc_source, loc_destination) {
+            markLocationV2(loc_source, loc_destination); // vẽ route cho chuyến đi đã chọn
+
+            // Kết nối đến WebSocket endpoint của backend
+            const socket = new WebSocket('ws://localhost:8080/ws/customer');
+            const stompClient = new StompJs.Client({ //tạo 1 STOMP client trên kết nối WebSocket
+                webSocketFactory: () => socket,
+                debug: function (str) {
+                    console.log(str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+            });
+
+            stompClient.onConnect = function (frame) {
+                console.log('Connected: ' + frame);
+                // Đăng ký nhận vị trí từ tài xế khi kết nối websocket được bật
+                stompClient.subscribe('/topic/location-send-to-customer-web/' + driverId, function (message) {  
+                    const driverRequest = JSON.parse(message.body); // message(driverRequestDTO) có dạng : {driverId: 1234, latitude: 21.0285, longitude: 105.8542, speed: 50.0, timestamp: "02:54:15 09/20/2024"}
+
+                    displayDriverOnMapV2(driverRequest.driverId, driverRequest.latitude, driverRequest.longitude); // marker lại vị trí tài xế trên bản đồ, mỗi khi nhận được vị trí mới từ tài xế -> Backend -> Customer Web.
+                });
+            };
+
+            stompClient.onWebSocketClose = function (event) {
+                console.log('WebSocket connection closed.', event);
+            };
+
+            stompClient.onStompError = function (error) {
+                console.error('WebSocket error: ', error);
+            };
+
+            stompClient.activate();
+        }
+
+        function displayDriverOnMapV2(driverId, lat, lon) {
+            // Kiểm tra xem driver có dữ liệu lat và lon không
+            // if (lat && lon) {
+            //     L.marker([lat, lon]).addTo(map).bindPopup(`Driver`).openPopup();
+            // } else {
+            //     console.error(`Driver with ID  has invalid coordinates: lat = ${lat}, lon = ${lon}`);
+            // }
+
+            const latLng = [lat, lon];
+            // Nếu đã có marker của tài xế này, cập nhật vị trí của nó
+            if (markers[driverId]) {
+                markers[driverId].setLatLng(latLng);
+            } else {
+                // Nếu chưa có, tạo một marker mới
+                markers[driverId] = L.marker(latLng).addTo(map)
+                    .bindPopup('DriverID: ' + driverId);
+            }
+
+            // Di chuyển bản đồ tới vị trí mới (có thể tắt đi nếu không muốn tự động di chuyển bản đồ)
+            map.panTo(latLng);
+        }
+
+
+        // Hàm đánh dấu vị trí cho chuyến đi khi khách hàng click vào nút "View Driver"
+        function markLocationV2(loc_source, loc_destination) {
+           
+                // Xóa marker cũ của điểm đón
+                map.removeLayer(locSourceMarker);
+                delete locSourceMarker;
+                // Xóa marker cũ của điểm trả
+                map.removeLayer(locDestinationMarker);
+                delete locDestinationMarker;
+                // Xóa tuyến đường cũ
+                map.removeControl(routeLayer);
+                
+                // Thêm marker mới cho điểm đón
+                let lat = loc_source.lat;
+                let lon = loc_source.lon;
+                locSourceMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm đón').openPopup();
+                localStorage.setItem('loc_source', JSON.stringify({ lat, lon }));
+                
+                // Thêm marker mới cho điểm trả
+                lat = loc_destination.lat;
+                lon = loc_destination.lon;
+                locDestinationMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm trả').openPopup();
+                localStorage.setItem('loc_destination', JSON.stringify({ lat, lon }));
+
+
+            // Kiểm tra và vẽ lại tuyến đường khi cả hai điểm đón và trả đã có
+            const storedSource = JSON.parse(localStorage.getItem('loc_source'));
+            const storedDestination = JSON.parse(localStorage.getItem('loc_destination'));
+            if (storedSource && storedDestination) {
+                drawRouteV2(storedSource, storedDestination);
+            }
+        }
+
+        // Hàm vẽ tuyến đường
+        function drawRouteV2(source, destination) {
+            // Xóa tuyến đường cũ nếu có
+            if (routeLayer) {
+                map.removeControl(routeLayer);
+            }
+
+            // Vẽ tuyến đường mới
+            routeLayer = L.Routing.control({
+                waypoints: [
+                    L.latLng(source.lat, source.lon),
+                    L.latLng(destination.lat, destination.lon)
+                ],
+                routeWhileDragging: true
+            }).addTo(map);
+        }
+
+
+
+
+
+
+
+
+        // ========================================================================================================================================
+        // ========================================================================================================================================
+        // ========================================================================================================================================
+        // ========================================================================================================================================
         // Hàm xử lý yêu cầu hủy chuyến đi đến Backend (cancel trip)
         function cancelTrip(tripId) {
             fetch('http://localhost:8080/trips/cancel', {
@@ -775,95 +908,9 @@
                 .catch(error => console.error('Error:', error));
         }
     </script>
+
+    <!-- Bao gồm STOMP.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 </body>
 
 </html>
-
-
-<!-- // Hàm hiển thị danh sách tài xế gần nhất để chọn 
-function displayDriverList(drivers) {
-    const driverList = document.getElementById('driverList');
-    driverList.innerHTML = ''; // Xóa danh sách cũ
-
-    drivers.forEach(driver => {
-        const li = document.createElement('li');
-        li.textContent = `Tài xế: ${driver.name} - Khoảng cách: ${driver.distance} km - Price: ${driver.price} $`;
-
-        li.addEventListener('click', function () {
-            document.getElementById('tripPayment').style.display = 'block'; // Hiển thị form thanh toán
-            const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
-            detailDiv.innerHTML = `
-                <p>Price: ${driver.price} $</p>
-                <p>Voucher: -${1.5} $</p>
-                <p>Total: ${driver.price - 1.5} $</p>                        
-            `;
-            showPaymentForm(driver); // Gọi hàm để xử lý thanh toán
-        });
-        driverList.appendChild(li);
-    });
-}
-
-// Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form 
-function showPaymentForm(driver) {
-    // Khi ấn nút "Pay Now"
-    document.getElementById('payNowBtn').addEventListener('click', function () {
-        const methodValue = document.getElementById('method').value;
-        // Tạo đối tượng paymentRequest
-        const paymentRequest = JSON.stringify({
-            price: driver.price, 
-            voucher: 1.5, 
-            total: driver.price - 1.5, 
-            method: methodValue, 
-            status: "Paid"
-        });
-
-        handleDriverSelection(driver, paymentRequest);
-    });
-
-    // Khi ấn nút "Ok"
-    document.getElementById("okBtn").addEventListener('click', function () {
-        const methodValue = document.getElementById('method').value;
-        // Tạo đối tượng paymentRequest
-        const paymentRequest = JSON.stringify({
-            price: driver.price,
-            voucher: 1.5,
-            total: driver.price - 1.5,
-            method: methodValue,
-            status: "Unpaid"
-        });
-
-        handleDriverSelection(driver, paymentRequest);
-    });
-}
-
-// Hàm xử lý khi customer chọn tài xế từ danh sách
-function handleDriverSelection(driver, paymentRequest) {
-    const loc_source = JSON.parse(localStorage.getItem('loc_source'));
-    const loc_destination = JSON.parse(localStorage.getItem('loc_destination'));
-
-    fetch('http://localhost:8080/api/request-driver', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            driverId: driver.driverId,
-            customerId: customerId,
-            loc_source: loc_source,
-            loc_destination: loc_destination, 
-            distance: driver.distance,
-            payment_request: paymentRequest
-        })
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'accepted') {
-            alert(`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
-        } else if (result.status === 'declined') {
-            alert(`Tài xế ${driver.name} đã từ chối yêu cầu. Vui lòng chọn tài xế khác.`);
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi gửi yêu cầu đến tài xế', error);
-    });
-} -->

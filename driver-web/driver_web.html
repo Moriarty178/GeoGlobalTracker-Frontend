@@ -192,17 +192,18 @@
                     <td>${(4.5 * 1.2).toFixed(2)} $</td>
                 `;
 
-                const actionId = document.createElement('td');
+                const actionTd = document.createElement('td');
                 // Nút "Get It" cho tất cả chuyến đi trong Trip List
                 const getItButton = document.createElement('button');
                 getItButton.textContent = 'Get It';
                 getItButton.addEventListener('click', function() {
                     updateStatusTrip(trip.tripId, "2");
+                    startTracking(stompClient, driverId, "2"); // gửi vị trí cho backend để gửi cho customer web, khi nhận chuyến đi (ấn nút "Get It").
                 });
 
-                actionId.appendChild(getItButton);
+                actionTd.appendChild(getItButton);
 
-                row.appendChild(actionId);
+                row.appendChild(actionTd);
                 tableBody.appendChild(row);
             });
         }
@@ -271,7 +272,7 @@
                     <td>${trip.distance}</td>
                 `;
 
-                const actionId = document.createElement('td'); // tạo cột action
+                const actionTd = document.createElement('td'); // tạo cột action
 
                 // Nút SeeDetail cho statu "1" -> "4"
                 const seeDetailButton = document.createElement('button');
@@ -279,7 +280,7 @@
                 seeDetailButton.addEventListener('click', function() {
                    seeTripDetail(trip.tripId); 
                 });
-                actionId.appendChild(seeDetailButton);
+                actionTd.appendChild(seeDetailButton);
 
                 // Nút Cancel và "đã đến điểm đón" cho status "2"
                 if (trip.status === "2") {
@@ -290,7 +291,7 @@
                     cancelButton.addEventListener('click', function() {
                         updateStatusTrip(trip.tripId, "1");
                     });
-                    actionId.appendChild(cancelButton);
+                    actionTd.appendChild(cancelButton);
 
                     // Nút "Đã đến điểm đón"
                     const receivedButton = document.createElement('button');
@@ -298,7 +299,7 @@
                     receivedButton.addEventListener('click', function() {
                         updateStatusTrip(trip.tripId, "3");
                     });
-                    actionId.appendChild(receivedButton);
+                    actionTd.appendChild(receivedButton);
                 }
                 
                 // Nút "Hoàn thành/đã đến điểm trả" cho status "3"
@@ -308,10 +309,10 @@
                     completeButton.addEventListener('click', function() {
                         updateStatusTrip(trip.tripId, "4");
                     });
-                    actionId.appendChild(completeButton);
+                    actionTd.appendChild(completeButton);
                 }
 
-                row.appendChild(actionId);
+                row.appendChild(actionTd);
                 tableBody.appendChild(row);
             });
 

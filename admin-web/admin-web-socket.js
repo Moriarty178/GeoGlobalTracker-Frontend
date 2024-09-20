@@ -107,7 +107,6 @@ function initMap() {
     }).addTo(map);
 
     // Gọi API lấy danh sách tất cả tài xế + vị trí trong mạng lưới GlobalTrackerGeo
-    // Gọi API lấy danh sách tất cả tài xế + vị trí trong mạng lưới GlobalTrackerGeo
     fetch('http://localhost:8080/api/all-driver-location')
         .then(response => {
             if (!response.ok) {
