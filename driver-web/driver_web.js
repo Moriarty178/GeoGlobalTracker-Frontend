@@ -239,86 +239,57 @@ function initializeWebSocket(driverId) {
 }
 
 
-// Hàm để cập nhật cảnh báo
-function showAlert(alertData) {
-    // Hiển thị cảnh báo cho tài xế (có thể thay alert bằng UI notification khác)
-    alert(`Alert: ${alertData.message}. Speed: ${alertData.speed}`);
-}
+// // Hàm để cập nhật cảnh báo
+// function showAlert(alertData) {
+//     // Hiển thị cảnh báo cho tài xế (có thể thay alert bằng UI notification khác)
+//     alert(`Alert: ${alertData.message}. Speed: ${alertData.speed}`);
+// }
 
 // Hàm để bắt đầu theo dõi và gửi thông tin vị trí
 function startTracking(stompClient, driverId, status) {
-    if (status === "2") { // Khi tài xế ấn nút accept khi được đề xuất chuyến đi hoặc ấn nút "Get It" để nhận chuyến đi thủ công
-        if (navigator.geolocation) {
-    
-            watchId = navigator.geolocation.watchPosition(function (position) {
-                const locationData = { // dùng lại để hạn chế viết class DTO mới, ko dùng tripId vì customer nhận qua topic "/topic/location-send-to-customer-web" + driverId
-                    driverId: driverId, 
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    speed: position.coords.speed,
-                    timestamp: position.timestamp
-                };
-    
-                // Gửi dữ liệu vị trí qua WebSocket topic đến backend ('MessageMappint('driver-location-with-trip'))
-                stompClient.publish({
-                    destination: '/app/driver-location-with-trip',
-                    body: JSON.stringify(locationData),
-                });
-            }, function (error) {
-                console.error('Geolocation error: ', error);
-            }, {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
-            });
-        } else {
-            console.error('Geolocation is not supported by this browser.');
-            locationElement.textContent = "Geolocation iss not supported by this browser.";
-        }
-    } else { // trường hợp khi tài xế đăng nhập vào thì thực hiện tự động gửi vị trí đến backend để gửi lên Admin Web theo dõi tất cả tài xế.
-        if (navigator.geolocation) {
-    
-            watchId = navigator.geolocation.watchPosition(function (position) {
-                const locationData = {
-                    driverId: driverId, // Thêm ID tài xế vào dữ liệu vị trí
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    speed: position.coords.speed,
-                    timestamp: position.timestamp
-                };
-    
-                // document.getElementById('location').textContent
-                locationElement.textContent = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}, Speed: ${position.coords.speed}, TimeStamp: ${position.timestamp}, DriverID: ${driverId}`;
-                // Gửi dữ liệu vị trí qua WebSocket topic đến backend ('MessageMappint('driver-location'))
-                stompClient.publish({
-                    destination: '/app/driver-location',
-                    body: JSON.stringify(locationData),
-                });
+    // trường hợp khi tài xế đăng nhập vào thì thực hiện tự động gửi vị trí đến backend để gửi lên Admin Web theo dõi tất cả tài xế.
+    if (navigator.geolocation) {
 
-                const locationData2 = { // dùng lại để hạn chế viết class DTO mới, ko dùng tripId vì customer nhận qua topic "/topic/location-send-to-customer-web" + driverId
-                    driverId: driverId, 
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    speed: position.coords.speed,
-                    timestamp: position.timestamp
-                };
-    
-                // Gửi dữ liệu vị trí qua WebSocket topic đến backend ('MessageMappint('driver-location-with-trip'))
-                stompClient.publish({
-                    destination: '/app/driver-location-with-trip',
-                    body: JSON.stringify(locationData2),
-                });
-            }, function (error) {
-                console.error('Geolocation error: ', error);
-            }, {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
+        watchId = navigator.geolocation.watchPosition(function (position) {
+            const locationData = {
+                driverId: driverId, // Thêm ID tài xế vào dữ liệu vị trí
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                speed: position.coords.speed,
+                timestamp: position.timestamp
+            };
+
+            // document.getElementById('location').textContent
+            locationElement.textContent = `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}, Speed: ${position.coords.speed}, TimeStamp: ${position.timestamp}, DriverID: ${driverId}`;
+            // Gửi dữ liệu vị trí qua WebSocket topic đến backend ('MessageMappint('driver-location'))
+            stompClient.publish({
+                destination: '/app/driver-location',
+                body: JSON.stringify(locationData),
             });
-        } else {
-            console.error('Geolocation is not supported by this browser.');
-            locationElement.textContent = "Geolocation iss not supported by this browser.";
-        }
+
+            const locationData2 = { // dùng lại để hạn chế viết class DTO mới, ko dùng tripId vì customer nhận qua topic "/topic/location-send-to-customer-web" + driverId
+                driverId: driverId, 
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                speed: position.coords.speed,
+                timestamp: position.timestamp
+            };
+
+            // Gửi dữ liệu vị trí qua WebSocket topic đến backend ('MessageMappint('driver-location-with-trip'))
+            stompClient.publish({
+                destination: '/app/driver-location-with-trip',
+                body: JSON.stringify(locationData2),
+            });
+        }, function (error) {
+            console.error('Geolocation error: ', error);
+        }, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+        locationElement.textContent = "Geolocation iss not supported by this browser.";
     }
 }
 

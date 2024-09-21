@@ -351,7 +351,7 @@
             driverList.innerHTML = ''; // xóa ds cũ
             drivers.forEach(driver => {
                 const li = document.createElement('li');
-                li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance} km - Price: ${routeInfo.distance * 1.2} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
+                li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance.toFixed(2)} km - Price: ${(routeInfo.distance * 1.2).toFixed(2)} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
 
                 li.addEventListener('click', function () {
                     document.getElementById('tripPayment').style.display = 'block'; // Corrected display logic
@@ -360,7 +360,7 @@
                     detailDiv.innerHTML = `
                         <p>Price: ${routeInfo.distance * 1.2} $</p>
                         <p>Voucher: -${1.5} $</p>
-                        <p>Total: ${routeInfo.distance * 1.2 - 1.5} $</p>                        
+                        <p>Total: ${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</p>                        
                     `;
 
                     showPaymentForm(driver); // Attach event listeners to payment buttons
@@ -440,7 +440,7 @@
                 .then(response => response.json())
                 .then(result => {
                     if (result.status === 'accepted') {
-                        alert(`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
+                        alert(`Tài xế ${driver.name} đã nhận yêu cầu. Khoảng cách: ${driver.distance.toFixed(2)} km, Thời gian dự kiến: ${result.estimatedTime} phút`);
                     } else if (result.status === 'declined') {
                         alert(`Tài xế ${driver.name} đã từ chối yêu cầu. Vui lòng chọn tài xế khác.`);
                     } else if (result.status === 'timeout') {
