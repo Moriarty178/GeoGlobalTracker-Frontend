@@ -180,6 +180,7 @@ function initializeWebSocket(driverId) {
             sendDriverResponse("accepted"); // Nếu chấp nhận, gửi với status "accepted"
             hideRequestButtons(); // Ẩn nút sau khi đã xử lý
             // alert("Bạn đã chấp nhận yêu cầu."); // Thông báo tài xế
+            lastTripStatuses = ["2"]; // gán một giá trị status cho lastTripStatuses khi ấn accept hoặc Get It để ko cần phải gọi hàm getTripStatuses().
 
 
             // Khi tài xế ấn accept thì bắt đầu auto publish vị trí đến backend "/app/driver-location-with-trip"". Ngừng gửi khi tất cả chuyến đi đã nhận đều có status "4"
@@ -245,8 +246,23 @@ function initializeWebSocket(driverId) {
 //     alert(`Alert: ${alertData.message}. Speed: ${alertData.speed}`);
 // }
 
+let lastTripStatuses = [];
+// Hàm lấy status của tất cả chuyến đi(trip) của tài xế
+async function getTripStatuses(driverId) {
+    try {
+        const response = await fetch(`http://localhost:8080/trips/${driverId}/trips-status`); // Chờ phản hồi từ server
+        const statuses = await response.json();  
+        console.log('status from backend:', statuses);
+        return statuses; // Trả về danh sách trạng thái 
+    } catch(error) {
+        console.error('Error fetching trip statuses: ', error);
+        return [];
+    }
+}
+
 // Hàm để bắt đầu theo dõi và gửi thông tin vị trí
-function startTracking(stompClient, driverId, status) {
+async function startTracking(stompClient, driverId, status) {
+
     // trường hợp khi tài xế đăng nhập vào thì thực hiện tự động gửi vị trí đến backend để gửi lên Admin Web theo dõi tất cả tài xế.
     if (navigator.geolocation) {
 
@@ -267,6 +283,15 @@ function startTracking(stompClient, driverId, status) {
                 body: JSON.stringify(locationData),
             });
 
+            console.log('lastTripStatuses = ', lastTripStatuses);
+
+            // Kiêm tra trạng thái của các chuyến đi
+            if (lastTripStatuses.every(status => status === '4')){ // nếu tất cả chuyến đi status "4"
+                console.log('All trips are completed. Stop sending location.');
+                return;
+            } 
+
+            // Nếu có chuyến đi chưa hoàn thành -> tiếp tục gửi vị trí
             const locationData2 = { // dùng lại để hạn chế viết class DTO mới, ko dùng tripId vì customer nhận qua topic "/topic/location-send-to-customer-web" + driverId
                 driverId: driverId, 
                 latitude: position.coords.latitude,
@@ -292,6 +317,9 @@ function startTracking(stompClient, driverId, status) {
         locationElement.textContent = "Geolocation iss not supported by this browser.";
     }
 }
+
+
+
 
 // (Optional) Hàm để kết nối lại khi có lỗi hoặc mất kết nối
 // function reconnect() {

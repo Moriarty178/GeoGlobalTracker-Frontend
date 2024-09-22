@@ -198,7 +198,7 @@
                 getItButton.textContent = 'Get It';
                 getItButton.addEventListener('click', function() {
                     updateStatusTrip(trip.tripId, "2");
-                    // startTracking(stompClient, driverId, "2"); // gửi vị trí cho backend để gửi cho customer web, khi nhận chuyến đi (ấn nút "Get It").=> bỏ, chỉ cần updateStatus lên "2" thì sẽ có nút "View Driver" trên Customer Web -> xem được vị trí
+                    lastTripStatuses = ["2"]; // gán 1 status cho lastTripStatuses để tiêp tục gửi vị trí, hạn chế phải gọi hàm getTripStatuses() để cập nhật trạng thái. Việc cập nhật trạng thái chỉ dành cho nút "Complete".(giàm được một nửa yêu cầu http api khi gọi getTripStatuses() từ [get it + accept + complete] xuống còn [complete]  : get it + accept = complete)
                 });
 
                 actionTd.appendChild(getItButton);
@@ -255,6 +255,7 @@
                 })
         }
 
+        
         function updateTripsTable(trips) {
             const tableBody = document.querySelector('#tripTable tbody');
             tableBody.innerHTML = ''; // Xóa dữ liệu cũ trong bảng
@@ -288,8 +289,13 @@
                     // Nút "Cancel"
                     const cancelButton = document.createElement('button');
                     cancelButton.textContent = 'Cancel';
-                    cancelButton.addEventListener('click', function() {
+                    cancelButton.addEventListener('click', async function() {
                         updateStatusTrip(trip.tripId, "1");
+    
+                        // Thêm một khoảng delay ngắn trước khi gọi getTripStatuses - nếu ko sẽ dẫn đến hàm updateStatus chưa kịp cập nhật status 3 -> 4 mà lasTripStatuses đã lấy -> có status 3 trong lastTripStatuses.
+                        await new Promise(resolve => setTimeout(resolve, 500)); 
+                        
+                        lastTripStatuses = await getTripStatuses(trip.driverId); // ko dùng lastTripStatuses = [] như lúc ấn nút Get It và Accept được. Bởi vì trong trường hợp 1 tài xế đang thực hiện nhiều chuyến đi cùng lúc, làm thế thì 1 trip ấn cacel các trip khác cũng bị mất khả năng theo dõi tài xế.
                     });
                     actionTd.appendChild(cancelButton);
 
@@ -306,8 +312,15 @@
                 if (trip.status === "3") {
                     const completeButton = document.createElement('button');
                     completeButton.textContent = 'Complete';
-                    completeButton.addEventListener('click', function() {
+                    completeButton.addEventListener('click', async function() {
                         updateStatusTrip(trip.tripId, "4");
+                        // Gọi hàm cập nhật trạng thái các chuyến đi.
+                        // lastTripStatuses = await getTripStatuses(trip.driverId);    
+                        // Thêm một khoảng delay ngắn trước khi gọi getTripStatuses - nếu ko sẽ dẫn đến hàm updateStatus chưa kịp cập nhật status 3 -> 4 mà lasTripStatuses đã lấy -> có status 3 trong lastTripStatuses.
+                        await new Promise(resolve => setTimeout(resolve, 500)); 
+                        
+                        lastTripStatuses = await getTripStatuses(trip.driverId);
+
                     });
                     actionTd.appendChild(completeButton);
                 }

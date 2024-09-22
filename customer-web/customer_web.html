@@ -358,7 +358,7 @@
                     const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
                     detailDiv.innerHTML = ''; // xóa ds cũ
                     detailDiv.innerHTML = `
-                        <p>Price: ${routeInfo.distance * 1.2} $</p>
+                        <p>Price: ${(routeInfo.distance * 1.2).toFixed(2)} $</p>
                         <p>Voucher: -${1.5} $</p>
                         <p>Total: ${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</p>                        
                     `;
@@ -460,9 +460,9 @@
             const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
             detailDiv.innerHTML = ''; //xóa ds cũ
             detailDiv.innerHTML = `
-                <p>Price: ${routeInfo.distance * 1.2} $</p>
-                <p>Price: -${1.5} $</p>
-                <p>Price: ${routeInfo.distance * 1.2 - 1.5} $</p>
+                <p>Price: ${(routeInfo.distance * 1.2).toFixed(2)} $</p>
+                <p>Voucher: -${1.5} $</p>
+                <p>Total: ${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</p>
             `;
 
             // Hàm xử lý khi customer nhập payment form xong và ấn "Pay Now" hoặc "Ok"
