@@ -116,7 +116,7 @@ window.addEventListener('beforeunload', function (e) {
 const locationElement = document.getElementById('location');
 
 // Hàm để khởi tạo WebSocket sau khi đăng nhập thành công
-function initializeWebSocket(driverId) {
+async function initializeWebSocket(driverId) {
 
     const statusElement = document.getElementById('status');
     const alertsElement = document.getElementById('alerts');
@@ -237,6 +237,7 @@ function initializeWebSocket(driverId) {
 
     //Kích hoạt kết nối khi đã thiết lập xong
     stompClient.activate();
+    lastTripStatuses = await getTripStatuses(driverId);
 }
 
 

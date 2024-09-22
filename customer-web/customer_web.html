@@ -334,10 +334,16 @@
             drivers.forEach(driver => {                       //1 driver có dạng: {driverId: 10, name: 'Tony', location: {lat:20.8824514, lon:106.0375673}, distance: 24.239102445215433}
                 // Kiểm tra xem driver có dữ liệu lat và lon không
                 if (driver.location.lat && driver.location.lon) {
-                    L.marker([driver.location.lat, driver.location.lon])
-                        .addTo(map)
-                        .bindPopup(`Driver: ${driver.name}`)
-                        .openPopup();
+                    const driverId = driver.driverId;
+                    const latLng = [driver.location.lat, driver.location.lon];
+                    // Xóa marker hiện có của tài xế nếu tồn tại
+                    if (markers[driverId]) {
+                        markers[driverId].setLatLng(latLng);
+                    } else {
+                        // Tạo marker mới và lưu vào đối tượng markers
+                        markers[driverId] = L.marker(latLng).addTo(map).bindPopup(`Driver: ${driver.name}`).openPopup();
+                    }
+
                 } else {
                     console.error(`Driver with ID ${driver.name} has invalid coordinates: lat = ${driver.lat}, lon = ${driver.lon}`);
                 }
@@ -639,12 +645,12 @@
                     viewDriver.textContent = 'View Driver';
                     viewDriver.addEventListener('click', function () {
                         // hiển thị nút "Esc"
-                        document.getElementById('escBtn').style.display = 'block'; 
-                        
+                        document.getElementById('escBtn').style.display = 'block';
+
                         // Hàm hiển thị route của chuyến đi, và hiển thị vị trí tài xế được cập nhật
                         viewDriverLocation(trip.driverId, sourceLocation, destinationLocation);
-                        
-                        document.getElementById('escBtn').addEventListener('click', function() {
+
+                        document.getElementById('escBtn').addEventListener('click', function () {
                             // Hàm ngắt kết nối websocket, unsubcribe kênh đã đăng ký
                             if (stompClient !== null) {
                                 if (subcription !== null) {
@@ -699,7 +705,7 @@
             stompClient.onConnect = function (frame) {
                 console.log('Connected: ' + frame);
                 // Đăng ký nhận vị trí từ tài xế khi kết nối websocket được bật
-                subcription = stompClient.subscribe('/topic/location-send-to-customer-web/' + driverId, function (message) {  
+                subcription = stompClient.subscribe('/topic/location-send-to-customer-web/' + driverId, function (message) {
                     const driverRequest = JSON.parse(message.body); // message(driverRequestDTO) có dạng : {driverId: 1234, latitude: 21.0285, longitude: 105.8542, speed: 50.0, timestamp: "02:54:15 09/20/2024"}
 
                     displayDriverOnMapV2(driverRequest.driverId, driverRequest.latitude, driverRequest.longitude); // marker lại vị trí tài xế trên bản đồ, mỗi khi nhận được vị trí mới từ tài xế -> Backend -> Customer Web.
@@ -718,12 +724,13 @@
         }
 
         function displayDriverOnMapV2(driverId, lat, lon) {
-            // Kiểm tra xem driver có dữ liệu lat và lon không
-            // if (lat && lon) {
-            //     L.marker([lat, lon]).addTo(map).bindPopup(`Driver`).openPopup();
-            // } else {
-            //     console.error(`Driver with ID  has invalid coordinates: lat = ${lat}, lon = ${lon}`);
-            // }
+            // Xóa tất cả các marker trước đó
+            for (let id in markers) {
+                if (markers[id]) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id]; // Xóa marker khỏi đối tượng markers
+                }
+            }
 
             const latLng = [lat, lon];
             // Nếu đã có marker của tài xế này, cập nhật vị trí của nó
@@ -742,27 +749,27 @@
 
         // Hàm đánh dấu vị trí cho chuyến đi khi khách hàng click vào nút "View Driver"
         function markLocationV2(loc_source, loc_destination) {
-           
-                // Xóa marker cũ của điểm đón
-                map.removeLayer(locSourceMarker);
-                delete locSourceMarker;
-                // Xóa marker cũ của điểm trả
-                map.removeLayer(locDestinationMarker);
-                delete locDestinationMarker;
-                // Xóa tuyến đường cũ
-                map.removeControl(routeLayer);
-                
-                // Thêm marker mới cho điểm đón
-                let lat = loc_source.lat;
-                let lon = loc_source.lon;
-                locSourceMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm đón').openPopup();
-                localStorage.setItem('loc_source', JSON.stringify({ lat, lon }));
-                
-                // Thêm marker mới cho điểm trả
-                lat = loc_destination.lat;
-                lon = loc_destination.lon;
-                locDestinationMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm trả').openPopup();
-                localStorage.setItem('loc_destination', JSON.stringify({ lat, lon }));
+
+            // Xóa marker cũ của điểm đón
+            map.removeLayer(locSourceMarker);
+            delete locSourceMarker;
+            // Xóa marker cũ của điểm trả
+            map.removeLayer(locDestinationMarker);
+            delete locDestinationMarker;
+            // Xóa tuyến đường cũ
+            map.removeControl(routeLayer);
+
+            // Thêm marker mới cho điểm đón
+            let lat = loc_source.lat;
+            let lon = loc_source.lon;
+            locSourceMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm đón').openPopup();
+            localStorage.setItem('loc_source', JSON.stringify({ lat, lon }));
+
+            // Thêm marker mới cho điểm trả
+            lat = loc_destination.lat;
+            lon = loc_destination.lon;
+            locDestinationMarker = L.marker([lat, lon]).addTo(map).bindPopup('Điểm trả').openPopup();
+            localStorage.setItem('loc_destination', JSON.stringify({ lat, lon }));
 
 
             // Kiểm tra và vẽ lại tuyến đường khi cả hai điểm đón và trả đã có
