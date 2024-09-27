@@ -14,12 +14,64 @@
             width: 100%;
         }
 
-        
-
         .hidden {
             display: none;
         }
 
+        /* CSS cơ bản cho bảng tripTable */
+        .trip-table {
+            table-layout: fixed; /* Cố định layout của bảng, cho phép điều chỉnh kích thước từng cột */
+        }
+
+        /* CSS cho tiêu đề bảng */
+        .trip-table th {
+            background-color: #4e67f8;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* CSS cho ô dữ liệu trong bảng */
+        .trip-table td:not(:last-child){
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden; /* Ẩn nội dung tràn */
+            text-overflow: ellipsis; /* Hiển thị dấu ba chấm khi nội dung bị cắt */
+            white-space: nowrap; /* Không xuống dòng, hiển thị trên cùng một dòng */
+        }
+
+        /* Thiết lập width với đơn vị % cho từng cột */
+        .trip-table th:nth-child(1), /* Cột Trip ID */
+        .trip-table td:nth-child(1) {
+            width: 10%;
+        }
+
+        .trip-table th:nth-child(2), /* Cột Status */
+        .trip-table td:nth-child(2) {
+            width: 5%;
+        }
+
+        .trip-table th:nth-child(3), /* Cột Source */
+        .trip-table td:nth-child(3) {
+            width: 25%;
+        }
+
+        .trip-table th:nth-child(4), /* Cột Destination */
+        .trip-table td:nth-child(4) {
+            width: 25%;
+        }
+
+        .trip-table th:nth-child(5), /* Cột Created At */
+        .trip-table td:nth-child(5) {
+            width: 10%;
+        }
+
+        .trip-table th:nth-child(6), /* Cột Action */
+        .trip-table td:nth-child(6) {
+            width: 25%; /* Độ rộng của cột Action */
+            /* white-space: nowrap;  Giữ tất cả nút trên cùng một dòng */
+        }
 
         table {
             width: 100%;
@@ -39,7 +91,14 @@
             color: white;
         }
 
-        table tbody tr:nth-child(even) {
+        /* table td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+        } */
+
+        /* table tbody tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
@@ -49,8 +108,7 @@
 
         tr:hover {
             background-color: #f1f1f1;
-        }
-
+        } */
 
         body {
             font-family: Arial, sans-serif;
@@ -90,6 +148,29 @@
             flex-direction: row; /* Chia bố cục của content theo chiều ngang */
             box-sizing: border-box;
             padding: 20px;
+        }
+
+        /* My Trip */
+        #tripList {
+        position: absolute; /* Vị trí tuyệt đối để có thể di chuyển tự do */
+        top: 20%; /* Căn chỉnh từ phía trên */
+        left: 50%; /* Căn chỉnh từ phía trái */
+        transform: translate(-50%, 0); /* Đưa phần tử về giữa màn hình theo chiều ngang */
+        width: 75%; /* Chiều rộng của tripList */
+        max-height: 65%; /* Đặt chiều cao tối đa để tránh tràn màn hình */
+        overflow-y: auto; /* Thêm thanh cuộn dọc nếu danh sách quá dài */
+        background-color: #fff; /* Nền trắng cho danh sách */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho phần tử */
+        border-radius: 8px; /* Bo góc */
+        padding: 20px; /* Khoảng cách padding */
+        z-index: 1002; /* Đưa phần tử lên trên cùng */
+        display: none; /* Ẩn mặc định, chỉ hiện khi click vào nút "My Trip" */
+        }
+
+        #tripListHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
@@ -540,9 +621,14 @@
 
         /* Nút đóng form (X) */
         .close-btn {
-            font-size: 1.5em;
+            font-size: 2em;
             cursor: pointer;
             color: #666;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #ff0000;
+            transform: scale(1.5); /* Phóng to nhẹ*/
         }
 
         /* Hiển thị chi tiết thanh toán */
@@ -707,7 +793,6 @@
        <!-- Phần Content -->
        <div id="content">
            <!-- Phần 1 Search Form-->
-           <!-- Phần 1 Search Form-->
            <div id="search-form">
                <h2>Đặt xe</h2>
    
@@ -815,50 +900,7 @@
    
    
            
-           <!-- Hiển thị danh sách các chuyến đi (tab khác)-->
-           <div id="tripList" style="display: none;">
-               <table id="tripTable" class="trip-table">
-                   <thead>
-                       <tr>
-                           <th>Trip ID</th>
-                           <th>Status</th>
-                           <th>Source</th>
-                           <th>Destination</th>
-                           <th>Created At</th>
-                           <th>Action</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <!-- Hàng dữ liệu sẽ được chèn vào đây -->
-                   </tbody>
-               </table>
-               <div class="turn-page">
-                   <button id="backBtn" style="display: none;">Back</button>
-                   <button id="loadMoreBtn" style="display: none;">Load More</button>
-               </div>
-   
-               <!-- SeeDetail giữa bảng My Trip (z-index) -->
-               <div id="tripDetail"></div>
-   
-               <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
-               <div id="tripRating" style="display: none;">
-                   <div id="ratingForm">
-                       <label for="rating">Rating:</label>
-                       <select id="rating">
-                           <option value="1">1 Star</option>
-                           <option value="2">2 Stars</option>
-                           <option value="3">3 Stars</option>
-                           <option value="4">4 Stars</option>
-                           <option value="5">5 Stars</option>
-                       </select><br>
-       
-                       <label for="feedback">Feedback:</label>
-                       <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
-       
-                       <button id="sendRatingBtn">Send</button>
-                   </div>
-               </div>
-           </div>
+           
    
    
            
@@ -871,6 +913,58 @@
    
            <!-- 3 Hiển thị bản đồ: trước khi search tỉ lệ 3:7 với phần 1, sau khi search: tỉ lệ 3:3:4 với phần 1 và 2-->
            <div id="map"></div>
+       </div>
+
+       <!-- My Trip -->
+       <div id="overlay2" class="overlay" style="display: none;">
+           <div id="tripList" style="display: none;">
+                <div id="tripListHeader">
+                    <h2>Trips Created</h2>
+                    <span id="closeTripList" class="close-btn">&times;</span>
+                </div>
+                <table id="tripTable" class="trip-table">
+                    <thead>
+                        <tr>
+                            <th>Trip ID</th>
+                            <th>Status</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Hàng dữ liệu sẽ được chèn vào đây -->
+                    </tbody>
+                </table>
+                <div class="turn-page">
+                    <button id="backBtn" style="display: none;">Back</button>
+                    <button id="loadMoreBtn" style="display: none;">Load More</button>
+                </div>
+    
+                <!-- SeeDetail giữa bảng My Trip (z-index) -->
+                <div id="tripDetail"></div>
+    
+                <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
+                <div id="tripRating" style="display: none;">
+                    <div id="ratingForm">
+                        <label for="rating">Rating:</label>
+                        <select id="rating">
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select><br>
+    
+                        <label for="feedback">Feedback:</label>
+                        <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+    
+                        <button id="sendRatingBtn">Send</button>
+                    </div>
+                </div>
+            </div>
+
        </div>
     </div>
 
@@ -1402,6 +1496,19 @@
         });
         document.getElementById('closePaymentForm').addEventListener('click', hidePaymentForm);
 
+
+        // Hàm ẩn My Trip khi ấn lớp phủ 'overlay2' hoặc 'close'
+        function hidenTripList() {
+            document.getElementById('tripList').style.display = 'none'
+            document.getElementById('overlay2').style.display = 'none';
+        }
+        document.getElementById('overlay2').addEventListener('click', function(event) {
+            if (event.target.id === 'overlay2') {
+                hidenTripList();
+            }
+        });
+        document.getElementById('closeTripList').addEventListener('click', hidenTripList);
+        
         // Hàm xử lý sau khi customer chọn tài xế từ danh sách rồi nhập payment form
         function handleDriverSelection(driver, paymentRequest) {
             const loc_source = JSON.parse(localStorage.getItem('loc_source'));
@@ -1567,6 +1674,7 @@
         let offset = 0;
 
         document.getElementById("myTripBtn").addEventListener("click", function () {
+            document.getElementById('overlay2').style.display = 'block';
             fetchTrips();
         });
 
@@ -1586,11 +1694,7 @@
 
                     offset == 0 ? document.getElementById("backBtn").style.display = 'none' : document.getElementById("backBtn").style.display = 'block';
 
-                    if (data.length === 10) {
-                        document.getElementById("loadMoreBtn").style.display = 'block'; // Hiển thị nút "Load More" nếu còn dữ liệu
-                    } else {
-                        document.getElementById("loadMoreBtn").style.display = 'none'; // Ẩn nút nếu không còn dữ liệu
-                    }
+                    document.getElementById('loadMoreBtn').style.display = (data.length === 6) ? 'block' : 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
