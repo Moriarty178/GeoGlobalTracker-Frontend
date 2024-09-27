@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <style>
         #map {
-            height: 900px;
+            height: 100%;
             width: 100%;
         }
 
@@ -56,8 +56,40 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
             background-color: #f4f4f4;
+            height: 100%;
+        }
+
+        /* Bố cục tổng thể cho trang */
+        body, html {
+            height: 100%; /* Đảm bảo body và html chiếm toàn bộ chiều cao của cửa sổ */
+        }
+
+        /* Tạo bố cục tổng thể giữa header và content */
+        #container {
+            display: flex;
+            flex-direction: column; /* Thiết lập hướng dọc cho bố cục */
+            height: 100%; /* Chiều cao của container chiếm toàn bộ màn hình */
+        }
+
+        /* Header chiếm 10% chiều cao */
+        #header {
+            flex: 0 0 10%; /* Chiều cao của header là 10% */
+            background-color: #f8f9fa; /* Màu nền tùy chỉnh cho header */
+            padding: 10px; /* Khoảng cách padding trong header */
+            box-sizing: border-box;
+            border-bottom: 1px solid #ddd; /* Đường viền ngăn cách */
+            /* margin: 20px; */
+        }
+
+        /* Content chiếm 90% chiều cao */
+        #content {
+            flex: 1; /* Chiều cao của content chiếm phần còn lại (90%) */
+            display: flex; /* Thiết lập flex để quản lý các phần tử bên trong */
+            flex-direction: row; /* Chia bố cục của content theo chiều ngang */
+            box-sizing: border-box;
+            padding: 20px;
         }
 
         h1 {
@@ -96,7 +128,38 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        /* Thiết lập bố cục tổng thể cho content */
         #content {
+            display: flex; /* Sử dụng Flexbox để tạo bố cục ngang */
+            height: 90vh; /* Chiều cao của content bằng chiều cao của màn hình */
+        }
+
+        /* Phần 1: Search Form */
+        #search-form {
+            flex: 0 0 25%; /* Chiều rộng của phần search-form chiếm 25% */
+            padding: 20px; /* Khoảng cách padding trong form */
+            border-right: 1px solid #ddd; /* Đường viền ngăn cách */
+            box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+        }
+
+        /* Phần 2: Search Results */
+        #search-results {
+            flex: 0 0 25%; /* Chiều rộng của phần search-results chiếm 25% */
+            padding: 20px; /* Khoảng cách padding trong results */
+            border-right: 1px solid #ddd; /* Đường viền ngăn cách */
+            box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+            overflow-y: auto; /* Hiển thị thanh cuộn nếu nội dung quá dài */
+        }
+
+        /* Phần 3: Map */
+        #map {
+            flex: 1; /* Chiếm phần còn lại, tương đương với 50% */
+            box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+            padding: 20px; /* Khoảng cách padding trong map */
+        }
+
+        /* #content {
             display: flex;
         }
         #search-form {
@@ -107,7 +170,7 @@
         #search-results {
             font-size: 24px;
             border: 1px solid #ddd;
-        }
+        } */
 
         /* --------------button---------- */
 
@@ -373,7 +436,7 @@
             display: flex; /* Sử dụng flexbox để xếp các phần theo chiều ngang */
             align-items: center; /* Căn giữa theo trục dọc */
             background-color: #ffffff; /* Màu nền */
-            padding: 10px; /* Khoảng cách bên trong */
+            padding-right: 10px; /* Khoảng cách bên trong */
             margin: 10px 0; /* Khoảng cách giữa các tài xế */
             border: 1px solid #ddd; /* Đường viền */
             border-radius: 8px; /* Bo góc */
@@ -406,13 +469,13 @@
         }
 
         .driver-name {
-            font-size: 16px; /* Kích thước chữ của tên tài xế */
+            font-size: 24px; /* Kích thước chữ của tên tài xế */
             font-weight: bold; /* In đậm */
             margin: 0; /* Bỏ khoảng cách mặc định */
         }
 
         .driver-distance {
-            font-size: 14px; /* Kích thước chữ của khoảng cách */
+            font-size: 16px; /* Kích thước chữ của khoảng cách */
             color: #555; /* Màu chữ nhạt hơn */
             margin: 5px 0 0 0; /* Khoảng cách trên */
         }
@@ -535,6 +598,48 @@
             background-color: #c82333;
         }
 
+        /* Định dạng cho Payment Method */
+        .payment-method {
+            display: flex;
+            align-items: center; /*căn dọc*/
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+        }
+
+        .payment-method:hover {
+            background-color: #f0f0f0;
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .method-name {
+            font-size: 20px;
+        }
+
+        .method-radio {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .method-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        label {
+            text-align: left;
+            margin: 15px 0 5px 0;
+        }
+
 
     </style>
 </head>
@@ -573,173 +678,200 @@
     </div>
 
     <!-- ********************************************************************************** -->
-     <!-- Phần Header -->
-    <div id="header">
-        <header>
-            <!-- Logo và tên ứng dụng -->
-            <div id="app-logo">
-                <img src="/asset/img/avatar.jpg" alt="App Logo" style="height: 40px; vertical-align: middle;">
-                <span>SaveRoad</span>
-            </div>
-            <!-- Các chức năng bên phải: My Trip và Avatar -->
-            <div id="about-me">
-                <button id="myTripBtn" class="header-btn">My Trip</button>
-                <!-- Thêm biểu tượng Avatar với menu dropdown -->
-                <div class="dropdown">
-                    <button class="header-btn dropdown-btn">
-                        <img src="/asset/img/avatar.jpg" alt="Avatar" style="height: 40px; border-radius: 50%;">
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="#">Information</a>
-                        <a href="#">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </div>
-    <!-- Phần Content -->
-    <div id="content">
-        <!-- Phần 1 Search Form-->
-        <!-- Phần 1 Search Form-->
-        <div id="search-form">
-            <h2>Đặt xe</h2>
+    <div id="container">
 
-            <!-- Container bọc lấy ô input và danh sách gợi ý -->
-            <div class="input-container">
-                <!-- <label for="loc_source">Điểm đón:</label> -->
-                <div class="input-with-icon">
-                    <span class="icon">📍</span> <!-- Icon cho điểm đón -->
-                    <input type="text" id="loc_source" placeholder="Nhập điểm đón">
-                </div>
-                <ul id="sourceSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm đón -->
-            </div>
-            <br>
-
-            <!-- Container bọc lấy ô input và danh sách gợi ý -->
-            <div class="input-container">
-                <!-- <label for="loc_destination">Điểm trả:</label> -->
-                <div class="input-with-icon">
-                    <span class="icon">🏁</span> <!-- Icon cho điểm trả -->
-                    <input type="text" id="loc_destination" placeholder="Nhập điểm trả">
-                </div>
-                <ul id="destinationSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm trả -->
-            </div>
-            <br>
-
-            <div class="turn-page">
-                <!-- Nút Search -->
-                <button id="searchBtn">Search</button>
-                <!-- Nút Create -->
-                <button id="createBtn">Create</button>
-            </div>
-        </div>
-
-
-
-        <!-- Phần 2 Search Results-->
-        <div id="search-results">
-            <h2>Chọn chuyến xe</h2>
-            <!-- Thông tin chuyến đi: distance, price -->
-            <div id="routeInfo"></div>
-
-            <!-- Phần hiển thị danh sách tài xế backend gửi lên: mỗi tài xế hiển thị trong một khung nhỏ, ở đầu có icon 'driver', có hiệu ứng hover và focus -->
-            <ul id="driverList"></ul>
-
-            <!-- Lớp phủ overlay -->
-            <div id="overlay" class="overlay" style="display: none;">
-                <!-- Khi Doubleclick vào 1 tài xế thì form thanh toán này hiện ra trên nền, chính giữa màn hình-->
-                <div id="tripPayment" class="payment-popup" style="display: none;">
-                    <!-- Header payment -->
-                    <div id="paymentFormHeader">
-                        <h2>Payment Detail</h2>
-                        <!-- nút "X" -->
-                         <span id="closePaymentForm" class="close-btn">&times;</span>
-                    </div>
-                    <!-- Content payment -->
-                    <div id="paymentForm">
-                        <label for="payment">Payment</label>
-                        <div id="paymentDetail">
-                            <!-- Price, Voucher, Total  -->
-                        </div>
-
-                        <label for="method">Payment Method</label>
-                        <select id="method">
-                            <option value="1">Cash</option>
-                            <option value="2">E-Wallet</option>
-                            <option value="3">Banking Online</option>
-                        </select>
-    
-                        <div class="turn-page">
-                            <!-- Button Confirm -->
-                            <button id="payNowBtn" class="btn-confirm">Pay now</button>
-                            <button id="okBtn" class="btn-cancel">Pay later</button>
-    
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        
-        <!-- Hiển thị danh sách các chuyến đi (tab khác)-->
-        <div id="tripList" style="display: none;">
-            <table id="tripTable" class="trip-table">
-                <thead>
-                    <tr>
-                        <th>Trip ID</th>
-                        <th>Status</th>
-                        <th>Source</th>
-                        <th>Destination</th>
-                        <th>Created At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Hàng dữ liệu sẽ được chèn vào đây -->
-                </tbody>
-            </table>
-            <div class="turn-page">
-                <button id="backBtn" style="display: none;">Back</button>
-                <button id="loadMoreBtn" style="display: none;">Load More</button>
-            </div>
-
-            <!-- SeeDetail giữa bảng My Trip (z-index) -->
-            <div id="tripDetail"></div>
-
-            <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
-            <div id="tripRating" style="display: none;">
-                <div id="ratingForm">
-                    <label for="rating">Rating:</label>
-                    <select id="rating">
-                        <option value="1">1 Star</option>
-                        <option value="2">2 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="5">5 Stars</option>
-                    </select><br>
-    
-                    <label for="feedback">Feedback:</label>
-                    <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
-    
-                    <button id="sendRatingBtn">Send</button>
-                </div>
-            </div>
-        </div>
-
-
-        
-
-
-        
-
-        <!-- Trên cùng bên phải của map -->
-        <button id="escBtn" style="display: none;">Esc</button>
-
-        <!-- 3 Hiển thị bản đồ: trước khi search tỉ lệ 3:7 với phần 1, sau khi search: tỉ lệ 3:3:4 với phần 1 và 2-->
-        <div id="map"></div>
+        <!-- Phần Header -->
+       <div id="header">
+           <header>
+               <!-- Logo và tên ứng dụng -->
+               <div id="app-logo">
+                   <img src="/asset/img/avatar.jpg" alt="App Logo" style="height: 40px; vertical-align: middle;">
+                   <span>SaveRoad</span>
+               </div>
+               <!-- Các chức năng bên phải: My Trip và Avatar -->
+               <div id="about-me">
+                   <button id="myTripBtn" class="header-btn">My Trip</button>
+                   <!-- Thêm biểu tượng Avatar với menu dropdown -->
+                   <div class="dropdown">
+                       <button class="header-btn dropdown-btn">
+                           <img src="/asset/img/avatar.jpg" alt="Avatar" style="height: 40px; border-radius: 50%;">
+                       </button>
+                       <div class="dropdown-content">
+                           <a href="#">Information</a>
+                           <a href="#">Logout</a>
+                       </div>
+                   </div>
+               </div>
+           </header>
+       </div>
+       <!-- Phần Content -->
+       <div id="content">
+           <!-- Phần 1 Search Form-->
+           <!-- Phần 1 Search Form-->
+           <div id="search-form">
+               <h2>Đặt xe</h2>
+   
+               <!-- Container bọc lấy ô input và danh sách gợi ý -->
+               <div class="input-container">
+                   <!-- <label for="loc_source">Điểm đón:</label> -->
+                   <div class="input-with-icon">
+                       <span class="icon">📍</span> <!-- Icon cho điểm đón -->
+                       <input type="text" id="loc_source" placeholder="Nhập điểm đón">
+                   </div>
+                   <ul id="sourceSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm đón -->
+               </div>
+               <br>
+   
+               <!-- Container bọc lấy ô input và danh sách gợi ý -->
+               <div class="input-container">
+                   <!-- <label for="loc_destination">Điểm trả:</label> -->
+                   <div class="input-with-icon">
+                       <span class="icon">🏁</span> <!-- Icon cho điểm trả -->
+                       <input type="text" id="loc_destination" placeholder="Nhập điểm trả">
+                   </div>
+                   <ul id="destinationSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm trả -->
+               </div>
+               <br>
+   
+               <div class="turn-page">
+                   <!-- Nút Search -->
+                   <button id="searchBtn">Search</button>
+                   <!-- Nút Create -->
+                   <button id="createBtn">Create</button>
+               </div>
+           </div>
+   
+   
+   
+           <!-- Phần 2 Search Results-->
+           <div id="search-results">
+               <h2>Chọn chuyến xe</h2>
+               <!-- Thông tin chuyến đi: distance, price -->
+               <div id="routeInfo"></div>
+   
+               <!-- Phần hiển thị danh sách tài xế backend gửi lên: mỗi tài xế hiển thị trong một khung nhỏ, ở đầu có icon 'driver', có hiệu ứng hover và focus -->
+               <ul id="driverList"></ul>
+   
+               <!-- Lớp phủ overlay -->
+               <div id="overlay" class="overlay" style="display: none;">
+                   <!-- Khi Doubleclick vào 1 tài xế thì form thanh toán này hiện ra trên nền, chính giữa màn hình-->
+                   <div id="tripPayment" class="payment-popup" style="display: none;">
+                       <!-- Header payment -->
+                       <div id="paymentFormHeader">
+                           <h2>Payment Detail</h2>
+                           <!-- nút "X" -->
+                            <span id="closePaymentForm" class="close-btn">&times;</span>
+                       </div>
+                       <!-- Content payment -->
+                       <div id="paymentForm">
+                           <label for="payment">Payment</label>
+                           <div id="paymentDetail">
+                               <!-- Price, Voucher, Total  -->
+                           </div>
+   
+                           <label for="method">Payment Method</label>
+                           <!-- <select id="method">
+                               <option value="1">Cash</option>
+                               <option value="2">E-Wallet</option>
+                               <option value="3">Banking Online</option>
+                           </select> -->
+                           <div class="payment-method" data-method="1">
+                               <input type="radio" name="paymentMethod" class="method-radio" id="cash">
+                               <label for="cash" class="method-label">
+                                   <img src="/asset/img/cash.png" alt="Cash" class="method-icon">
+                                   <span class="method-name">Cash</span>
+   
+                               </label>
+                           </div>
+                           <div class="payment-method" data-method="2">
+                               <input type="radio" name="paymentMethod" class="method-radio" id="e-wallet">
+                               <label for="e-wallet" class="method-label">
+                                   <img src="/asset/img/wallet3.png" alt="E-Wallet" class="method-icon">
+                                   <span class="method-name">E-Wallet</span>
+   
+                               </label>
+                           </div>
+                           <div class="payment-method" data-method="3">
+                               <input type="radio" name="paymentMethod" class="method-radio" id="banking-online">
+                               <label for="banking-online" class="method-label">
+                                   <img src="/asset/img/banking-online.png" alt="Banking" class="method-icon">
+                                   <span class="method-name">Banking</span>
+   
+                               </label>
+                           </div>
+       
+                           <div class="turn-page">
+                               <!-- Button Confirm -->
+                               <button id="payNowBtn" class="btn-confirm">Pay now</button>
+                               <button id="okBtn" class="btn-cancel">Pay later</button>
+       
+                           </div>
+                       </div>
+                   </div>
+   
+               </div>
+   
+           </div>
+   
+   
+           
+           <!-- Hiển thị danh sách các chuyến đi (tab khác)-->
+           <div id="tripList" style="display: none;">
+               <table id="tripTable" class="trip-table">
+                   <thead>
+                       <tr>
+                           <th>Trip ID</th>
+                           <th>Status</th>
+                           <th>Source</th>
+                           <th>Destination</th>
+                           <th>Created At</th>
+                           <th>Action</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <!-- Hàng dữ liệu sẽ được chèn vào đây -->
+                   </tbody>
+               </table>
+               <div class="turn-page">
+                   <button id="backBtn" style="display: none;">Back</button>
+                   <button id="loadMoreBtn" style="display: none;">Load More</button>
+               </div>
+   
+               <!-- SeeDetail giữa bảng My Trip (z-index) -->
+               <div id="tripDetail"></div>
+   
+               <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
+               <div id="tripRating" style="display: none;">
+                   <div id="ratingForm">
+                       <label for="rating">Rating:</label>
+                       <select id="rating">
+                           <option value="1">1 Star</option>
+                           <option value="2">2 Stars</option>
+                           <option value="3">3 Stars</option>
+                           <option value="4">4 Stars</option>
+                           <option value="5">5 Stars</option>
+                       </select><br>
+       
+                       <label for="feedback">Feedback:</label>
+                       <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+       
+                       <button id="sendRatingBtn">Send</button>
+                   </div>
+               </div>
+           </div>
+   
+   
+           
+   
+   
+           
+   
+           <!-- Trên cùng bên phải của map -->
+           <button id="escBtn" style="display: none;">Esc</button>
+   
+           <!-- 3 Hiển thị bản đồ: trước khi search tỉ lệ 3:7 với phần 1, sau khi search: tỉ lệ 3:3:4 với phần 1 và 2-->
+           <div id="map"></div>
+       </div>
     </div>
 
 
@@ -1140,10 +1272,15 @@
                 const li = document.createElement('li');
                 li.className = 'driver-item';
 
+                const driverImg = document.createElement('img');
+                driverImg.src = '/asset/img/car.png';
+                driverImg.className = 'driver-icon';
+                driverImg.alt = 'Driver Icon';
+                driverImg.style.width = '80px';
                 // Tạo icon driver
-                const driverIcon = document.createElement('i');
-                driverIcon.classList = 'driver-icon';
-                driverIcon.textContent = '🚗';
+                // const driverIcon = document.createElement('i');
+                // driverIcon.classList = 'driver-icon';
+                // driverIcon.textContent = '🚗';
 
                 // Tạo div driver-info
                 const driverInfo = document.createElement('div');
@@ -1169,7 +1306,7 @@
                 // li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance.toFixed(2)} km - Price: ${(routeInfo.distance * 1.2).toFixed(2)} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
                 
                 // Thêm icon và info vào li
-                li.appendChild(driverIcon);
+                li.appendChild(driverImg);
                 li.appendChild(driverInfo);
 
                 // Event click
@@ -1206,34 +1343,49 @@
 
             // Attach event listener for "Pay Now"
             newPayNowBtn.addEventListener('click', function () {
-                const methodValue = document.getElementById('method').value;
-                const paymentRequest = {
-                    price: routeInfo.distance * 1.2,
-                    voucher: 1.5,
-                    total: routeInfo.distance * 1.2 - 1.5,
-                    method: methodValue,
-                    status: "Paid"
-                };
+                // Lấy giá trị của phương thức thanh toán đã chọn
+                const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                if (selectedMethod) {
+                    const methodValue = selectedMethod.parentElement.getAttribute('data-method');
 
-                document.getElementById('tripPayment').style.display = 'none';
-                hidePaymentForm();
-                handleDriverSelection(driver, paymentRequest);
+                    // function() hiển thị mã QR, ... để thanh toán "Pay Now".
+                    const paymentRequest = {
+                        price: routeInfo.distance * 1.2,  // Giá dựa trên khoảng cách
+                        voucher: 1.5,                     // Giảm giá (có thể sửa đổi)
+                        total: routeInfo.distance * 1.2 - 1.5, // Tổng cộng sau khi giảm giá
+                        method: methodValue,              // Phương thức thanh toán đã chọn
+                        status: "Paid"                    // Trạng thái thanh toán
+                    };
+
+                    document.getElementById('tripPayment').style.display = 'none';
+                    hidePaymentForm();
+                    handleDriverSelection(driver, paymentRequest);
+                } else {
+                    alert('Please select a payment method!'); // Hiển thị thông báo nếu chưa chọn phương thức thanh toán
+                }
             });
 
             // Attach event listener for "Ok"
             newOkBtn.addEventListener('click', function () {
-                const methodValue = document.getElementById('method').value;
-                const paymentRequest = {
-                    price: routeInfo.distance * 1.2,
-                    voucher: 1.5,
-                    total: routeInfo.distance * 1.2 - 1.5,
-                    method: methodValue,
-                    status: "Unpaid"
-                };
+                // Lấy giá trị của Payment Method đã chọn
+                const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                if (selectedMethod) { // nếu đã chọn
+                    const methodValue = selectedMethod.parentElement.getAttribute('data-method');
 
-                document.getElementById('tripPayment').style.display = 'none';
-                hidePaymentForm();
-                handleDriverSelection(driver, paymentRequest);
+                    const paymentRequest = {
+                        price: routeInfo.distance * 1.2,
+                        voucher: 1.5,
+                        total: routeInfo.distance * 1.2 - 1.5,
+                        method: methodValue,
+                        status: "Unpaid"
+                    };
+    
+                    document.getElementById('tripPayment').style.display = 'none';
+                    hidePaymentForm();
+                    handleDriverSelection(driver, paymentRequest);
+                } else {
+                    alert('Please select a payment method!');
+                }
             });
         }
 
@@ -1290,13 +1442,15 @@
 
         document.getElementById('createBtn').addEventListener('click', function () {
             const routeInfo = JSON.parse(localStorage.getItem('route_info'));
-            document.getElementById('tripPayment').style.display = 'block';
+           
+            document.getElementById('tripPayment').style.display = 'block'; 
+            document.getElementById('overlay').style.display = 'block';
             const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
-            detailDiv.innerHTML = ''; //xóa ds cũ
+            detailDiv.innerHTML = ''; // xóa ds cũ
             detailDiv.innerHTML = `
-                <p>Price: ${(routeInfo.distance * 1.2).toFixed(2)} $</p>
-                <p>Voucher: -${1.5} $</p>
-                <p>Total: ${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</p>
+                <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
+                <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
+                <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
             `;
 
             // Hàm xử lý khi customer nhập payment form xong và ấn "Pay Now" hoặc "Ok"
@@ -1304,6 +1458,7 @@
 
         });
 
+        
 
         // Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form
         function showPaymentFormV2() {
@@ -1319,36 +1474,52 @@
             const newPayNowBtn = document.getElementById('payNowBtn');
             const newOkBtn = document.getElementById('okBtn');
 
-            // Attach event listener for "Pay Now"
+            // "Pay Now"
             newPayNowBtn.addEventListener('click', function () {
-                const methodValue = document.getElementById('method').value;
-                const paymentRequest = {
-                    price: routeInfo.distance * 1.2,
-                    voucher: 1.5,
-                    total: routeInfo.distance * 1.2 - 1.5,
-                    method: methodValue,
-                    status: "Paid"
-                };
+                // Lấy giá trị của phương thức thanh toán đã chọn
+                const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                if (selectedMethod) {
+                    const methodValue = selectedMethod.parentElement.getAttribute('data-method');
 
-                document.getElementById('tripPayment').style.display = 'none';
+                    // function() hiển thị mã QR, ... để thanh toán "Pay Now".
+                    const paymentRequest = {
+                        price: routeInfo.distance * 1.2,  // Giá dựa trên khoảng cách
+                        voucher: 1.5,                     // Giảm giá (có thể sửa đổi)
+                        total: routeInfo.distance * 1.2 - 1.5, // Tổng cộng sau khi giảm giá
+                        method: methodValue,              // Phương thức thanh toán đã chọn
+                        status: "Paid"                    // Trạng thái thanh toán
+                    };
 
-                handleDriverSelectionV2(paymentRequest);
+                    document.getElementById('tripPayment').style.display = 'none';
+                    hidePaymentForm();
+                    handleDriverSelectionV2(paymentRequest);
+                } else {
+                    alert('Please select a payment method!'); // Hiển thị thông báo nếu chưa chọn phương thức thanh toán
+                }
             });
 
-            // Attach event listener for "Ok"
+            // "Pay Later"
             newOkBtn.addEventListener('click', function () {
-                const methodValue = document.getElementById('method').value;
-                const paymentRequest = {
-                    price: routeInfo.distance * 1.2,
-                    voucher: 1.5,
-                    total: routeInfo.distance * 1.2 - 1.5,
-                    method: methodValue,
-                    status: "Unpaid"
-                };
+                // Lấy giá trị của phương thức thanh toán đã chọn
+                const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                if (selectedMethod) {
+                    const methodValue = selectedMethod.parentElement.getAttribute('data-method');
 
-                document.getElementById('tripPayment').style.display = 'none';
+                    // function() hiển thị mã QR, ... để thanh toán "Pay Now".
+                    const paymentRequest = {
+                        price: routeInfo.distance * 1.2,  // Giá dựa trên khoảng cách
+                        voucher: 1.5,                     // Giảm giá (có thể sửa đổi)
+                        total: routeInfo.distance * 1.2 - 1.5, // Tổng cộng sau khi giảm giá
+                        method: methodValue,              // Phương thức thanh toán đã chọn
+                        status: "Unpaid"                    // Trạng thái thanh toán
+                    };
 
-                handleDriverSelectionV2(paymentRequest);
+                    document.getElementById('tripPayment').style.display = 'none';
+                    hidePaymentForm();
+                    handleDriverSelectionV2(paymentRequest);
+                } else {
+                    alert('Please select a payment method!'); // Hiển thị thông báo nếu chưa chọn phương thức thanh toán
+                }
             });
         }
 
