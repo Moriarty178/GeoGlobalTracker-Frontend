@@ -1,4 +1,5 @@
-// -------------------------------- Loin/Sign up ---------------------------------
+// -------------------------------- Loin/Sign up -----okokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkooooooooooooooooookkkkkkkkkkkkkkkkkkkkk----------------------------
+
 
 // URL của backend API cho đăng nhập và đăng ký
 const API_BASE_URL = 'http://localhost:8080/api/auth';//AuthController(BE)
@@ -17,19 +18,15 @@ function login() {
         .then(response => response.json())
         .then(data => {
             const jwt = data.jwt;
-            const driverId = data.driverId;
+            const driverId = data.id;
 
             if (jwt && driverId) {
                 localStorage.setItem('jwt', jwt);
                 localStorage.setItem('driverId', driverId);//lưu driverId
-                document.getElementById('login-message').textContent = 'Login successful!';
+                // document.getElementById('login-message').textContent = 'Login successful!';
+                afterLoginSuccess();
 
                 initializeWebSocket(driverId); // Gọi hàm kết nối WebSocket sau khi đăng nhập thành công
-                document.getElementById('login-form').classList.add('hidden');
-                document.getElementById('signup-form').classList.add('hidden');
-                document.getElementById('status').classList.remove('hidden');
-                document.getElementById('location').classList.remove('hidden');
-                document.getElementById('alerts').classList.remove('hidden');
             } else {
                 document.getElementById('login-message').textContent = 'Login failed!';
             }
@@ -38,6 +35,8 @@ function login() {
         .catch(error => {
             console.error('Error during login:', error);
             document.getElementById('login-message').textContent = 'Login failed!';
+            document.getElementById('login-message').style.display = 'block';
+
         });
 }
 
@@ -61,6 +60,7 @@ function signup() {
             document.getElementById('signup-message').textContent = message;
             if (message === 'Registered successfully!') {
                 document.getElementById('signup-form').classList.add('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
             }
         })
         .catch(error => {
@@ -72,6 +72,7 @@ function signup() {
 // Hàm đăng xuất
 function logout() {
     const driverId = localStorage.getItem('driverId');
+    console.log('driverId:', driverId);
     fetch(`http://localhost:8080/api/logout`, {
         method: 'POST',
         headers: {
@@ -84,11 +85,7 @@ function logout() {
             if (response.ok) {
                 localStorage.removeItem('jwt');
                 localStorage.removeItem('driverId');
-
-                document.getElementById('login-form').classList.remove('hidden');
-                document.getElementById('status').classList.add('hidden');
-                document.getElementById('location').classList.add('hidden');
-                document.getElementById('alerts').classList.add('hidden');
+                afterLogout();
 
                 console.log('Logout successful');
 
@@ -102,9 +99,76 @@ function logout() {
         .catch(error => console.error('Logout failed:', error));
 }
 
-//Sự kiện trước khi thoát hoặc đóng tab
+// Đảm bảo rằng khi đăng xuất, các sự kiện được xóa bỏ
+function afterLogout() {
+// Reset lại trạng thái của các phần tử bên trong 'content'
+    document.getElementById('tripList').style.display = 'none';
+    document.getElementById('tripReceived').style.display = 'none';
+    // document.getElementById('tripDetail').innerHTML = ''; // Xóa nội dung chi tiết chuyến đi nếu có
+
+    // Xóa dữ liệu trong bảng nếu có
+    document.querySelector('#tripListTable tbody').innerHTML = '';
+    document.querySelector('#tripTable tbody').innerHTML = '';
+
+    // Cập nhật giao diện
+    document.getElementById('login-form').classList.remove('hidden');
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('logout-form').classList.add('hidden');
+    document.getElementById('location-display').classList.add('hidden');
+    document.getElementById('login-message').classList.add('hidden');//
+
+    
+    document.getElementById('content').classList.add('hidden');// Ẩn toàn bộ nội dung sau khi đăng xuất
+}
+
+// Gán lại sự kiện khi đăng nhập thành công
+function afterLoginSuccess() {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('logout-form').classList.remove('hidden');
+    document.getElementById('location-display').classList.remove('hidden');
+    
+    document.getElementById('content').classList.remove('hidden');// Hiển thị nội dung sau khi đăng nhập thành công
+    document.getElementById('tripListBtn').addEventListener('click', fetchTripList);// Gán sự kiện cho nút Trip List
+    document.getElementById('myTripBtn').addEventListener('click', fetchTripsReceived);// Gán sự kiện cho nút Trip Received
+}
+// Sự kiện trước khi thoát hoặc đóng tab
 window.addEventListener('beforeunload', function (e) {
-    logout();
+    // logout();
+});
+
+// Kiểm tra trạng thái đăng nhập khi tải trang
+window.onload = function() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+        // Nếu đã đăng nhập
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('signup-form').classList.add('hidden');
+        document.getElementById('logout-form').classList.remove('hidden');
+        document.getElementById('location-display').classList.remove('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        initializeWebSocket(localStorage.getItem('driverId'));
+    } else {
+        // Nếu chưa đăng nhập
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('signup-form').classList.add('hidden');
+        document.getElementById('logout-form').classList.add('hidden');
+        document.getElementById('location-display').classList.add('hidden');
+        document.getElementById('content').classList.add('hidden');
+    }
+};
+
+// Sự kiện cho nút chuyển đổi giữa Login và Signup
+document.getElementById('show-signup').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('signup-form').classList.remove('hidden');
+});
+
+document.getElementById('show-login').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('login-form').classList.remove('hidden');
 });
 
 
@@ -168,6 +232,8 @@ async function initializeWebSocket(driverId) {
         Điểm đón: ${driverRequest.loc_source.display_name}
         Điểm trả: ${driverRequest.loc_destination.display_name}
         Khoảng cách: ${driverRequest.distance} km`;
+
+        document.getElementById('request-driver').style.display = 'block';
 
         document.getElementById('request-info').textContent = requestInfo; // Hiển thị thông tin yêu cầu trên giao diện
 
@@ -237,7 +303,7 @@ async function initializeWebSocket(driverId) {
 
     //Kích hoạt kết nối khi đã thiết lập xong
     stompClient.activate();
-    lastTripStatuses = await getTripStatuses(driverId);
+    lastTripStatuses = await getTripStatuses(driverId); // thêm phần trả về khi không có chuyến đi nào fetch rỗng
 }
 
 

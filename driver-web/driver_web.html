@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,23 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 50px;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
         }
 
-        #status {
-            margin-bottom: 20px;
+        h1 {
+            color: #333;
         }
 
-        #location {
-            margin-bottom: 20px;
-        }
-
-        #alerts {
-            color: red;
-            font-weight: bold;
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .form-container {
@@ -31,120 +35,286 @@
         .form-container input {
             margin: 5px;
             padding: 10px;
-            width: 200px;
+            width: 90%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         .form-container button {
             padding: 10px 20px;
             margin-top: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px 10px 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #status,
+        #location,
+        #alerts {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
         }
 
         .hidden {
             display: none;
         }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .btn-group button {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        /* Container for trip lists */
+        #tripList,
+        #tripReceived {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fafafa;
+        }
+        #logout-button {
+            background-color: red;
+            color: white;
+        }
+
+        .turn-page {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* background button */
+        .turn-page button {
+            background-color: #0e00ff;
+        }
+
+        .turn-page button:hover {
+            background-color: #221b9d;
+        }
+
+        #tripListBtn {
+            background-color: #baba18;
+        }
+
+        #myTripBtn {
+            background-color: #ff2546;
+        }
+
+        .button-get-it {
+            background-color: #0e69c2;
+            color: white;
+        }
+
+        .button-see-detail {
+            background-color: #3b82f5;
+            color: white;
+        }
+
+        .button-cancel {
+            background-color: rgb(233, 49, 74);
+            color: white;
+        }
+
+        .button-received {
+            background-color: rgb(247, 161, 0);
+            columns: white;
+        }
+
+        .button-complete {
+            background-color: #23a644;
+            color: white;
+        }
+        
+
+        
     </style>
+
+    
 </head>
+
 <body>
 
+    <!-- Nút Đăng Xuất -->
+    <div id="logout-form" class="form-container hidden">
+        <!-- <h2>Đăng Xuất</h2> -->
+         <div class="turn-page">
+             <button id="logout-button" onclick="logout()">Đăng Xuất</button>
+             <div id="logout-message"></div>
+         </div>
+    </div>
+    
     <h1>Driver Web</h1>
-
     <!-- Đăng nhập form -->
     <div id="login-form" class="form-container">
-        <h2>Login</h2>
+        <h2>Đăng Nhập</h2>
         <input type="email" id="login-email" placeholder="Email" required />
-        <input type="password" id="login-password" placeholder="Password" required />
-        <button onclick="login()">Login</button>
+        <input type="password" id="login-password" placeholder="Mật khẩu" required />
+        <button id="login-button" onclick="login()">Đăng Nhập</button>
+        <p>Chưa có tài khoản? <a href="#" id="show-signup">Đăng ký</a></p>
         <div id="login-message"></div>
     </div>
 
     <!-- Đăng ký form -->
-    <div id="signup-form" class="form-container">
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-firstname" placeholder="First Name" required />
-        <input type="text" id="signup-lastname" placeholder="Last Name" required />
+    <div id="signup-form" class="form-container hidden">
+        <h2>Đăng Ký</h2>
+        <input type="text" id="signup-firstname" placeholder="First name" required />
+        <input type="text" id="signup-lastname" placeholder="Last name" required />
         <input type="email" id="signup-email" placeholder="Email" required />
-        <input type="password" id="signup-password" placeholder="Password" required />
-        <input type="text" id="signup-phone" placeholder="Phone Number" required />
-        <button onclick="signup()">Sign Up</button>
+        <input type="password" id="signup-password" placeholder="Mật khẩu" required />
+        <input type="text" id="signup-phone" placeholder="Số điện thoại" required />
+        <button onclick="signup()">Đăng Ký</button>
+        <p>Đã có tài khoản? <a href="#" id="show-login">Đăng nhập</a></p>
         <div id="signup-message"></div>
     </div>
-    <!-- Đăng xuất form -->
-     <div class="form-container">
-        <h2>Logout</h2>
-        <button onclick="logout()">Logout</button>
-        <div id="logout-message"></div>
-     </div>
 
-    <!-- Giao diện theo dõi vị trí -->
-    <div id="status" class="hidden">Status: Disconnected</div>
-    <div id="location" class="hidden">Location: Unknown</div>
-    <div id="alerts" class="hidden">Alerts: None</div>
+    
+
+    <!-- ************************************************************************************* -->
+    <!-- Giao diện theo dõi vị trí okokokkkkkkkkkooooooooooooooooooookkkkkkkkkkkk -->
+    <div id="location-display" class="hidden">
+        <div id="status">Status: Disconnected</div>
+        <div id="location">Location: Unknown</div>
+        <div id="alerts">Alerts: None</div>
+
+    </div>
 
     <!-- Hiển thị thông tin driverRequest mà backend gửi đến -->
-    <div id="request-info"></div>
+    <div id="content" class="hidden">
 
-    <button id="accept-button" style="display: none;">Chấp nhận</button>
-    <button id="deny-button" style="display: none;">Từ chối</button>
+        <div id="request-driver">
+            <div id="request-info"></div>
 
-     <!-- Nút Trip Received -->
-    <button id="myTripBtn">Trip Received</button>
-    <button id="backBtn" style="display: none;">Back</button>
-    <button id="loadmoreBtn" style="display: none;">Load More</button>
+            <button id="accept-button" style="display: none;">Chấp nhận</button>
+            <button id="deny-button" style="display: none;">Từ chối</button>
 
-    <!-- Nút Trip List  -->
-    <button id="tripListBtn">Trip List</button>
-    <button id="backListBtn" style="display: none;">Back List</button>
-    <button id="loadmoreListBtn" style="display: none;">Load More List</button>
+        </div>
 
-    <!-- Hiển thị danh sách chuyến đi tài xế có thể nhận thủ công -->
-     <div id="tripList" style="display: none;">
-        <table id="tripListTable" class="trip-list-table">
-            <thead>
-                <th>Trip ID</th>
-                <th>Status</th>
-                <th>Source</th>
-                <th>Destination</th>
-                <th>Distance</th>
-                <th>Total</th>
-                <th>Action</th>
-            </thead>
-            <tbody>
-                <!-- Hàng dữ liệu sẽ được chèn vào đây -->
-            </tbody>
-        </table>
-     </div>
+        <!-- Nút Trip List  -->
+        <button id="tripListBtn">Trip List</button>
+        <!-- Nút Trip Received okokokokokok-->
+        <button id="myTripBtn">Trip Received</button>
 
-    <!-- Hiển thị danh sách chuyến đi đã nhận (Trip Received) -->
-    <div id="tripReceived" style="display: none;">
-        <table id="tripTable" class="trip-table">
-            <thead>
-                <tr>
+        <!-- Hiển thị danh sách chuyến đi tài xế có thể nhận thủ công -->
+        <div id="tripList" class="hidden">
+            <table id="tripListTable" class="trip-list-table">
+                <thead>
                     <th>Trip ID</th>
                     <th>Status</th>
                     <th>Source</th>
-                    <th>Destiantion</th>
+                    <th>Destination</th>
                     <th>Distance</th>
+                    <th>Total</th>
                     <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Hàng dữ liệu sẽ được chèn vào đây -->
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <!-- Hàng dữ liệu sẽ được chèn vào đây -->
+                </tbody>
+            </table>
+            <div class="turn-page">
+                <button id="backListBtn" style="display: none;">Back List</button>
+                <button id="loadmoreListBtn" style="display: none;">Load More List</button>
 
-    <!-- Hiển thị thông tin chi tiết chuyến đi (SeeDetail) -->
-     <div id="tripDetail"></div>
+            </div>
+        </div>
+
+
+        <!-- Hiển thị danh sách chuyến đi đã nhận (Trip Received) -->
+        <div id="tripReceived" class="hidden">
+            <table id="tripTable" class="trip-table">
+                <thead>
+                    <tr>
+                        <th>Trip ID</th>
+                        <th>Status</th>
+                        <th>Source</th>
+                        <th>Destiantion</th>
+                        <th>Distance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Hàng dữ liệu sẽ được chèn vào đây -->
+                </tbody>
+            </table>
+            <div class="turn-page">
+                <button id="backBtn" style="display: none;">Back</button>
+                <button id="loadmoreBtn" style="display: none;">Load More</button>
+
+            </div>
+            <!-- Hiển thị thông tin chi tiết chuyến đi (SeeDetail) -->
+            <div id="tripDetail"></div>
+        </div>
+
+    </div>
 
     <!-- Bao gồm STOMP.js từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="driver_web.js"></script>
 
     <script>
+        // --------- Trip List ---------------
         let offsetList = 0;
 
-        document.getElementById('tripListBtn').addEventListener('click', function() {
+        document.getElementById('tripListBtn').addEventListener('click', function () {
             fetchTripList();
+            toggleView('tripList');
         });
 
         function fetchTripList() {
@@ -155,23 +325,19 @@
                 },
                 body: JSON.stringify({ offsetList: offsetList })
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
 
-                document.getElementById('tripList').style.display = 'block'; 
-                updateTripsListTable(data);
+                    document.getElementById('tripList').style.display = 'block';
+                    updateTripsListTable(data);
 
-                offsetList == 0 ? document.getElementById('backListBtn').style.display = 'none' : document.getElementById('backListBtn').style.display = 'block';
+                    document.getElementById('backListBtn').style.display = (offsetList === 0) ? 'none' : 'block';
+                    document.getElementById('loadmoreListBtn').style.display = (data.length === 10) ? 'block' : 'none';
 
-                if (data.length === 10) {
-                    document.getElementById('loadmoreListBtn').style.display = 'block';
-                } else {
-                    document.getElementById('loadmoreListBtn').style.display = 'none';
-                }
-            }).catch(error => {
-                console.log('Error:', error);
-            })
+                }).catch(error => {
+                    console.log('Error:', error);
+                })
         }
 
         function updateTripsListTable(trips) {
@@ -196,7 +362,8 @@
                 // Nút "Get It" cho tất cả chuyến đi trong Trip List
                 const getItButton = document.createElement('button');
                 getItButton.textContent = 'Get It';
-                getItButton.addEventListener('click', function() {
+                getItButton.classList.add('button-get-it');
+                getItButton.addEventListener('click', function () {
                     updateStatusTrip(trip.tripId, "2");
                     lastTripStatuses = ["2"]; // gán 1 status cho lastTripStatuses để tiêp tục gửi vị trí, hạn chế phải gọi hàm getTripStatuses() để cập nhật trạng thái. Việc cập nhật trạng thái chỉ dành cho nút "Complete".(giàm được một nửa yêu cầu http api khi gọi getTripStatuses() từ [get it + accept + complete] xuống còn [complete]  : get it + accept = complete)
                 });
@@ -208,22 +375,23 @@
             });
         }
 
-        document.getElementById('loadmoreListBtn').addEventListener('click', function() {
+        document.getElementById('loadmoreListBtn').addEventListener('click', function () {
             offsetList += 1;
             fetchTripList();
         });
-        document.getElementById('backListBtn').addEventListener('click', function() {
+        document.getElementById('backListBtn').addEventListener('click', function () {
             offsetList -= 1;
             fetchTripList();
         })
 
 
 
-        // ========================================
+        // =======================Trip Received=================
         let offset = 0;
 
-        document.getElementById('myTripBtn').addEventListener('click', function() {
+        document.getElementById('myTripBtn').addEventListener('click', function () {
             fetchTripsReceived();
+            toggleView('tripReceived');
         });
 
         function fetchTripsReceived() {
@@ -236,26 +404,22 @@
                 body: JSON.stringify({ id: driverId, offset: offset })
             })
                 .then(response => response.json())
-                .then(data =>{ // trips received
+                .then(data => { // trips received
                     console.log(data);
 
                     document.getElementById('tripReceived').style.display = 'block';
                     updateTripsTable(data);
 
-                    offset == 0? document.getElementById('backBtn').style.display = 'none' : document.getElementById('backBtn').style.display = 'block';
 
-                    if (data.length === 10) {
-                        document.getElementById('loadmoreBtn').style.display = 'block';
-                    } else {
-                        document.getElementById('loadmoreBtn').style.display = 'none';
-                    }
+                    document.getElementById('backBtn').style.display = (offset === 0) ? 'none' : 'block';
+                    document.getElementById('loadmoreBtn').style.display = (data.length === 10) ? 'block' : 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 })
         }
 
-        
+
         function updateTripsTable(trips) {
             const tableBody = document.querySelector('#tripTable tbody');
             tableBody.innerHTML = ''; // Xóa dữ liệu cũ trong bảng
@@ -270,7 +434,7 @@
                     <td>${trip.status}</td>
                     <td>${sourceLocation.display_name}</td>
                     <td>${destinationLocation.display_name}</td>
-                    <td>${trip.distance}</td>
+                    <td>${trip.distance} Km</td>
                 `;
 
                 const actionTd = document.createElement('td'); // tạo cột action
@@ -278,8 +442,9 @@
                 // Nút SeeDetail cho statu "1" -> "4"
                 const seeDetailButton = document.createElement('button');
                 seeDetailButton.textContent = 'SeeDetail';
-                seeDetailButton.addEventListener('click', function() {
-                   seeTripDetail(trip.tripId); 
+                seeDetailButton.classList.add('button-see-detail');
+                seeDetailButton.addEventListener('click', function () {
+                    seeTripDetail(trip.tripId);
                 });
                 actionTd.appendChild(seeDetailButton);
 
@@ -289,12 +454,13 @@
                     // Nút "Cancel"
                     const cancelButton = document.createElement('button');
                     cancelButton.textContent = 'Cancel';
-                    cancelButton.addEventListener('click', async function() {
+                    cancelButton.classList.add('button-cancel');
+                    cancelButton.addEventListener('click', async function () {
                         updateStatusTrip(trip.tripId, "1");
-    
+
                         // Thêm một khoảng delay ngắn trước khi gọi getTripStatuses - nếu ko sẽ dẫn đến hàm updateStatus chưa kịp cập nhật status 3 -> 4 mà lasTripStatuses đã lấy -> có status 3 trong lastTripStatuses.
-                        await new Promise(resolve => setTimeout(resolve, 500)); 
-                        
+                        await new Promise(resolve => setTimeout(resolve, 500));
+
                         lastTripStatuses = await getTripStatuses(trip.driverId); // ko dùng lastTripStatuses = [] như lúc ấn nút Get It và Accept được. Bởi vì trong trường hợp 1 tài xế đang thực hiện nhiều chuyến đi cùng lúc, làm thế thì 1 trip ấn cacel các trip khác cũng bị mất khả năng theo dõi tài xế.
                     });
                     actionTd.appendChild(cancelButton);
@@ -302,23 +468,24 @@
                     // Nút "Đã đến điểm đón"
                     const receivedButton = document.createElement('button');
                     receivedButton.textContent = 'Received';
-                    receivedButton.addEventListener('click', function() {
+                    receivedButton.classList.add('button-received');
+                    receivedButton.addEventListener('click', function () {
                         updateStatusTrip(trip.tripId, "3");
                     });
                     actionTd.appendChild(receivedButton);
                 }
-                
+
                 // Nút "Hoàn thành/đã đến điểm trả" cho status "3"
                 if (trip.status === "3") {
                     const completeButton = document.createElement('button');
                     completeButton.textContent = 'Complete';
-                    completeButton.addEventListener('click', async function() {
+                    completeButton.classList.add('button-complete');
+                    completeButton.addEventListener('click', async function () {
                         updateStatusTrip(trip.tripId, "4");
                         // Gọi hàm cập nhật trạng thái các chuyến đi.
-                        // lastTripStatuses = await getTripStatuses(trip.driverId);    
                         // Thêm một khoảng delay ngắn trước khi gọi getTripStatuses - nếu ko sẽ dẫn đến hàm updateStatus chưa kịp cập nhật status 3 -> 4 mà lasTripStatuses đã lấy -> có status 3 trong lastTripStatuses.
-                        await new Promise(resolve => setTimeout(resolve, 500)); 
-                        
+                        await new Promise(resolve => setTimeout(resolve, 500));
+
                         lastTripStatuses = await getTripStatuses(trip.driverId);
 
                     });
@@ -333,7 +500,7 @@
 
         function updateStatusTrip(tripId, status) {
             const driverId = JSON.parse(localStorage.getItem('driverId'));
-            
+
             fetch('http://localhost:8080/trips/update-status-trip', {
                 method: 'POST',
                 headers: {
@@ -345,18 +512,16 @@
                     status: status
                 })
             })
-            .then(response => response.text())
-            .then(data => {
-                alert('Ok.');
+                .then(response => response.text())
+                .then(data => {
+                    alert('Ok.');
 
-                offset = 0;
-                status === "2" ? fetchTripList() : fetchTripsReceived(); 
-                // fetchTripsReceived();
-                // fetchTripList();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                    offset = 0;
+                    status === "2" ? fetchTripList() : fetchTripsReceived();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
 
         // Hàm xử lý hiển thị chi tiết đơn hàng (SeeDetail)
@@ -386,34 +551,44 @@
 
         function getPaymentMethod(method) {
             switch (method) {
-                case '1' : return "Cash";
-                case '2' : return "E-Wallet";
-                case '3' : return "Banking Online";
+                case '1': return "Cash";
+                case '2': return "E-Wallet";
+                case '3': return "Banking Online";
                 default: return 'Unknow';
             }
         }
         function getTripStatus(status) {
             switch (status) {
-                case '2' : return 'Accepted';
-                case '3' : return 'Received Guest';
-                case '4' : return 'Completed';
+                case '2': return 'Accepted';
+                case '3': return 'Received Guest';
+                case '4': return 'Completed';
                 default: return 'Unknow';
             }
         }
 
         // Khi click nút "Load More"
-        document.getElementById('loadmoreBtn').addEventListener('click', function() {{
-            offset += 1;
-            fetchTripsReceived();
-        }});
+        document.getElementById('loadmoreBtn').addEventListener('click', function () {
+            {
+                offset += 1;
+                fetchTripsReceived();
+            }
+        });
 
         // Khi click nút "Back"
-        document.getElementById('backBtn').addEventListener('click', function() {
+        document.getElementById('backBtn').addEventListener('click', function () {
             offset -= 1;
             fetchTripsReceived();
         });
 
+        // Hàm ẩn hiện view
+        function toggleView(viewId) {
+            document.getElementById('tripList').style.display = 'none';
+            document.getElementById('tripReceived').style.display = 'none';
+            document.getElementById(viewId).style.display = 'block';
+        }
+
     </script>
-    
+
 </body>
+
 </html>

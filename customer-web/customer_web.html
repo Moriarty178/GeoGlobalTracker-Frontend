@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Web</title>
+    <!-- Thư viện FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <style>
         #map {
@@ -12,75 +14,677 @@
             width: 100%;
         }
 
-        /* CSS cho danh sách gợi ý */
-        .suggestions {
+        
+
+        .hidden {
+            display: none;
+        }
+
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
             border: 1px solid #ddd;
-            max-height: 150px;
-            overflow-y: auto;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #006db3d6;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-container input {
+            margin: 5px;
+            padding: 10px;
+            width: 90%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #content {
+            display: flex;
+        }
+        #search-form {
+            width: 35%;
+            font-size: 24px;
+            border: 1px solid #ddd;
+        }
+        #search-results {
+            font-size: 24px;
+            border: 1px solid #ddd;
+        }
+
+        /* --------------button---------- */
+
+        button {
+            background-color: #273cfa;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px 10px 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #1900fb;
+        }
+
+        #logout-button {
+            background-color: red;
+            color: white;
+        }
+
+        #escBtn {
+            background-color: #4e5979;
+            color: white;
+        }
+
+        .button-see-detail {
+            background-color: #3b82f5;
+            color: white;
+        }
+
+        .button-cancel {
+            background-color: rgb(233, 49, 74);
+            color: white;
+        }
+
+        .button-view-driver {
+            background-color: rgb(247, 161, 0);
+            columns: white;
+        }
+
+        .button-rating {
+            background-color: #23a644;
+            color: white;
+        }
+
+        .turn-page {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* .turn-page button {
+            background-color: #0e00ff;
+        } */
+
+        /* .turn-page button:hover {
+            background-color: #221b9d;
+        } */
+
+
+        /* Header Styling */
+        #header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        #header header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #app-logo span {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .header-btn {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .header-btn:hover {
+            background-color: #777;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Content Styling */
+
+        #search-form, #search-results, #map {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+
+        /* Căn chỉnh ô nhập liệu và danh sách gợi ý */
+        /* Căn chỉnh chung cho các thẻ input và nhãn */
+        .input-container {
+            /* margin-bottom: 20px; */
+            position: relative;
+        }
+
+        /* Style cho thẻ input */
+        #loc_source, #loc_destination {
+            width: 80%;
+            padding: 12px 24px; /* Khoảng cách bên trong input */
+            font-size: 16px;
+            border: 2px solid #ddd; /* Viền nhạt */
+            border-radius: 8px; /* Bo góc */
+            outline: none;
+            background-color: #f9f9f9; /* Màu nền nhạt */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+            transition: border-color 0.3s, box-shadow 0.3s; /* Hiệu ứng chuyển màu viền và bóng đổ */
+        }
+
+        /* Hiệu ứng khi di chuột vào ô input */
+        #loc_source:hover, #loc_destination:hover {
+            border-color: #aaa; /* Đổi màu viền khi di chuột vào */
+        }
+
+        /* Hiệu ứng khi tập trung vào input */
+        #loc_source:focus, #loc_destination:focus {
+            border-color: #4285f4; /* Đổi màu viền khi focus */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tăng bóng đổ khi focus */
+        }
+
+        /* Căn chỉnh label để đẹp hơn */
+        .input-container label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            display: block; /* Đặt label thành block để căn chỉnh tốt hơn */
+        }
+
+        /* CSS cho danh sách gợi ý */
+        
+
+        /* Style cho danh sách gợi ý */
+        .suggestions {
+            position: absolute; /* Đặt vị trí tuyệt đối cho danh sách gợi ý */
+            top: 100%; /* Hiển thị ngay dưới ô nhập liệu */
+            left: 0;
+            width: 93%; /* Chiều rộng bằng với ô input */
+            border-radius: 8px;
+            background-color: white;
+            /* border: 1px solid #ddd; */
+            border-top: none; /* Loại bỏ đường viền trên để nối liền với ô input */
+            z-index: 1000; /* Hiển thị lên trên các phần tử khác */
+            max-height: 150px; /* Giới hạn chiều cao, thêm scroll nếu danh sách quá dài */
+            overflow-y: auto; /* Thêm cuộn dọc khi danh sách quá dài */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng đổ bóng */
+            padding: 0;
+            margin: 0;
+            list-style-type: none; /* Loại bỏ dấu chấm đầu dòng */
         }
 
         .suggestion-item {
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             padding: 8px;
             cursor: pointer;
-            background-color: white;
+            background-color: #ededed;
         }
 
         .suggestion-item:hover {
             background-color: #f0f0f0;
         }
 
-        .trip-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Hiển thị danh sách gợi ý */
+        .suggestions li {
+            padding: 8px 16px; /* Khoảng cách bên trong mỗi mục */
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .trip-table th,
-        .trip-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        .location-icon {
+            font-size: 14px;
+            color: rgb(0, 0, 0);/*#4285f4;*/
+            margin-right: 20px;
         }
 
-        .trip-table th {
-            background-color: #f2f2f2;
+        /* Hiệu ứng hover */
+        .suggestions li:hover {
+            background-color: #f4f4f4;
+        }
+
+        /* Hiển thị danh sách khi có gợi ý */
+        .suggestions.show {
+            display: block; /* Hiển thị danh sách khi thêm class 'show' */
+        }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-with-icon .icon {
+            position: absolute;
+            /* left: 10px; Điều chỉnh vị trí icon */
+            font-size: 20px; /* Kích thước icon */
+            color: #555; /* Màu sắc icon */
+        }
+
+        .input-with-icon input {
+            padding-left: 30px; /* Thêm khoảng cách cho chữ để không chồng lên icon */
+            width: 100%; /* Đảm bảo input chiếm hết chiều rộng có sẵn */
+        }
+
+
+        /* CSS cho phần driver list */
+        #driverList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .driver-item {
+            display: flex; /* Sử dụng flexbox để xếp các phần theo chiều ngang */
+            align-items: center; /* Căn giữa theo trục dọc */
+            background-color: #ffffff; /* Màu nền */
+            padding: 10px; /* Khoảng cách bên trong */
+            margin: 10px 0; /* Khoảng cách giữa các tài xế */
+            border: 1px solid #ddd; /* Đường viền */
+            border-radius: 8px; /* Bo góc */
+            cursor: pointer; /* Con trỏ chuột khi hover */
+            transition: border-color 0.3s, box-shadow 0.3s; /* Hiệu ứng hover */
+        }
+
+        .driver-item:hover,
+        .driver-item:focus {
+            border-color: #00bfa5; /* Màu viền khi hover */
+            box-shadow: 0 4px 8px rgba(0, 191, 165, 0.2); /* Đổ bóng khi hover */
+        }
+
+        .driver-icon {
+            font-size: 24px; /* Kích thước icon */
+            margin-right: 10px; /* Khoảng cách giữa icon và thông tin tài xế */
+            color: #00796b; /* Màu icon */
+        }
+
+        .driver-info {
+            display: flex; /* Sử dụng flexbox để chia phần info theo chiều ngang */
+            justify-content: space-between; /* Giãn đều khoảng cách giữa các phần */
+            width: 100%; /* Chiều rộng của driver-info */
+        }
+
+        .driver-details {
+            display: flex;
+            flex-direction: column; /* Chiều dọc cho phần tên và khoảng cách */
             text-align: left;
         }
 
-        .trip-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .driver-name {
+            font-size: 16px; /* Kích thước chữ của tên tài xế */
+            font-weight: bold; /* In đậm */
+            margin: 0; /* Bỏ khoảng cách mặc định */
         }
 
-        .trip-table tr:hover {
-            background-color: #ddd;
+        .driver-distance {
+            font-size: 14px; /* Kích thước chữ của khoảng cách */
+            color: #555; /* Màu chữ nhạt hơn */
+            margin: 5px 0 0 0; /* Khoảng cách trên */
         }
+
+        .driver-price {
+            font-size: 20px; /* Kích thước chữ của giá tiền */
+            font-weight: bold; /* In đậm */
+            color: #00796b; /* Màu chữ của giá tiền */
+            display: flex;
+            align-items: center; /* Căn giữa theo trục dọc */
+        }
+        
+        
+        #paymentForm {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #paymentForm .turn-page {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .payment-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 25%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+            z-index: 1002; /* Đưa form lên trên cùng */
+            border-radius: 8px;
+        }
+
+        /* CSS cho lớp phủ overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; /* Chiều rộng phủ toàn màn hình */
+            height: 100%; /* Chiều cao phủ toàn màn hình */
+            background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối với độ trong suốt */
+            z-index: 1001; /* Lớp hiển thị nằm dưới form thanh toán */
+        }
+
+        /* Header của form thanh toán */
+        #paymentFormHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Tiêu đề form thanh toán */
+        #paymentFormHeader h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        /* Nút đóng form (X) */
+        .close-btn {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Hiển thị chi tiết thanh toán */
+        #paymentDetail p {
+            margin: 8px 0;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Các trường chọn (select) */
+        #method {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Container cho các nút */
+        /* .turn-page {
+            display: flex;
+            justify-content: space-between;
+        } */
+
+        /* Nút confirm */
+        .btn-confirm, .btn-cancel {
+            padding: 10px 15px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            background-color: #28a745;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel {
+            background-color: #dc3545;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #c82333;
+        }
+
+
     </style>
 </head>
 
 <body>
-    <div>
-        <label for="loc_source">Điểm đón:</label>
-        <input type="text" id="loc_source" placeholder="Nhập điểm đón">
-        <ul id="sourceSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý -->
-        <br>
-        <label for="loc_destination">Điểm trả:</label>
-        <input type="text" id="loc_destination" placeholder="Nhập điểm trả">
-        <ul id="destinationSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý -->
-        <br>
-        <!-- Nút Search -->
-        <button id="searchBtn">Search</button>
-        <!-- Nút Create -->
-        <button id="createBtn">Create</button>
-        <div id="routeInfo">
+    <!-- Nút Đăng Xuất -->
+    <div id="logout-form" class="form-container hidden">
+        <!-- <h2>Đăng Xuất</h2> -->
+        <div class="turn-page">
+            <button id="logout-button" onclick="logout()">Đăng Xuất</button>
+            <div id="logout-message"></div>
         </div>
-        <!-- Phần hiển thị danh sách tài xế gần nhât backend gửi lên -->
-        <ul id="driverList"></ul>
+    </div>
+
+    <!-- Đăng nhập form -->
+    <div id="login-form" class="form-container">
+        <h2>Đăng Nhập</h2>
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Mật khẩu" required />
+        <button id="login-button" onclick="login()">Đăng Nhập</button>
+        <p>Chưa có tài khoản? <a href="#" id="show-signup">Đăng ký</a></p>
+        <div id="login-message"></div>
+    </div>
+
+    <!-- Đăng ký form -->
+    <div id="signup-form" class="form-container hidden">
+        <h2>Đăng Ký</h2>
+        <input type="text" id="signup-firstname" placeholder="First name" required />
+        <input type="text" id="signup-lastname" placeholder="Last naem" required />
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <input type="text" id="signup-phone" placeholder="Phone" required />
+        <button onclick="signup()">Đăng Ký</button>
+        <p>Đã có tài khoản? <a href="#" id="show-login">Đăng nhập</a></p>
+        <div id="signup-message"></div>
+    </div>
+
+    <!-- ********************************************************************************** -->
+     <!-- Phần Header -->
+    <div id="header">
+        <header>
+            <!-- Logo và tên ứng dụng -->
+            <div id="app-logo">
+                <img src="/asset/img/avatar.jpg" alt="App Logo" style="height: 40px; vertical-align: middle;">
+                <span>SaveRoad</span>
+            </div>
+            <!-- Các chức năng bên phải: My Trip và Avatar -->
+            <div id="about-me">
+                <button id="myTripBtn" class="header-btn">My Trip</button>
+                <!-- Thêm biểu tượng Avatar với menu dropdown -->
+                <div class="dropdown">
+                    <button class="header-btn dropdown-btn">
+                        <img src="/asset/img/avatar.jpg" alt="Avatar" style="height: 40px; border-radius: 50%;">
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Information</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <!-- Phần Content -->
+    <div id="content">
+        <!-- Phần 1 Search Form-->
+        <!-- Phần 1 Search Form-->
+        <div id="search-form">
+            <h2>Đặt xe</h2>
+
+            <!-- Container bọc lấy ô input và danh sách gợi ý -->
+            <div class="input-container">
+                <!-- <label for="loc_source">Điểm đón:</label> -->
+                <div class="input-with-icon">
+                    <span class="icon">📍</span> <!-- Icon cho điểm đón -->
+                    <input type="text" id="loc_source" placeholder="Nhập điểm đón">
+                </div>
+                <ul id="sourceSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm đón -->
+            </div>
+            <br>
+
+            <!-- Container bọc lấy ô input và danh sách gợi ý -->
+            <div class="input-container">
+                <!-- <label for="loc_destination">Điểm trả:</label> -->
+                <div class="input-with-icon">
+                    <span class="icon">🏁</span> <!-- Icon cho điểm trả -->
+                    <input type="text" id="loc_destination" placeholder="Nhập điểm trả">
+                </div>
+                <ul id="destinationSuggestions" class="suggestions"></ul> <!-- Danh sách gợi ý điểm trả -->
+            </div>
+            <br>
+
+            <div class="turn-page">
+                <!-- Nút Search -->
+                <button id="searchBtn">Search</button>
+                <!-- Nút Create -->
+                <button id="createBtn">Create</button>
+            </div>
+        </div>
 
 
-        <button id="myTripBtn">My Trip</button>
-        <button id="backBtn" style="display: none;">Back</button>
-        <button id="loadMoreBtn" style="display: none;">Load More</button>
-        <button id="nextBtn" style="display: none;">Next</button>
 
-        <!-- Hiển thị danh sách các chuyến đi -->
+        <!-- Phần 2 Search Results-->
+        <div id="search-results">
+            <h2>Chọn chuyến xe</h2>
+            <!-- Thông tin chuyến đi: distance, price -->
+            <div id="routeInfo"></div>
+
+            <!-- Phần hiển thị danh sách tài xế backend gửi lên: mỗi tài xế hiển thị trong một khung nhỏ, ở đầu có icon 'driver', có hiệu ứng hover và focus -->
+            <ul id="driverList"></ul>
+
+            <!-- Lớp phủ overlay -->
+            <div id="overlay" class="overlay" style="display: none;">
+                <!-- Khi Doubleclick vào 1 tài xế thì form thanh toán này hiện ra trên nền, chính giữa màn hình-->
+                <div id="tripPayment" class="payment-popup" style="display: none;">
+                    <!-- Header payment -->
+                    <div id="paymentFormHeader">
+                        <h2>Payment Detail</h2>
+                        <!-- nút "X" -->
+                         <span id="closePaymentForm" class="close-btn">&times;</span>
+                    </div>
+                    <!-- Content payment -->
+                    <div id="paymentForm">
+                        <label for="payment">Payment</label>
+                        <div id="paymentDetail">
+                            <!-- Price, Voucher, Total  -->
+                        </div>
+
+                        <label for="method">Payment Method</label>
+                        <select id="method">
+                            <option value="1">Cash</option>
+                            <option value="2">E-Wallet</option>
+                            <option value="3">Banking Online</option>
+                        </select>
+    
+                        <div class="turn-page">
+                            <!-- Button Confirm -->
+                            <button id="payNowBtn" class="btn-confirm">Pay now</button>
+                            <button id="okBtn" class="btn-cancel">Pay later</button>
+    
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        
+        <!-- Hiển thị danh sách các chuyến đi (tab khác)-->
         <div id="tripList" style="display: none;">
             <table id="tripTable" class="trip-table">
                 <thead>
@@ -97,57 +701,209 @@
                     <!-- Hàng dữ liệu sẽ được chèn vào đây -->
                 </tbody>
             </table>
-        </div>
-
-        <!-- Hiển thị thông tin chi tiết chuyến đi -->
-        <div id="tripDetail"></div>
-
-        <!-- Hiển thị form đánh giá -->
-        <div id="tripRating" style="display: none;">
-            <div id="ratingForm">
-                <label for="rating">Rating:</label>
-                <select id="rating">
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                </select><br>
-
-                <label for="feedback">Feedback:</label>
-                <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
-
-                <button id="sendRatingBtn">Send</button>
+            <div class="turn-page">
+                <button id="backBtn" style="display: none;">Back</button>
+                <button id="loadMoreBtn" style="display: none;">Load More</button>
             </div>
-        </div>
 
-        <!-- Hiển thị form payment khi click vào tài xế -->
-        <div id="tripPayment" style="display: none;">
-            <div id="paymentForm">
-                <label for="payment">Payment</label>
-                <div id="paymentDetail">
-                    <!-- Price, Voucher, Total  -->
+            <!-- SeeDetail giữa bảng My Trip (z-index) -->
+            <div id="tripDetail"></div>
+
+            <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
+            <div id="tripRating" style="display: none;">
+                <div id="ratingForm">
+                    <label for="rating">Rating:</label>
+                    <select id="rating">
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                    </select><br>
+    
+                    <label for="feedback">Feedback:</label>
+                    <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+    
+                    <button id="sendRatingBtn">Send</button>
                 </div>
-                <select id="method">
-                    <option value="1">Cash</option>
-                    <option value="2">E-Wallet</option>
-                    <option value="3">Banking Online</option>
-                </select>
-
-                <!-- Button Confirm -->
-                <button id="payNowBtn">Pay Now</button>
-                <button id="okBtn">Ok</button>
             </div>
         </div>
+
+
+        
+
+
+        
+
+        <!-- Trên cùng bên phải của map -->
+        <button id="escBtn" style="display: none;">Esc</button>
+
+        <!-- 3 Hiển thị bản đồ: trước khi search tỉ lệ 3:7 với phần 1, sau khi search: tỉ lệ 3:3:4 với phần 1 và 2-->
+        <div id="map"></div>
     </div>
 
-    <button id="escBtn" style="display: none;">Esc</button>
-    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     <script>
-        let customerId = 1234;
+
+        // ======================= Đăng Nhập, Đăng Ký, Đăng Xuất ==================
+
+        const API_BASE_URL = 'http://localhost:8080/api/auth';
+        // ----------- Đăng Nhập -------------------
+        // Hàm đăng nhập
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            fetch(`${API_BASE_URL}/customer-login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const jwt = data.jwt;
+                    const customerId = data.id;
+
+                    if (jwt && customerId) {
+                        localStorage.setItem('jwt', jwt);
+                        localStorage.setItem('customerId', customerId);//lưu driverId
+                        // document.getElementById('login-message').textContent = 'Login successful!';
+                        afterLoginSuccess();
+                        console.log('customerId:', customerId)
+
+                        // initializeWebSocket(customerId); // Gọi hàm kết nối WebSocket sau khi đăng nhập thành công
+                    } else {
+                        document.getElementById('login-message').textContent = 'Login failed!';
+                    }
+                    // console.log(jwt);
+                })
+                .catch(error => {
+                    console.error('Error during login:', error);
+                    // document.getElementById('login-message').textContent = 'Login failed!';
+                    // document.getElementById('login-message').style.display = 'block';
+
+                });
+        }
+
+        // ------------------ Đăng Ký -------------------
+        function signup() {
+            const firstName = document.getElementById('signup-firstname').value;
+            const lastName = document.getElementById('signup-lastname').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const phone = document.getElementById('signup-phone').value;
+
+            fetch(`${API_BASE_URL}/customer-signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName, email, password, phone })
+            })
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('signup-message').textContent = message;
+                    if (message === 'Registered successfully!') {
+                        document.getElementById('signup-form').classList.add('hidden');
+                        document.getElementById('login-form').classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during signup:', error);
+                    document.getElementById('signup-message').textContent = 'Signup failed!';
+                });
+        }
+
+        // --------------- Đăng xuất --------------------
+        function logout() {
+            const customerId = localStorage.getItem('customerId');
+            fetch(`http://localhost:8080/api/customer-logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customerId })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        localStorage.removeItem('jwt');
+                        localStorage.removeItem('customerId');
+                        afterLogout();
+
+                        console.log('Logout successful');
+                    }
+                })
+                .catch(error => console.error('Logout failed:', error));
+        }
+
+        function afterLogout() {
+            // Reset lại trạng thái của các phần tử bên trong 'content'
+            // document.getElementById('tripList').style.display = 'none';
+            // document.getElementById('tripReceived').style.display = 'none';
+            // document.getElementById('tripDetail').innerHTML = ''; // Xóa nội dung chi tiết chuyến đi nếu có
+
+            // Xóa dữ liệu trong bảng nếu có
+            // document.querySelector('#tripListTable tbody').innerHTML = '';
+            // document.querySelector('#tripTable tbody').innerHTML = '';
+
+            // Cập nhật giao diện
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('logout-form').classList.add('hidden');
+            document.getElementById('login-message').classList.add('hidden');//
+
+
+            document.getElementById('content').classList.add('hidden');// Ẩn toàn bộ nội dung sau khi đăng xuất
+        }
+
+        // Gán lại sự kiện khi đăng nhập thành công
+        function afterLoginSuccess() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('logout-form').classList.remove('hidden');
+
+            document.getElementById('content').classList.remove('hidden');// Hiển thị nội dung sau khi đăng nhập thành công
+            // document.getElementById('tripListBtn').addEventListener('click', fetchTripList);// Gán sự kiện cho nút Trip List
+            // document.getElementById('myTripBtn').addEventListener('click', fetchTripsReceived);// Gán sự kiện cho nút Trip Received
+        }
+
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            const jwt = localStorage.getItem('jwt');
+            if (jwt) {
+                // Nếu đã đăng nhập
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('signup-form').classList.add('hidden');
+                document.getElementById('logout-form').classList.remove('hidden');
+                document.getElementById('content').classList.remove('hidden');
+                // initializeWebSocket(localStorage.getItem('customerId'));
+            } else {
+                // Nếu chưa đăng nhập
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('signup-form').classList.add('hidden');
+                document.getElementById('logout-form').classList.add('hidden');
+                document.getElementById('content').classList.add('hidden');
+            }
+        };
+
+        // Sự kiện cho nút chuyển đổi giữa Login và Signup
+        document.getElementById('show-signup').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+        });
+
+        document.getElementById('show-login').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('signup-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        });
+
+
+        // =========================================================================
+        let customerId = localStorage.getItem('customerId');
         var map = L.map('map').setView([21.0285, 105.8542], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -192,6 +948,7 @@
             const storedSource = JSON.parse(localStorage.getItem('loc_source'));
             const storedDestination = JSON.parse(localStorage.getItem('loc_destination'));
             if (storedSource && storedDestination) {
+                document.getElementById('routeInfo').innerHTML = `Khoảng cách: 4.5 km, Thời gian dự kiến: 12 phút`;//////////////////////////////
                 drawRoute(storedSource, storedDestination);
             }
         }
@@ -254,15 +1011,39 @@
         }
 
         function displaySuggestions(data, suggestionBox, isSource) {
-            suggestionBox.innerHTML = '';
+            suggestionBox.style.display = 'block';
+            suggestionBox.innerHTML = ''; // Xóa nội dung cũ trước khi thêm đề xuất mới
             data.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'suggestion-item';
-                li.textContent = `${item.display_name}`;
+
+                // Tạo phần tử icon cho mỗi đề xuất
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-map-marker-alt location-icon'; // Sử dụng FontAwesome icon
+
+                // Tạo phần tử span để chứa text của đề xuất
+                const text = document.createElement('span'); 
+                text.textContent = `${item.display_name}`;
+
+                // Thêm icon và text vào li
+                li.appendChild(icon);
+                li.appendChild(text); //li.textContent += `${item.display_name}`;
+
+                // Thêm sự kiện click vào mỗi đề xuất
                 li.addEventListener('click', () => {
+
+                    // Điền vào input tương ứng
+                    if (isSource) {
+                        document.getElementById('loc_source').value = item.display_name; // Điền vào input điểm đón
+                    } else {
+                        document.getElementById('loc_destination').value = item.display_name; // Điền vào input điểm trả
+                    }
+                    
                     markLocation(item.lat, item.lon, item.display_name, isSource);
                     suggestionBox.innerHTML = ''; // Xóa gợi ý khi chọn
                 });
+
+                // Thêm li vào suggestionBox
                 suggestionBox.appendChild(li);
             });
         }
@@ -357,16 +1138,50 @@
             driverList.innerHTML = ''; // xóa ds cũ
             drivers.forEach(driver => {
                 const li = document.createElement('li');
-                li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance.toFixed(2)} km - Price: ${(routeInfo.distance * 1.2).toFixed(2)} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
+                li.className = 'driver-item';
 
+                // Tạo icon driver
+                const driverIcon = document.createElement('i');
+                driverIcon.classList = 'driver-icon';
+                driverIcon.textContent = '🚗';
+
+                // Tạo div driver-info
+                const driverInfo = document.createElement('div');
+                driverInfo.className = 'driver-info';
+                
+
+                // driver-detail: bên trái driver-info
+                const driverDetails = document.createElement('div');
+                driverDetails.className = 'driver-details';
+                driverDetails.innerHTML = `
+                    <h3 class="driver-name">${driver.name}</h3>
+                    <p class="driver-distance">Đang cách: ${driver.distance.toFixed(2)} km</p>
+                `;
+
+                // driver-price bên phải driver-info
+                const driverPrice = document.createElement('div');
+                driverPrice.className = 'driver-price';
+                driverPrice.innerHTML = `${(routeInfo.distance * 1.2).toFixed(2)} $`;
+
+                driverInfo.appendChild(driverDetails);
+                driverInfo.appendChild(driverPrice);
+
+                // li.textContent = `Tài xế: ${driver.name} - Đang cách điểm đón: ${driver.distance.toFixed(2)} km - Price: ${(routeInfo.distance * 1.2).toFixed(2)} $`; // [?] backend gửi thêm price = distance * 5.500 vnđ
+                
+                // Thêm icon và info vào li
+                li.appendChild(driverIcon);
+                li.appendChild(driverInfo);
+
+                // Event click
                 li.addEventListener('click', function () {
-                    document.getElementById('tripPayment').style.display = 'block'; // Corrected display logic
+                    document.getElementById('tripPayment').style.display = 'block'; 
+                    document.getElementById('overlay').style.display = 'block';
                     const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
                     detailDiv.innerHTML = ''; // xóa ds cũ
                     detailDiv.innerHTML = `
-                        <p>Price: ${(routeInfo.distance * 1.2).toFixed(2)} $</p>
-                        <p>Voucher: -${1.5} $</p>
-                        <p>Total: ${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</p>                        
+                        <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
+                        <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
+                        <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
                     `;
 
                     showPaymentForm(driver); // Attach event listeners to payment buttons
@@ -401,7 +1216,7 @@
                 };
 
                 document.getElementById('tripPayment').style.display = 'none';
-
+                hidePaymentForm();
                 handleDriverSelection(driver, paymentRequest);
             });
 
@@ -417,10 +1232,23 @@
                 };
 
                 document.getElementById('tripPayment').style.display = 'none';
-
+                hidePaymentForm();
                 handleDriverSelection(driver, paymentRequest);
             });
         }
+
+        // Hàm ẩn form thanh toán và lớp phủ khi ấn nút "Pay Now" hoặc "Ok"
+        function hidePaymentForm() {
+            document.getElementById('tripPayment').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        document.getElementById('overlay').addEventListener('click', function(event) {
+            if (event.target.id === 'overlay') {// Nếu click vào chính lớp overlay(ko phải paymentForm)
+                hidePaymentForm();
+            }
+        });
+        document.getElementById('closePaymentForm').addEventListener('click', hidePaymentForm);
 
         // Hàm xử lý sau khi customer chọn tài xế từ danh sách rồi nhập payment form
         function handleDriverSelection(driver, paymentRequest) {
@@ -548,7 +1376,7 @@
                 .then(response => response.json())
                 .then(result => {
                     if (result.status === 'accepted') {
-                        alert(`Đã có tài xế nhận yêu cầu chuyến đi. Đang cách điểm đón: ${result.distance} km, Dự kiến đến nơi sau: ${result.estimatedTime} phút`);
+                        alert(`Đã có tài xế nhận yêu cầu chuyến đi. Đang cách điểm đón: ${result.distance.toFixed(2)} km, Dự kiến đến nơi sau: ${result.estimatedTime} phút`);
                     } else {
                         alert(`${result.status}`);// ko ai nhận (tất cả tài xế ấn deny)
                     }
@@ -622,7 +1450,8 @@
 
                 // Nút SeeDetail
                 const seeDetailButton = document.createElement('button');
-                seeDetailButton.textContent = 'SeeDetail';
+                seeDetailButton.textContent = 'See Detail';
+                seeDetailButton.classList.add('button-see-detail');
                 seeDetailButton.addEventListener('click', function () {
                     // alert('Displaying details for trip: ' + trip.tripId);
                     // function seeDetail();
@@ -634,6 +1463,7 @@
                 if (trip.status === '1' || trip.status === '2') {
                     const cancelButton = document.createElement('button');
                     cancelButton.textContent = 'Cancel';
+                    cancelButton.classList.add('button-cancel');
                     cancelButton.addEventListener('click', function () {
                         cancelTrip(trip.tripId);
                     });
@@ -643,6 +1473,7 @@
                 if (trip.status === '2' || trip.status === '3') {
                     const viewDriver = document.createElement('button');
                     viewDriver.textContent = 'View Driver';
+                    viewDriver.classList.add('button-view-driver');
                     viewDriver.addEventListener('click', function () {
                         // hiển thị nút "Esc"
                         document.getElementById('escBtn').style.display = 'block';
@@ -670,6 +1501,7 @@
                 if (trip.status === '4') {
                     const ratingButton = document.createElement('button');
                     ratingButton.textContent = 'Rating';
+                    ratingButton.classList.add('button-rating');
                     ratingButton.addEventListener('click', function () {
                         // alert('Rating driver for trip: ' + trip.tripId);
                         document.getElementById('tripRating').style.display = 'block'; // Hiện form đánh giá
