@@ -194,9 +194,9 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .form-container {
+        /* .form-container {
             margin-bottom: 30px;
-        }
+        } */
 
         .form-container input {
             margin: 5px;
@@ -396,7 +396,7 @@
             background-color: #f9f9f9;
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 1;
+            z-index: 900;
         }
 
         .dropdown-content a {
@@ -667,6 +667,53 @@
         }
 
 
+        
+        /* CSS cho lớp phủ overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; /* Chiều rộng phủ toàn màn hình */
+            height: 100%; /* Chiều cao phủ toàn màn hình */
+            background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+            z-index: 1001; /* Lớp hiển thị nằm dưới form thanh toán */
+            opacity: 0; /* Bắt đầu với độ trong suốt bằng 0 */
+            pointer-events: none; /* Vô hiệu hóa sự kiện chuột */
+            transition: opacity 0.4s ease-in-out; /* Hiệu ứng mờ dần */
+        }
+
+        /* Khi overlay hiển thị */
+        .overlay.active {
+            opacity: 1; /* Độ trong suốt tăng lên 1 */
+            pointer-events: auto; /* Cho phép sự kiện chuột */
+        }
+
+        /* My Trip */
+        #tripList {
+            position: absolute; /* Vị trí tuyệt đối để có thể di chuyển tự do */
+            top: 20%; /* Căn chỉnh từ phía trên */
+            left: 50%; /* Căn chỉnh từ phía trái */
+            width: 75%; /* Chiều rộng của tripList */
+            max-height: 65%; /* Đặt chiều cao tối đa để tránh tràn màn hình */
+            overflow-y: auto; /* Thêm thanh cuộn dọc nếu danh sách quá dài */
+            background-color: #fff; /* Nền trắng cho danh sách */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho phần tử */
+            border-radius: 8px; /* Bo góc */
+            padding: 20px; /* Khoảng cách padding */
+            z-index: 1002; /* Đưa phần tử lên trên cùng */
+            opacity: 0; /* Bắt đầu với độ trong suốt = 0 */
+            transform: translate(-50%, -30%) scale(0.7); /* Thu nhỏ */
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; /* Hiệu ứng mờ dần và phóng to */
+            display: none; /* Ẩn mặc định */
+        }
+
+        /* Khi tripList hiển thị */
+        #tripList.active {
+            opacity: 1; /* Hiển thị với độ trong suốt */
+            transform: translate(-50%, 0) scale(1); /* Phóng to trở lại và đưa về vị trí giữa */
+            display: block; /* Hiển thị phần tử */
+        }
+
         #paymentForm {
             display: flex;
             flex-direction: column;
@@ -693,56 +740,8 @@
             border-radius: 8px;
         }
 
-        /* CSS cho lớp phủ overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%; /* Chiều rộng phủ toàn màn hình */
-            height: 100%; /* Chiều cao phủ toàn màn hình */
-            background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-            z-index: 1001; /* Lớp hiển thị nằm dưới form thanh toán */
-            opacity: 0; /* Bắt đầu với độ trong suốt bằng 0 */
-            pointer-events: none; /* Vô hiệu hóa sự kiện chuột */
-            transition: opacity 0.4s ease-in-out; /* Hiệu ứng mờ dần */
-        }
-
-        /* Khi overlay hiển thị */
-        .overlay.active {
-            opacity: 1; /* Độ trong suốt tăng lên 1 */
-            pointer-events: auto; /* Cho phép sự kiện chuột */
-        }
-
-        /* My Trip */
-        #tripList {
-            position: absolute; /* Vị trí tuyệt đối để có thể di chuyển tự do */
-            top: 20%; /* Căn chỉnh từ phía trên */
-            left: 50%; /* Căn chỉnh từ phía trái */
-            transform: translate(-50%, -30%) scale(0.7); /* Thu nhỏ và di chuyển lên trên để chuẩn bị hiệu ứng */
-            width: 75%; /* Chiều rộng của tripList */
-            max-height: 65%; /* Đặt chiều cao tối đa để tránh tràn màn hình */
-            overflow-y: auto; /* Thêm thanh cuộn dọc nếu danh sách quá dài */
-            background-color: #fff; /* Nền trắng cho danh sách */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng cho phần tử */
-            border-radius: 8px; /* Bo góc */
-            padding: 20px; /* Khoảng cách padding */
-            z-index: 1002; /* Đưa phần tử lên trên cùng */
-            opacity: 0; /* Bắt đầu với độ trong suốt = 0 */
-            transform: translate(-50%, -30%) scale(0.7); /* Thu nhỏ */
-            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; /* Hiệu ứng mờ dần và phóng to */
-            display: none; /* Ẩn mặc định */
-        }
-
-        /* Khi tripList hiển thị */
-        #tripList.active {
-            opacity: 1; /* Hiển thị với độ trong suốt */
-            transform: translate(-50%, 0) scale(1); /* Phóng to trở lại và đưa về vị trí giữa */
-            display: block; /* Hiển thị phần tử */
-        }
-
-
         /* Header của form thanh toán */
-        #paymentFormHeader {
+        #paymentFormHeader, #tripDetailHeader , #tripRatingHeader{
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -786,6 +785,132 @@
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+
+
+        /* các thành phần sau khi bảng My Trip hiển thị */
+        .overlay-detail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay-detail.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .trip-detail {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            background: white;
+            width: 20%;
+            height: 45%;
+            max-width: 400px;
+            border-radius: 8px;
+            padding: 15px;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.7);
+            z-index: 2002;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            display: none;
+        }
+
+        .trip-detail.active {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+            /* transform: translate(-50%, -50%); */
+        }
+
+        #tripDetailContent p {
+            margin: 20px 0;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #tripDetailContent p strong::after {
+            content: ".............................................................";
+            display: inline-block;
+            flex: 1;
+            margin: 0 10px;
+            /* overflow: hidden;
+            white-space: nowrap; */
+        }
+
+        #tripDetailContent p strong.line {
+            display: inline-block;
+            /* border-bottom: 1px dotted #888; */
+            margin: 0 10px;
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Rating */
+        .trip-rating {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            background: white;
+            width: 20%;
+            max-width: 400px;
+            border-radius: 8px;
+            padding: 15px;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.7);
+            z-index: 2002;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            display: none;
+        }
+        
+        .trip-rating.active {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        #tripRatingHeader label {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        #ratingForm {
+            text-align: left;
+        }
+        
+        #rating {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            font-size: 1rem;
+        }
+
+        .rating-feedback {
+            margin-bottom: 20px;
+        }
+
+        #feedback {
+            width: 94%;
+            padding: 3%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            font-size: 1rem;
         }
 
         /* Container cho các nút */
@@ -873,14 +998,7 @@
 </head>
 
 <body>
-    <!-- Nút Đăng Xuất -->
-    <div id="logout-form" class="form-container hidden">
-        <!-- <h2>Đăng Xuất</h2> -->
-        <div class="turn-page">
-            <button id="logout-button" onclick="logout()">Đăng Xuất</button>
-            <div id="logout-message"></div>
-        </div>
-    </div>
+    
 
     <!-- Đăng nhập form -->
     <div id="login-form" class="form-container">
@@ -926,7 +1044,15 @@
                         </button>
                         <div class="dropdown-content">
                             <a href="#">Information</a>
-                            <a href="#">Logout</a>
+                            <!-- <a href="#">Logout</a> -->
+                            <!-- Nút Đăng Xuất -->
+                            <div id="logout-form" class="form-container hidden">
+                                <!-- <h2>Đăng Xuất</h2> -->
+                                <!-- <div class="turn-page"> -->
+                                <button id="logout-button" onclick="logout()">Đăng Xuất</button>
+                                    <!-- <div id="logout-message"></div> -->
+                                <!-- </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1058,12 +1184,30 @@
                         </div>
 
                         <!-- SeeDetail giữa bảng My Trip (z-index) -->
-                        <div id="tripDetail"></div>
+                        <!-- Overlay mới để hiển thị tripDetail và tripRating -->
+                        <div id="overlayDetail" class="overlay-detail" style="display: none;"></div>
 
-                        <!-- Hiển thị form đánh giá dùng z-index hiên thị trên nền bảng My Trip), display none khi đánh giá xong hoặc ấn 'x'-->
-                        <div id="tripRating" style="display: none;">
+                        <!-- SeeDetail sẽ hiển thị ở giữa trang -->
+                        <div id="tripDetail" class="trip-detail">
+                            <div id="tripDetailHeader">
+                                <h3>Detail Payment</h3>
+                                <!-- <label for="See Detail">Detail Payment</label> -->
+                                <span id="closeTripDetail" class="close-btn">&times;</span>
+                            </div>
+                            <div id="tripDetailContent">
+                                <!-- Nội dung chi tiết chuyến đi (trip detail) sẽ được thêm vào đây -->
+                            </div>
+                            
+                        </div>
+
+                        <!-- Form hiển thị rating giữa trang -->
+                        <div id="tripRating" class="trip-rating">
+                            <div id="tripRatingHeader">
+                                <label for="rating">Rating</label>
+                                <span id="closeTripRating"  class="close-btn">&times;</span>
+                            </div>
                             <div id="ratingForm">
-                                <label for="rating">Rating:</label>
+                                <label for="vote">Vote</label>
                                 <select id="rating">
                                     <option value="1">1 Star</option>
                                     <option value="2">2 Stars</option>
@@ -1071,10 +1215,10 @@
                                     <option value="4">4 Stars</option>
                                     <option value="5">5 Stars</option>
                                 </select><br>
-
-                                <label for="feedback">Feedback:</label>
-                                <textarea id="feedback" rows="4" cols="50"
-                                    placeholder="Leave your feedback..."></textarea><br>
+                                <div class="rating-feedback">
+                                    <label for="feedback">Feedback:</label>
+                                    <textarea id="feedback" rows="4" cols="50" placeholder="Leave your feedback..."></textarea><br>
+                                </div>
 
                                 <button id="sendRatingBtn">Send</button>
                             </div>
@@ -1517,40 +1661,38 @@
 
                 // Event click
                 li.addEventListener('click', function () {
-                    showDetailPayment()
-                    handlePayment(driver); // Attach event listeners to payment buttons
+                    const overlay = document.getElementById('overlay');
+                    const tripPayment = document.getElementById('tripPayment');
+
+                    // Hiển thị overlay với hiệu ứng
+                    overlay.style.display = 'block'; // Hiển thị overlay
+                    setTimeout(() => {
+                        overlay.classList.add('active'); // Thêm class 'active' sau một khoảng delay ngắn để kích hoạt hiệu ứng
+                    }, 10); // Delay 10ms để chắc chắn rằng overlay đã hiển thị trước khi thêm class
+
+                    // Hiển thị tripList với hiệu ứng
+                    tripPayment.style.display = 'block'; // Hiển thị tripList
+                    setTimeout(() => {
+                        tripPayment.classList.add('active'); // Thêm class 'active' để kích hoạt hiệu ứng
+                    }, 20); // Delay thêm một chút để đảm bảo hiệu ứng hiển thị đồng bộ với overlay
+
+                    const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
+                    detailDiv.innerHTML = ''; // xóa ds cũ
+                    detailDiv.innerHTML = `
+                        <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
+                        <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
+                        <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
+                    `;
+
+                    showPaymentForm(driver); // Attach event listeners to payment buttons
                 });
                 driverList.appendChild(li);
             });
         }
-
-        function showDetailPayment() {
-            const overlay = document.getElementById('overlay');
-            const tripPayment = document.getElementById('tripPayment');
-
-            // Hiển thị overlay với hiệu ứng
-            overlay.style.display = 'block'; // Hiển thị overlay
-            setTimeout(() => {
-                overlay.classList.add('active'); // Thêm class 'active' sau một khoảng delay ngắn để kích hoạt hiệu ứng
-            }, 10); // Delay 10ms để chắc chắn rằng overlay đã hiển thị trước khi thêm class
-
-            // Hiển thị tripList với hiệu ứng
-            tripPayment.style.display = 'block'; // Hiển thị tripList
-            setTimeout(() => {
-                tripPayment.classList.add('active'); // Thêm class 'active' để kích hoạt hiệu ứng
-            }, 20); // Delay thêm một chút để đảm bảo hiệu ứng hiển thị đồng bộ với overlay
-
-            const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
-            detailDiv.innerHTML = ''; // xóa ds cũ
-            detailDiv.innerHTML = `
-                <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
-                <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
-                <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
-            `;
-        }
+        
 
         // Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form
-        function handlePayment(driver) {
+        function showPaymentForm(driver) {
             const payNowBtn = document.getElementById('payNowBtn');
             const okBtn = document.getElementById('okBtn');
             const routeInfo = JSON.parse(localStorage.getItem('route_info'));
@@ -1678,9 +1820,21 @@
 
         document.getElementById('createBtn').addEventListener('click', function () {
             const routeInfo = JSON.parse(localStorage.getItem('route_info'));
+            const overlay = document.getElementById('overlay');
+            const tripPayment = document.getElementById('tripPayment');
 
-            document.getElementById('tripPayment').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+            // Hiển thị overlay với hiệu ứng
+            overlay.style.display = 'block'; // Hiển thị overlay
+            setTimeout(() => {
+                overlay.classList.add('active'); // Thêm class 'active' sau một khoảng delay ngắn để kích hoạt hiệu ứng
+            }, 10); // Delay 10ms để chắc chắn rằng overlay đã hiển thị trước khi thêm class
+
+            // Hiển thị tripList với hiệu ứng
+            tripPayment.style.display = 'block'; // Hiển thị tripList
+            setTimeout(() => {
+                tripPayment.classList.add('active'); // Thêm class 'active' để kích hoạt hiệu ứng
+            }, 20); // Delay thêm một chút để đảm bảo hiệu ứng hiển thị đồng bộ với overlay
+
             const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
             detailDiv.innerHTML = ''; // xóa ds cũ
             detailDiv.innerHTML = `
@@ -1690,14 +1844,14 @@
             `;
 
             // Hàm xử lý khi customer nhập payment form xong và ấn "Pay Now" hoặc "Ok"
-            handlePaymentV2();
+            showPaymentFormV2();
 
         });
 
 
 
         // Hàm xử lý khi ấn nút "Pay Now" hoặc "Ok" trên Payment Form
-        function handlePaymentV2() {
+        function showPaymentFormV2() {
             const payNowBtn = document.getElementById('payNowBtn');
             const okBtn = document.getElementById('okBtn');
             const routeInfo = JSON.parse(localStorage.getItem('route_info'));
@@ -1871,8 +2025,6 @@
                 seeDetailButton.textContent = 'See Detail';
                 seeDetailButton.classList.add('button-see-detail');
                 seeDetailButton.addEventListener('click', function () {
-                    // alert('Displaying details for trip: ' + trip.tripId);
-                    // function seeDetail();
                     seeTripDetail(trip.tripId);
                 });
                 actionTd.appendChild(seeDetailButton);
@@ -1925,7 +2077,7 @@
                     ratingButton.classList.add('button-rating');
                     ratingButton.addEventListener('click', function () {
                         // alert('Rating driver for trip: ' + trip.tripId);
-                        document.getElementById('tripRating').style.display = 'block'; // Hiện form đánh giá
+                        // document.getElementById('tripRating').style.display = 'block'; // Hiện form đánh giá
 
                         showRatingForm(trip.tripId); // Hàm xử lý sau khi gửi đánh giá (lắng nghe sự kiến ấn nút Send Rating)
                     });
@@ -2110,14 +2262,52 @@
         }
 
         function displayTripDetail(payment) {
-            const detailDiv = document.getElementById('tripDetail');
+            const overlayDetail = document.getElementById('overlayDetail');
+            const tripDetail = document.getElementById('tripDetail');
+
+            overlayDetail.style.display = 'block';
+            tripDetail.style.display = 'block';
+            setTimeout(() => {
+                overlayDetail.classList.add('active');
+                tripDetail.classList.add('active');
+            }, 30);// thêm 30ms để browser render lại thay đổi
+
+            const detailDiv = document.getElementById('tripDetailContent');
+
+            detailDiv.innerHTML = ''; // xóa ds cũ
             detailDiv.innerHTML = `
-                <p>Price: ${payment.price} $</p>
-                <p>Voucher: - ${payment.voucher || 0} $</p>
-                <p>Total: ${payment.total} $</p>
-                <p>Payment Status: ${payment.paymentStatus}</p>
-                <p>Payment Method: ${getPaymentMethod(payment.paymentMethod)}</p>`;
+                <p><strong class="line">Price</strong> <span id ="price">${payment.price} $</span></p>
+                <p><strong class="line">Voucher</strong> <span id="voucher">- ${payment.voucher || 0} $</span></p>
+                <p><strong class="line">Total</strong> <span id="total">${payment.total} $</span></p>                        
+                <p><strong class="line">Payment Method</strong> <span id="paymentMethod">${getPaymentMethod(payment.paymentMethod)}</span></p>                        
+                <p><strong class="line">Payment Status</strong> <span id="total">${payment.paymentStatus}</span></p>                        
+            `;
         }
+        
+        document.getElementById('closeTripDetail').addEventListener('click', hideTripDetail);
+
+        // Ẩn tripDetail và overlayDetail và tripRating
+        function hideTripDetail() {
+            const overlayDetail = document.getElementById('overlayDetail');
+            const tripDetail = document.getElementById('tripDetail');
+            const tripRating = document.getElementById('tripRating');
+
+            overlayDetail.classList.remove('active');
+            tripDetail.classList.remove('active');
+            tripRating.classList.remove('active');
+
+            setTimeout(() => {
+                overlayDetail.style.display = 'none';
+                tripDetail.style.display = 'none';
+                tripRating.style.display = 'none';
+            }, 300); // giá tri = transition 
+        }
+        // Ẩn khi ấn vùng phủ olayDetail
+        document.getElementById('overlayDetail').addEventListener('click', function (event) {
+            if (event.target.id === 'overlayDetail') {// Nếu click vào chính lớp overlay(ko phải paymentForm)
+                hideTripDetail();
+            }
+        });
 
         function getPaymentMethod(method) {
             switch (method) {
@@ -2130,12 +2320,25 @@
 
         // Hàm xử lý form đánh giá (Rating) 
         function showRatingForm(tripId) {
+            const overlayDetail = document.getElementById('overlayDetail');
+            const tripRating = document.getElementById('tripRating');
+
+            overlayDetail.style.display = 'block';
+            tripRating.style.display = 'block';
+            setTimeout(() => {
+                overlayDetail.classList.add('active');
+                tripRating.classList.add('active');
+            }, 30);// 
+
             document.getElementById('sendRatingBtn').addEventListener('click', function () {
                 const ratingValue = document.getElementById('rating').value;
                 const feedbackValue = document.getElementById('feedback').value;
                 sendRating(tripId, ratingValue, feedbackValue);
+                hideTripDetail();
             });
         }
+
+        document.getElementById('closeTripRating').addEventListener('click', hideTripDetail);
 
         function sendRating(tripId, rating, feedback) {
             fetch('http://localhost:8080/trips/rate-trip', {
@@ -2153,6 +2356,7 @@
                 .then(data => {
                     // alert('Rating submitted successfully!');
                     console.log(data);
+                    alert(data);
                     // Optionally reload the table to reflect the updated state
                 })
                 .catch(error => {
