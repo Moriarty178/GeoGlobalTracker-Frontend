@@ -343,20 +343,14 @@
             justify-content: flex-end;
         }
 
-        /* .turn-page button {
-            background-color: #0e00ff;
-        } */
-
-        /* .turn-page button:hover {
-            background-color: #221b9d;
-        } */
-
 
         /* Header Styling */
         #header {
             background-color: #333;
             color: white;
             padding: 10px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng */
+            user-select: none;
         }
 
         #header header {
@@ -365,23 +359,47 @@
             align-items: center;
         }
 
-        #app-logo span {
-            font-size: 20px;
-            font-weight: bold;
-            margin-left: 10px;
+        #app-logo {
+            display: flex;
+            align-items: center; /* Canh giữa logo và tên ứng dụng */
         }
 
+        #app-logo img {
+            height: 40px;
+            border-radius: 50%; /* Bo tròn cho logo */
+            margin-right: 10px; /* Khoảng cách giữa logo và tên ứng dụng */
+        }
+
+        #app-logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff; /* Màu chữ của tên ứng dụng */
+        }
+
+        #about-me {
+            display: flex;
+            align-items: center;
+        }
         .header-btn {
-            background-color: #555;
-            color: white;
+            background: none;
             border: none;
-            padding: 10px 15px;
+            color: #fff;
+            font-size: 16px;
             cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease; /* Hiệu ứng nền khi hover */
         }
 
         .header-btn:hover {
-            background-color: #777;
+            background-color: #2980b9; /* Màu nền khi hover */
         }
+
+        .header-btn.dropdown-btn {
+            display: flex;
+            align-items: center;
+        }
+
 
         /* Dropdown Menu */
         .dropdown {
@@ -390,18 +408,24 @@
         }
 
         .dropdown-content {
-            display: none;
+            visibility: hidden;
             position: absolute;
             right: 0;
+            top: 100%;
             background-color: #f9f9f9;
             min-width: 160px;
+            border-radius: 8px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 900;
+            z-index: 1001;
+            transform: translateY(-10px) scale(0.5) ;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .dropdown-content a {
             color: black;
             padding: 12px 16px;
+            border-radius: inherit; /*Duy trì (kế thừa) border-radius cũ khi click hoặc hover*/
             text-decoration: none;
             display: block;
         }
@@ -411,7 +435,9 @@
         }
 
         .dropdown:hover .dropdown-content {
-            display: block;
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         /* Content Styling */
@@ -850,6 +876,23 @@
         #tripDetailContent p strong.line {
             display: inline-block;
             /* border-bottom: 1px dotted #888; */
+            margin: 0 10px;
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #paymentDetail p strong::after {
+            content: "...............................................................................................";
+            display: inline-block;
+            flex: 1;
+            margin: 0 10px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #paymentDetail p strong.line {
+            display: inline-block;
             margin: 0 10px;
             flex: 1;
             overflow: hidden;
@@ -1679,9 +1722,9 @@
                     const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
                     detailDiv.innerHTML = ''; // xóa ds cũ
                     detailDiv.innerHTML = `
-                        <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
-                        <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
-                        <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
+                        <p><strong class="line">Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
+                        <p><strong class="line">Voucher</strong> <span id="voucher">-${1.5} $</span></p>
+                        <p><strong class="line">Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
                     `;
 
                     showPaymentForm(driver); // Attach event listeners to payment buttons
@@ -1838,9 +1881,9 @@
             const detailDiv = document.getElementById('paymentDetail'); // Hiển thị paymentDetail: price, voucher, total
             detailDiv.innerHTML = ''; // xóa ds cũ
             detailDiv.innerHTML = `
-                <p><strong>Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
-                <p><strong>Voucher</strong> <span id="voucher">-${1.5} $</span></p>
-                <p><strong>Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
+                <p><strong class="line">Price</strong> <span id ="price">${(routeInfo.distance * 1.2).toFixed(2)} $</span></p>
+                <p><strong class="line">Voucher</strong> <span id="voucher">-${1.5} $</span></p>
+                <p><strong class="line">Total</strong> <span id="total">${(routeInfo.distance * 1.2 - 1.5).toFixed(2)} $</span></p>                        
             `;
 
             // Hàm xử lý khi customer nhập payment form xong và ấn "Pay Now" hoặc "Ok"
