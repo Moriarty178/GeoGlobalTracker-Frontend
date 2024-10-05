@@ -1,0 +1,230 @@
+.dashboard {
+  padding: 20px;
+}
+
+/* Cards */
+
+.stats-cards {
+  display: flex;
+  justify-content: space-between; /* Căn giữa các nhóm thẻ */
+  margin-bottom: 20px;
+}
+
+.stats-left,
+.stats-right {
+  width: 48%; /* Đặt chiều rộng cho các nhóm thẻ */
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  /* padding: 0 15px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+}
+
+.stats-left h3, .stats-right h3 {
+  margin: 0; /* Loại bỏ khoảng cách mặc định của tiêu đề */
+  font-size: 1.2em;
+  color: #333;
+  background-color: #e0e0e0;
+  padding: 10px 20px; /* Thêm padding để tạo không gian cho tiêu đề */
+  border-radius: 4px 4px 0 0; /* Bo tròn góc trên của tiêu đề */
+  border: 2px solid #bab8b8;
+  text-align: left;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between; /* Căn giữa các thẻ trong hàng */
+  margin-bottom: 10px; /* Khoảng cách giữa các hàng */
+}
+
+.card {
+  flex: 1; /* Mỗi thẻ sẽ chiếm cùng một khoảng không gian */
+  margin: 0 10px; /* Khoảng cách giữa các thẻ */
+  color: white; /* Màu chữ mặc định cho thẻ */
+  border-radius: 5px; /* Bo góc cho thẻ */
+  display: flex;
+  align-items: center; /* Căn giữa nội dung trong thẻ */
+  height: 100px; /* Đặt chiều cao cố định cho thẻ */
+  overflow: hidden;
+}
+
+.icon-container {
+  height: 100%; /* Đặt chiều cao của biểu tượng bằng chiều cao thẻ */
+  width: 30%;
+  display: flex;
+  align-items: center; /* Căn giữa biểu tượng theo chiều dọc */
+  margin-right: 30px; /* Khoảng cách giữa biểu tượng và nội dung thẻ */
+  background-color: green;
+  justify-content: center; /*căn ngang center*/
+}
+
+.icon-config {
+  width: 70%;
+  height: 70%;
+  /* margin-right: 20px; */
+}
+
+.card-content {
+  flex: 1; /* Đặt nội dung chiếm không gian còn lại */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.card-content h3, h4 {
+  margin: 0; /* Bỏ khoảng cách cho tiêu đề */
+}
+
+.card-content span {
+  font-size: 1.5em; /* Kích thước chữ cho giá trị */
+}
+
+
+h3 {
+  font-size: 1.8em;
+  
+}
+/* Charts */
+
+.charts-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart {
+  width: 48%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  min-width: 250px;
+}
+
+.chart-header {
+  display: flex;
+  border: 2px solid #a6a3a3;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+  background-color: #e0e0e0;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.chart h3 {
+  font-size: 1.1em;
+  margin: 0 0 0 15px;
+}
+
+.chart:first-child {
+  flex-basis: 65%;
+}
+
+.chart:last-child {
+  flex-basis: 32%;
+}
+
+/* @media screen and (max-width: 768px) {
+  .charts-section {
+    flex-direction: column;
+  }
+
+  .chart {
+    flex-basis: 100%;
+    margin-bottom: 20px;
+  }
+} */
+
+/* Table Recent Rides */
+.recent-rides h3 {
+  margin: 0;
+  border: 2px solid #a6a3a3;  
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 211, 0.1);
+  background-color: #e0e0e0;
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.recent-rides table {
+  width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+  border-collapse: collapse; /* Hợp nhất các đường viền của các ô */
+}
+
+.recent-rides th,
+.recent-rides td {
+  border: 1px solid #ddd; /* Thêm đường viền cho các ô */
+  padding: 8px; /* Thêm khoảng cách cho các ô */
+  text-align: left; /* Căn lề trái cho nội dung */
+  word-wrap: break-word; /* Cho phép xuống hàng khi nội dung dài */
+}
+
+.recent-rides th {
+  background-color: #f2f2f2; /* Màu nền cho hàng tiêu đề */
+}
+
+.recent-rides td {
+  max-width: 150px; /* Giới hạn độ rộng tối đa cho cột */
+  overflow: hidden; /* Ẩn nội dung bị tràn */
+  text-overflow: ellipsis; /* Hiển thị dấu "..." nếu nội dung bị cắt */
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  /* Cards */
+  .stats-cards {
+    flex-direction: column;
+    /* max-width: 100%; */
+    width: 90%;
+  }
+
+  .stats-left , .stats-right {
+    width: 100%;
+  }
+
+  /* Charts */
+  .charts-section {
+    flex-direction: column;
+    width: 90%;
+  }
+
+  .chart {
+    width: 100%;
+    /* max-width: 400px; */
+    margin-bottom: 20px;
+  }
+
+  /* Table Recent Rides */
+  .recent-rides {
+    width: 90%;
+  }
+}
+
+
+
