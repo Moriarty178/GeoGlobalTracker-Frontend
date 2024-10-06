@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-
+import './Charts.css'
 import { Doughnut } from 'react-chartjs-2'; // Giả sử bạn sẽ sử dụng chart.js
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, ArcElement, BarElement, CategoryScale, LinearScale, TimeScale } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { format } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon
 import { faChartPie } from '@fortawesome/free-solid-svg-icons'; // Import faMapMarkerAlt
 import ChartDataLabels from 'chartjs-plugin-datalabels'
@@ -43,7 +42,7 @@ const DriverChart = () => {
 
             // const text = centerValue; // sẽ ko cập nhật được khi centerValue thay đổi BỞI VI khi component re-renders,nó tạo ra context mới, -> nếu chỉ định centerValue trực tiếp thì nó sẽ KHÔNG CẬP NHẬT khi có thay đổi.
             // Lấy giá trị centerValue để tách dòn
-            const centerValue = chart.options.plugins.centerTextPlugin.centerValue || 'click a section'; // Dùng getContext của chart để lấy giá tị mới nhất của centerValue
+            const centerValue = chart.options.plugins.centerTextPlugin.centerValue || 'Click a section'; // Dùng getContext của chart để lấy giá tị mới nhất của centerValue
             const lines = centerValue.split('\n');
 
             const lineHeight = 30;

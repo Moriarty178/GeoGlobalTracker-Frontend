@@ -1,0 +1,116 @@
+/* Table Recent Rides */
+.recent-rides h3 {
+    margin: 0;
+    border: 2px solid #a6a3a3;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 211, 0.1);
+    background-color: #e0e0e0;
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.recent-rides table {
+    width: 100%;
+    /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+    border-collapse: collapse;
+    /* Hợp nhất các đường viền của các ô */
+}
+
+.recent-rides th,
+.recent-rides td {
+    border: 1px solid #ddd;
+    /* Thêm đường viền cho các ô */
+    padding: 8px;
+    /* Thêm khoảng cách cho các ô */
+    text-align: left;
+    /* Căn lề trái cho nội dung */
+    word-wrap: break-word;
+    /* Cho phép xuống hàng khi nội dung dài */
+}
+
+.recent-rides th {
+    background-color: #f2f2f2;
+    /* Màu nền cho hàng tiêu đề */
+}
+
+.recent-rides td {
+    max-width: 150px;
+    /* Giới hạn độ rộng tối đa cho cột */
+    overflow: hidden;
+    /* Ẩn nội dung bị tràn */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu "..." nếu nội dung bị cắt */
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    /* Căn giữa các nút phân trang */
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination button {
+    background-color: #007bff;
+    /* Màu nền cho nút */
+    color: white;
+    /* Màu chữ */
+    border: none;
+    /* Không viền */
+    padding: 10px 15px;
+    /* Khoảng cách bên trong nút */
+    margin: 0 5px;
+    /* Khoảng cách giữa các nút */
+    border-radius: 5px;
+    /* Bo góc nút */
+    cursor: pointer;
+    /* Hiển thị con trỏ tay khi di chuột */
+    transition: background-color 0.3s, transform 0.3s;
+    /* Hiệu ứng chuyển đổi */
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+    /* Màu nền khi di chuột */
+    transform: scale(1.05);
+    /* Tăng kích thước khi di chuột */
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    /* Màu nền cho nút vô hiệu hóa */
+    cursor: not-allowed;
+    /* Con trỏ không cho phép khi di chuột */
+}
+
+.pagination .current-page {
+    background-color: #28a745;
+    /* Màu nền cho nút trang hiện tại */
+    border: 1px solid #007bff;
+    /* Viền cho nút trang hiện tại */
+    color: white;
+    /* Màu chữ */
+    font-weight: bold;
+    /* Đậm chữ */
+}

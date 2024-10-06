@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './Charts.css'
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, TimeScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend, Title } from 'chart.js';
 import 'chartjs-plugin-zoom';
@@ -124,7 +125,7 @@ const RideChart = () => {
         }
     };
 
-    const options2 = {
+    const options = {
         responsive: true,
         plugins: {
             legend: {
@@ -224,7 +225,7 @@ const RideChart = () => {
                 <FontAwesomeIcon icon={faChartLine} style={{ color: '#524545', fontSize: '28px' }} />
                 <h3>Ride Status</h3>
             </div>
-            <Line data={rideStatusData} options={options2} />
+            <Line data={rideStatusData} options={options} />
         </div>
     );
 };
