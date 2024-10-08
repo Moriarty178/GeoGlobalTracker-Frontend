@@ -13,7 +13,7 @@ const RecentRide = () => {
 
   useEffect(() => {
     // Gọi API để lấy dữ liệu từ backend
-    const fetchRecentRides = async (offset, limit) => {
+    const fetchRecentRides = async (offset, limit) => { // offset: pageNumber
       try {
         const response = await axios.get('http://localhost:8080/trips/recent-rides', {
           params: {
@@ -23,6 +23,7 @@ const RecentRide = () => {
         });
         setRecentRides(response.data.rides); // Giả định response.data chứa thông tin rides
         setTotalRides(response.data.total); // Giả định response.data có tổng số rides
+        console.log("Total = ", response.data.total);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching recent rides:', error);
@@ -30,7 +31,7 @@ const RecentRide = () => {
       }
     };
 
-    fetchRecentRides((currentPage - 1) * ridesPerPage, ridesPerPage);
+    fetchRecentRides((currentPage - 1) * ridesPerPage, ridesPerPage); // startFromRecord = ? limit = ?      startFromRecord = (pageNumber - 1) * limit
   }, [currentPage]);
 
   if (loading) {
@@ -38,6 +39,7 @@ const RecentRide = () => {
   }
 
   const totalPages = Math.ceil(totalRides / ridesPerPage);
+  console.log('TotalPages = ', totalPages);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -93,16 +95,29 @@ const RecentRide = () => {
 
       {/* Phần phân trang */}
       <div className="pagination">
-        <button onClick={() => handlePageChange(1)} disabled={currentPage === 1}>Đầu</button> 
-        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>{currentPage - 1}</button>
+        {currentPage !== 1 && (
+          <button onClick={() => handlePageChange(1)}>Đầu</button>
+        )}
+
+        {currentPage > 2 && (
+          <button onClick={() => handlePageChange(currentPage - 1)}>{currentPage - 1}</button>
+        )}
 
         <span>{currentPage}</span>
 
-        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>{currentPage + 1}</button>
-        <button onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>Cuối</button>
+        {currentPage < totalPages - 1 && (
+          <button onClick={() => handlePageChange(currentPage + 1)}>{currentPage + 1}</button>
+        )}
+
+        {currentPage !== totalPages && (
+          <button onClick={() => handlePageChange(totalPages)}>Cuối</button>
+        )}
       </div>
     </div>
   );
 };
 
 export default RecentRide;
+
+// Note:
+// Thêm phần See Detail cho cột Status
