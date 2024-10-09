@@ -18,7 +18,8 @@ const RiderAdd = ({ onSubPageChange }) => {
         axios.post('http://localhost:8080/trips/riders/add', newRider)
             .then(response => {
                 console.log("Rider added: ", response.data);
-                onSubPageChange();// quay về trang Riders
+                alert("Add rider successfully.");
+                // onSubPageChange();// quay về trang Riders
             }).catch(error => {
                 console.error('Error adding rider:', error);
             });

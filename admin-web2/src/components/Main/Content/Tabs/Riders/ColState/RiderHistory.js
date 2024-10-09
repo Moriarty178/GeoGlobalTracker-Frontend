@@ -71,7 +71,7 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
                 </thead>
                 <tbody>
                     {trips.map((trip, index) => (
-                        <tr key={index}>
+                        <tr key={trip.tripId}>
                             <td>{trip.tripId}</td>
                             <td>
                                 <div>

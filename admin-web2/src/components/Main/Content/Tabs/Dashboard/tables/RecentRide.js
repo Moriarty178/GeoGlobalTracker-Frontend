@@ -73,7 +73,7 @@ const RecentRide = () => {
         </thead>
         <tbody>
           {recentRides.map((ride, index) => (
-            <tr key={index}>
+            <tr key={ride.tripId}>
               <td>{ride.tripId}</td>
               <td>{ride.customerName}</td>
               <td>{ride.driverName ? ride.driverName : 'N/A'}</td>

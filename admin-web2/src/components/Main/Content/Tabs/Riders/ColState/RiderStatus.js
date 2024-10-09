@@ -1,6 +1,7 @@
 // import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import './RiderStatus.css'
 
 const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
     const [status, setStatus] = useState(initialStatus || 'Active');
@@ -12,6 +13,7 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
                 console.log('Status updated:', response.data);
                 // Quay lại trang Rider sau khi lưu thành công
                 // onSubPageChange(null); // Quay lại trang chính (Rider)
+                alert(`${response.data} Change status of RiderID ${riderId} -> ${status}`);
             })
             .catch(error => {
                 console.error('Error updating rider status:', error);
@@ -25,15 +27,20 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
 
     return (
         <div>
-            <h2>Change Status for Rider {riderId}</h2>
+            <h2>Change Status for RiderID: {riderId}</h2>
             <div className='form-buttons'>
                 <button type='button' onClick={handleBack}>Back</button>
             </div>
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Block">Block</option>
-            </select>
-            <button onClick={handleSave}>Save</button>
+            <div className='form-select-status'>
+                <span> Select status:</span>
+                <select className='select-status' value={status} onChange={(e) => setStatus(e.target.value)}>
+                    <option value="Active">Active</option>
+                    <option value="Block">Block</option>
+                </select>
+                <div className='form-buttons'>
+                    <button style={{ background: 'green', color: 'white' }} onClick={handleSave}>Save</button>
+                </div>
+            </div>
         </div>
     );
 };

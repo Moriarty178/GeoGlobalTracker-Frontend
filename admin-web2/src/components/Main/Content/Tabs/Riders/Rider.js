@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
 import './Rider.css'
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDeleteLeft, faEdit, faHistory, faLock, faPen, faPenAlt, faRectangleXmark, faTrash, faTrashAlt, faTrashCan, faUnlock, faUserEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 
 const Rider = ({ onSubPageChange }) => {
     const [riders, setRiders] = useState([]);
@@ -14,53 +13,71 @@ const Rider = ({ onSubPageChange }) => {
 
     // const navigate = useNavigate(); // Hook dùng để điều hướng
 
-    useEffect(() => {
-        const fetchRiders = async (offset, limit) => { // offset: pageNumber
-            try {
-                const response = await axios.get('http://localhost:8080/trips/riders', {
-                    params: {
-                        offset: offset,
-                        limit: limit,
-                    },
-                });
-                setRiders(response.data.riders);
-                setTotalRides(response.data.total);
-                console.log('Riders:', response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching riders:', error);
-                setLoading(false);
-            }
-        };
+    // Tách hàm fetch ra ngoài dùng lại khi cần thiết vd: update table after delete
+    const fetchRiders = async (offset, limit) => { // offset: pageNumber
+        try {
+            const response = await axios.get('http://localhost:8080/trips/riders', {
+                params: {
+                    offset: offset,
+                    limit: limit,
+                },
+            });
+            setRiders(response.data.riders);
+            setTotalRides(response.data.total);
+            console.log('Riders:', response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching riders:', error);
+            setLoading(false);
+        }
+    };
 
+    // fetch dữ liệu mỗi khi currentPage thay đổi
+    useEffect(() => {
+        // const fetchRiders = async (offset, limit) => { 
+        // ................
+        // };
         fetchRiders((currentPage - 1), ridersPerPage); // pageNumber = ? limit = ?
     }, [currentPage]);
+
+    // Hàm chuyến trang (pagination)
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const handleAddRider = () => {
+        onSubPageChange('addRider'); // Điều hướng sang trang <RiderAdd />
+    };
+
+    const handleRideHistory = (riderId) => {
+        // navigate(`/riders/${riderId}/history`); 
+        onSubPageChange('rideHistory', { riderId }); // Điều hướng đến trang <RideHistory /> với riderId
+    };
+
+    const handleRiderStatus = (riderId, currentStatus) => {
+        // navigate(`/riders/${riderId}/status`, { state: { currentStatus } }); 
+        onSubPageChange('riderStatus', { riderId, currentStatus }); // Điều hướng đến trang <RiderStatus /> với riderId
+    };
+
+    const handleEditRider = (riderId) => {
+        onSubPageChange('editRider', { riderId }); // Điều hướng đến trang <RiderEdit />
+    };
+
+    const handleDeleteRider = async (riderId) => { // hàm xóa rider
+        try {
+            const response = await axios.delete(`http://localhost:8080/trips/riders/${riderId}`);
+            console.log("Status: ", response.data);
+            fetchRiders(currentPage, ridersPerPage);
+        } catch (error) {
+            console.error('Error deleting rider: ', error);
+        };
+    };
 
     if (loading) {
         return <div>Loading...</div>
     }
 
     const totalPages = Math.ceil(totalRiders / ridersPerPage);
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
-
-    const handleRideHistory = (riderId) => {
-        // navigate(`/riders/${riderId}/history`); // Điều hướng đến trang RideHistory với riderId
-        onSubPageChange('rideHistory', { riderId });
-    };
-
-    const handleRiderStatus = (riderId, currentStatus) => {
-        // navigate(`/riders/${riderId}/status`, { state: { currentStatus } }); // Điều hướng đến trang RiderStatus với riderId
-        onSubPageChange('riderStatus', { riderId, currentStatus });
-    };
-
-    const handleAddRider = () => {
-        onSubPageChange('addRider'); // Điều hướng sang trang RiderAdd
-    };
-
-
 
     return (
         <div className='riders'>
@@ -82,8 +99,8 @@ const Rider = ({ onSubPageChange }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {riders.map((rider, index) => (
-                        <tr key={index}>
+                    {riders.map((rider) => (
+                        <tr key={rider.customerId}>
                             <td>{rider.customerId}</td>
                             <td>{rider.firstName}</td>
                             <td>{rider.email}</td>
@@ -97,8 +114,16 @@ const Rider = ({ onSubPageChange }) => {
                             </td>
                             <td>
                                 <div className='form-buttons'>
-                                    <button className='btn-edit'><FontAwesomeIcon icon={faUserEdit} style={{ color: 'white' }} /></button>
-                                    <button className='btn-delete'><FontAwesomeIcon icon={faTrashCan} style={{ color: 'white' }} /></button>
+                                    <button className='btn-edit' onClick={() => handleEditRider(rider.customerId)}><FontAwesomeIcon icon={faUserEdit} style={{ color: 'white' }} /></button>
+                                    {/* Click delete -> window confirm -> confirm -> handleDelete */}
+                                    <button className='btn-delete'
+                                        onClick={() => {
+                                            if (window.confirm(`Are you sure you want to delete rider ${rider.firstName}?`)) {
+                                                handleDeleteRider(rider.customerId);
+                                            }
+                                        }}>
+                                        <FontAwesomeIcon icon={faTrashCan} style={{color: 'white'}} />
+                                    </button>
                                 </div>
                             </td>
                         </tr>

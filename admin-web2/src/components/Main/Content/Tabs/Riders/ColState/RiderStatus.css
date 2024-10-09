@@ -1,0 +1,29 @@
+.form-select-status {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-select-status span {
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.select-status {
+    width: 50%;
+    border: 2px solid rgb(133, 129, 129);
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.select-status:hover {
+    border-color: black;
+}
+
+.select-status:focus {
+    border-color: rgb(62, 45, 250);
+    border-bottom: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    /* border-radius: 4px 4px 12px 12px; */
+}
