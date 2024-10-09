@@ -26,7 +26,7 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
     return (
         <div>
             <h2>Change Status for Rider {riderId}</h2>
-            <div>
+            <div className='form-buttons'>
                 <button type='button' onClick={handleBack}>Back</button>
             </div>
             <select value={status} onChange={(e) => setStatus(e.target.value)}>

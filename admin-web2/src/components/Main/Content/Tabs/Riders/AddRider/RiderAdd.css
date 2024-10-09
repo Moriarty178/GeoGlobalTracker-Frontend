@@ -1,0 +1,93 @@
+/* Container của form */
+.form-container {
+    /* max-width: 500px; */
+    /* margin: 50px auto; */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề của form */
+.form-title {
+    text-align: left;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Nội dung của form */
+.form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Các nhóm input */
+.form-group {
+    /* display: grid;
+    grid-template-columns: 150px 1fr; Cột 1 cố định 150px cho nhãn, cột 2 chiếm phần còn lại */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;  */
+    margin-bottom: 15px;
+}
+
+/* Label cho các ô nhập */
+.form-label {
+    font-weight: bold;
+    color: #555;
+    text-align: left; 
+    padding-right: 10px; /* Thêm khoảng cách giữa nhãn và ô nhập */
+    margin-bottom: 12px;
+
+}
+
+/* Input cho form */
+.form-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 100%; /* Đảm bảo ô nhập chiếm toàn bộ chiều rộng */
+    transition: border-color 0.3s ease;
+}
+
+.form-input:hover {
+    border-color: green;
+}
+
+.form-input:focus {
+    border-color: red;
+    outline: none;
+}
+
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 15px;
+        max-width: 100%; /* Giãn chiều rộng form chiếm 100% chiều rộng màn hình */
+        margin: 10px;
+    }
+
+    .form-group {
+        flex-direction: column; /* Chuyển nhóm input thành dạng cột */
+        align-items: flex-start; /* Căn các nhãn và ô nhập liệu sang bên trái */
+    }
+
+    .form-label {
+        /* text-align: left; Căn nhãn sang trái */
+        padding-bottom: 5px; /* Thêm khoảng cách bên dưới nhãn */
+        margin-bottom: 5px; /* Điều chỉnh khoảng cách giữa nhãn và ô nhập */
+    }
+
+    .form-buttons {
+        flex-direction: column; /* Chuyển nhóm nút thành dạng cột */
+        align-items: stretch; /* Kéo rộng nút chiếm toàn bộ chiều rộng */
+    }
+
+    .form-buttons button {
+        width: 100%; /* Đảm bảo nút chiếm toàn bộ chiều rộng */
+        margin-bottom: 10px; /* Thêm khoảng cách giữa các nút */
+    }
+}

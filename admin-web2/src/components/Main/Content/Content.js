@@ -2,10 +2,10 @@ import React, { act } from 'react';
 import Dashboard from './Tabs/Dashboard/Dashboard';
 import './Content.css';
 import Rider from './Tabs/Riders/Rider';
-import RideHistory from './Tabs/Riders/RiderHistory';
-import RiderStatus from './Tabs/Riders/RiderStatus';
-import RiderAdd from './Tabs/Riders/RiderAdd';
-import RiderEdit from './Tabs/Riders/RiderEdit';
+import RideHistory from './Tabs/Riders/ColState/RiderHistory';
+import RiderStatus from './Tabs/Riders/ColState/RiderStatus';
+import RiderAdd from './Tabs/Riders/AddRider/RiderAdd';
+import RiderEdit from './Tabs/Riders/ColAction/RiderEdit';
 
 function Content({ activeTab, subPage, onSubPageChange }) {
   const renderContent = () => {

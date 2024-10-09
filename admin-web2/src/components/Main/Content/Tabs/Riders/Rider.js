@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import './Rider.css'
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDeleteLeft, faEdit, faHistory, faLock, faPen, faPenAlt, faRectangleXmark, faTrash, faTrashAlt, faTrashCan, faUnlock, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 
 const Rider = ({ onSubPageChange }) => {
     const [riders, setRiders] = useState([]);
@@ -31,7 +33,7 @@ const Rider = ({ onSubPageChange }) => {
             }
         };
 
-        fetchRiders((currentPage - 1) , ridersPerPage); // pageNumber = ? limit = ?
+        fetchRiders((currentPage - 1), ridersPerPage); // pageNumber = ? limit = ?
     }, [currentPage]);
 
     if (loading) {
@@ -63,11 +65,11 @@ const Rider = ({ onSubPageChange }) => {
     return (
         <div className='riders'>
             <h2>Riders</h2>
-            <div className='button'>
+            <div className='form-buttons'>
                 <button onClick={handleAddRider}>Add Rider</button>
                 <button onClick={() => onSubPageChange()}>Back</button>
             </div>
-            <table>
+            <table id='ridersTable'>
                 <thead>
                     <tr>
                         <th>Rider ID</th>
@@ -88,10 +90,17 @@ const Rider = ({ onSubPageChange }) => {
                             <td>{rider.phone}</td>
                             <td>..........</td>
                             <td>
-                                <button onClick={() => handleRideHistory(rider.customerId)}>Ride History</button>
-                                <button onClick={() => handleRiderStatus(rider.customerId, rider.status)}>{rider.status}</button>
+                                <div className='form-buttons'>
+                                    <button className='btn-history' onClick={() => handleRideHistory(rider.customerId)}>Ride History</button>
+                                    <button className='btn-status' onClick={() => handleRiderStatus(rider.customerId, rider.status)}>{rider.status}</button>
+                                </div>
                             </td>
-                            <td><button>Edit</button><button>Delete</button></td>
+                            <td>
+                                <div className='form-buttons'>
+                                    <button className='btn-edit'><FontAwesomeIcon icon={faUserEdit} style={{ color: 'white' }} /></button>
+                                    <button className='btn-delete'><FontAwesomeIcon icon={faTrashCan} style={{ color: 'white' }} /></button>
+                                </div>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

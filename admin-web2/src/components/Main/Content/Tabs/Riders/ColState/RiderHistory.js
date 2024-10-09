@@ -56,7 +56,7 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
     return (
         <div>
             <h2>Ride History for Rider {riderId}</h2>
-            <div>
+            <div className="form-buttons">
                 <button type="button" onClick={handleBack}>Back</button>
             </div>
             <table>

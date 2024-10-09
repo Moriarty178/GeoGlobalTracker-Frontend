@@ -1,0 +1,50 @@
+/* Các nút điêu khiển : cho toàn bộ bố cục buttons của <Rider />  */
+.form-buttons {
+    display: flex;
+    justify-content: left;
+    margin: 20px 0 20px;
+}
+
+.form-buttons button {
+    padding: 6px 16px;
+    border: 3px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, transform 0.3s;
+    margin-right: 20px;
+}
+
+.form-buttons button:hover {
+    border-color: #007bff;
+    transform: scale(1.03);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    outline: none;
+    z-index: 1;
+    position: relative;
+}
+
+#ridersTable .form-buttons{
+    margin: 0;
+}
+
+/* buttons of table */
+.btn-history {
+    background-color: orange;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-status {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-edit {
+    background-color: blue;
+}
+
+.btn-delete {
+    background-color: red;
+}

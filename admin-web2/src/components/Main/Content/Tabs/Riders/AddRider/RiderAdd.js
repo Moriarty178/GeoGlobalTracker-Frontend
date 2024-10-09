@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import './RiderAdd.css'
 
 
 const RiderAdd = ({ onSubPageChange }) => {
@@ -28,52 +29,67 @@ const RiderAdd = ({ onSubPageChange }) => {
     };
 
     return (
-        <div>
-            <h2>Add New Rider</h2>
-            <form>
-                <div>
-                    <label>Email:</label>
-                    <input
+        <div className="form-container">
+            <h2 className="form-title">Add New Rider</h2>
+            <form className="form-content">
+                <div className="form-group">
+                    <label className="form-label">Email:</label>
+                    <input 
+                        className="form-input"
                         type="email"
+                        placeholder="Email"
+                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Phone:</label>
-                    <input
+                <div className="form-group">
+                    <label className="form-label">Phone:</label>
+                    <input 
+                        className="form-input"
                         type="text"
+                        placeholder="Phone"
+                        required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>First Name:</label>
-                    <input
+                <div className="form-group">
+                    <label className="form-label">First Name:</label>
+                    <input 
+                        className="form-input"
                         type="text"
+                        placeholder="First Name"
+                        required
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Last Name:</label>
-                    <input
+                <div className="form-group">
+                    <label className="form-label">Last Name:</label>
+                    <input 
+                        className="form-input"
                         type="text"
+                        placeholder="Last Name"
+                        required
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Password:</label>
-                    <input
+                <div className="form-group">
+                    <label className="form-label">Password:</label>
+                    <input 
+                        className="form-input"
                         type="password"
+                        placeholder="Password"
+                        required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div>
-                    <button type="button" onClick={handleSave}>Save</button>
-                    <button type="button" onClick={handleBack}>Back</button>
+                <div className="form-buttons">
+                    <button type="submit" className="btn-primary" onClick={handleSave}>Save</button>
+                    <button type="button" className="btn-secondary" onClick={handleBack}>Back</button>
                 </div>
             </form>
         </div>
