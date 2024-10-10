@@ -64,13 +64,23 @@ const RideChart = () => {
                     const [year, month] = label.split('-');
                     return new Date(year, month - 1, 1).getTime(); // Chuyển đổi thành timestamp
                 });
-                setRideStatusData((prevData) => ({
+
+                console.log('InitiaData labels:', formattedLabels);
+                
+                setRideStatusData({
                     labels: formattedLabels, // Sử dụng timestamp cho nhãn
-                    datasets: prevData.datasets.map((dataset, index) => ({
-                        ...dataset,
-                        data: initialData.datasets[index].data || [],
+                    datasets: initialData.datasets.map((dataset, index) => ({
+                        ...rideStatusData.datasets[index],
+                        data: dataset.data,
                     })),
-                }));
+                });
+                // setRideStatusData((prevData) => ({
+                //     labels: formattedLabels, // Sử dụng timestamp cho nhãn
+                //     datasets: prevData.datasets.map((dataset, index) => ({
+                //         ...dataset,
+                //         data: initialData.datasets[index].data || [],
+                //     })),
+                // }));
                 setCurrentStartIndex(12);
             }
             setLoading(false);
@@ -79,6 +89,8 @@ const RideChart = () => {
         loadInitialData();
     }, []);
 
+
+    // in ra console kết quả để kiểm tra
     useEffect(() => {
         console.log("Updated rideStatusData: ", rideStatusData);
     }, [rideStatusData]);
@@ -95,13 +107,22 @@ const RideChart = () => {
                         const [year, month] = label.split('-');
                         return new Date(year, month - 1, 1).getTime(); // Chuyển đổi thành timestamp
                     });
-                    setRideStatusData((prevData) => ({
+
+
+                    setRideStatusData({
                         labels:formattedLabels,
-                        datasets: prevData.datasets.map((dataset, index) => ({
-                            ...dataset,
-                            data: [...newData.datasets[index].data, ...dataset.data], 
+                        datasets: newData.datasets.map((dataset, index) => ({
+                            ...rideStatusData.datasets[index],
+                            data: dataset.data, 
                         })),
-                    }));
+                    });
+                    // setRideStatusData((prevData) => ({
+                    //     labels:formattedLabels,
+                    //     datasets: prevData.datasets.map((dataset, index) => ({
+                    //         ...dataset,
+                    //         data: [...newData.datasets[index].data, ...dataset.data], 
+                    //     })),
+                    // }));
                     setCurrentStartIndex(currentStartIndex + 12);
                 }
             } else if (direction === 'current') {
@@ -111,13 +132,13 @@ const RideChart = () => {
                         const [year, month] = label.split('-');
                         return new Date(year, month - 1, 1).getTime(); // Chuyển đổi thành timestamp
                     });
-                    setRideStatusData((prevData) => ({
+                    setRideStatusData({
                         labels:formattedLabels, //[...prevData.labels, ...uniqueLabels], // Gộp nhãn hiện tại vào
-                        datasets: prevData.datasets.map((dataset, index) => ({
-                            ...dataset,
-                            data: [...newData.datasets[index].data, ...dataset.data], 
+                        datasets: newData.datasets.map((dataset, index) => ({
+                            ...rideStatusData.datasets[index],
+                            data: dataset.data, 
                         })),
-                    }));
+                    });
                     setCurrentStartIndex(currentStartIndex - 12);
                 }
             }
