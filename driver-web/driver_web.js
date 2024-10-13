@@ -1,4 +1,4 @@
-// -------------------------------- Loin/Sign up -----okokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkooooooooooooooooookkkkkkkkkkkkkkkkkkkkk----------------------------
+// -------------------------------- Loin/Sign up ---------------------------------
 
 
 // URL của backend API cho đăng nhập và đăng ký

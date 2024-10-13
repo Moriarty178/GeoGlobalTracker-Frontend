@@ -25,3 +25,6 @@
     padding-left: 10px;
   }
   
+  .sub-menu {
+    margin-left: 20px; /* Để tạo khoảng cách lệch vào so với tab chính */
+  }

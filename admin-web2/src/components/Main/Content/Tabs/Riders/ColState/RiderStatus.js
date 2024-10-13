@@ -8,12 +8,12 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
 
     const handleSave = () => {
         // Gửi request để cập nhật trạng thái của Rider
-        axios.post(`http://localhost:8080/trips/riders/${riderId}/status`, { status })
+        axios.put(`http://localhost:8080/trips/riders/${riderId}/status`, { status })
             .then(response => {
                 console.log('Status updated:', response.data);
                 // Quay lại trang Rider sau khi lưu thành công
                 // onSubPageChange(null); // Quay lại trang chính (Rider)
-                alert(`${response.data} Change status of RiderID ${riderId} -> ${status}`);
+                alert(`${response.data} Changed the status of RiderID ${riderId} -> ${status}`);
             })
             .catch(error => {
                 console.error('Error updating rider status:', error);
@@ -35,10 +35,10 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
                 <span> Select status:</span>
                 <select className='select-status' value={status} onChange={(e) => setStatus(e.target.value)}>
                     <option value="Active">Active</option>
-                    <option value="Block">Block</option>
+                    <option value="Blocked">Block</option>
                 </select>
                 <div className='form-buttons'>
-                    <button style={{ background: 'green', color: 'white' }} onClick={handleSave}>Save</button>
+                    <button className="btn-green" onClick={handleSave}>Save</button>
                 </div>
             </div>
         </div>

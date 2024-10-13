@@ -29,22 +29,26 @@
 }
 
 /* buttons of table */
-.btn-history {
+.btn-yellow {
     background-color: orange;
     color: white;
     font-weight: bold;
 }
 
-.btn-status {
+.btn-green {
     background-color: green;
     color: white;
     font-weight: bold;
 }
 
-.btn-edit {
+.btn-blue {
+    font-weight: bold;
+    columns: white;
     background-color: blue;
 }
 
-.btn-delete {
+.btn-red {
+    font-weight: bold;
+    color: white;
     background-color: red;
 }

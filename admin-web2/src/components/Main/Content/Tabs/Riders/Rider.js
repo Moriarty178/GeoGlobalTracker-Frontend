@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './Rider.css'
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan, faUserEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashCan, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 
 const Rider = ({ onSubPageChange }) => {
     const [riders, setRiders] = useState([]);
@@ -108,15 +108,23 @@ const Rider = ({ onSubPageChange }) => {
                             <td>..........</td>
                             <td>
                                 <div className='form-buttons'>
-                                    <button className='btn-history' onClick={() => handleRideHistory(rider.customerId)}>Ride History</button>
-                                    <button className='btn-status' onClick={() => handleRiderStatus(rider.customerId, rider.status)}>{rider.status}</button>
+                                    <button className='btn-yellow' onClick={() => handleRideHistory(rider.customerId)}>Ride History</button>
+                                    {rider.status === 'Active' ? (
+                                        <button className='btn-green' onClick={() => handleRiderStatus(rider.customerId, rider.status)}>
+                                            {rider.status}
+                                        </button>
+                                    ) : (
+                                        <button className='btn-red' onClick={() => handleRiderStatus(rider.customerId, rider.status)}>
+                                            {rider.status}
+                                        </button>
+                                    )}
                                 </div>
                             </td>
                             <td>
                                 <div className='form-buttons'>
-                                    <button className='btn-edit' onClick={() => handleEditRider(rider.customerId)}><FontAwesomeIcon icon={faUserEdit} style={{ color: 'white' }} /></button>
+                                    <button className='btn-blue' onClick={() => handleEditRider(rider.customerId)}><FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} /></button>
                                     {/* Click delete -> window confirm -> confirm -> handleDelete */}
-                                    <button className='btn-delete'
+                                    <button className='btn-red'
                                         onClick={() => {
                                             if (window.confirm(`Are you sure you want to delete rider ${rider.firstName}?`)) {
                                                 handleDeleteRider(rider.customerId);
