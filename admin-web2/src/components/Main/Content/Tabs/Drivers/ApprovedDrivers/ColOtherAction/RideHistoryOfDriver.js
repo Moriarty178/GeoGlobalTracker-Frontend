@@ -12,8 +12,6 @@ const RideHistoryOfDriver = ({driverId, onSubPageChange}) => {
     const tripsPerPage = 10;
 
     //fetch lấy dữ liệu
-    
-
     useEffect(() => {
         const fetchTrips = async (offset, limit) => {
             try {

@@ -32,8 +32,8 @@ const StatCards = () => {
                 <h3>Site Statistics</h3> {/* Tiêu đề cho nhóm thẻ thống kê */}
                 <div className="stats-row">
                     <div className="card" style={{ backgroundColor: '#4CAF50' }}>
-                        <div className='icon-container' style={{ backgroundColor: 'green' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faUsersLine} style={{ color: '#0100f3' }} /> {/* Biểu tượng cho Total Riders */}
+                        <div className='card-icon' style={{ backgroundColor: 'green' }}>
+                            <FontAwesomeIcon className='card-icon-config' icon={faUsersLine} style={{ color: '#0100f3' }} /> {/* Biểu tượng cho Total Riders */}
                         </div>
                         <div className='card-content'>
                             <h4>Total Customers</h4>
@@ -41,8 +41,8 @@ const StatCards = () => {
                         </div>
                     </div>
                     <div className="card" style={{ backgroundColor: '#2196F3' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#2020eb' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faUserAstronaut} style={{ color: '#00ffed' }} /> {/* Biểu tượng cho Total Drivers */}
+                        <div className='card-icon' style={{ backgroundColor: '#2020eb' }}>
+                            <FontAwesomeIcon className='card-icon-config' icon={faUserAstronaut} style={{ color: '#00ffed' }} /> {/* Biểu tượng cho Total Drivers */}
                         </div>
                         <div className='card-content'>
                             <h4>Total Drivers</h4>
@@ -52,8 +52,8 @@ const StatCards = () => {
                 </div>
                 <div className="stats-row" >
                     <div className="card" style={{ backgroundColor: '#FF9800' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#c58002' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faCar} style={{ color: '#b00808' }} /> {/* Biểu tượng cho Vehicle Type */}
+                        <div className='card-icon bg-n-color-car'>
+                            <FontAwesomeIcon className='card-icon-config' icon={faCar} /> {/* Biểu tượng cho Vehicle Type */}
                         </div>
                         <div className='card-content'>
                             <h4>Vehicle Type</h4>
@@ -61,8 +61,8 @@ const StatCards = () => {
                         </div>
                     </div>
                     <div className="card" style={{ backgroundColor: '#b70c8f' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#8d016c' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faMoneyBillTrendUp} style={{ color: 'green' }} /> {/* Biểu tượng cho Revenue */}
+                        <div className='card-icon bg-n-color-revenue'>
+                            <FontAwesomeIcon className='card-icon-config' icon={faMoneyBillTrendUp} /> {/* Biểu tượng cho Revenue */}
                         </div>
                         <div className='card-content'>
                             <h4>Revenue</h4>
@@ -75,8 +75,8 @@ const StatCards = () => {
                 <h3>Ride Statistics</h3> {/* Tiêu đề cho nhóm thẻ thống kê */}
                 <div className="stats-row">
                     <div className="card" style={{ backgroundColor: '#F44336' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#3f3838' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faRoad} style={{ color: 'white' }} /> {/* Biểu tượng cho Total Rides */}
+                        <div className='card-icon' style={{ backgroundColor: '#3f3838' }}>
+                            <FontAwesomeIcon className='card-icon-config' icon={faRoad} style={{ color: 'white' }} /> {/* Biểu tượng cho Total Rides */}
                         </div>
                         <div className='card-content'>
                             <h4>Total Rides</h4>
@@ -84,8 +84,8 @@ const StatCards = () => {
                         </div>
                     </div>
                     <div className="card" style={{ backgroundColor: '#e2cb00' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#abb100' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faPersonRunning} style={{ color: 'red' }} /> {/* Biểu tượng cho Running Rides */}
+                        <div className='card-icon' style={{ backgroundColor: '#abb100' }}>
+                            <FontAwesomeIcon className='card-icon-config' icon={faPersonRunning} style={{ color: 'red' }} /> {/* Biểu tượng cho Running Rides */}
                         </div>
                         <div className='card-content'>
                             <h4>Running Rides</h4>
@@ -95,8 +95,8 @@ const StatCards = () => {
                 </div>
                 <div className="stats-row">
                     <div className="card" style={{ backgroundColor: '#bc5642' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#ae3a24' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faRectangleXmark} style={{ color: 'white' }} /> {/* Biểu tượng cho Canceled Rides */}
+                        <div className='card-icon bg-n-color-canceled'>
+                            <FontAwesomeIcon className='card-icon-config' icon={faRectangleXmark} /> {/* Biểu tượng cho Canceled Rides */}
                         </div>
                         <div className='card-content'>
                             <h4>Canceled Rides</h4>
@@ -104,8 +104,8 @@ const StatCards = () => {
                         </div>
                     </div>
                     <div className="card" style={{ backgroundColor: '#35cb46' }}>
-                        <div className='icon-container' style={{ backgroundColor: '#03a815' }}>
-                            <FontAwesomeIcon className='icon-config' icon={faFlagCheckered} style={{ color: 'white' }} /> {/* Biểu tượng cho Completed Rides */}
+                        <div className='card-icon bg-n-color-completed'>
+                            <FontAwesomeIcon className='card-icon-config' icon={faFlagCheckered}/> {/* Biểu tượng cho Completed Rides */}
                         </div>
                         <div className='card-content'>
                             <h4>Completed Rides</h4>

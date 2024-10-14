@@ -41,8 +41,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
           return <DriverStatus driverId={subPage.data.driverId} status={subPage.data.status} onSubPageChange={onSubPageChange} />
         case 'driverHistory':
           return <RideHistoryOfDriver driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
-        case 'drirverStatement':
-          return <DriverStatement onSubPageChange={onSubPageChange} />;
+        case 'driverStatement':
+          return <DriverStatement driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
         case 'driverEdit':
           return <DriverEdit driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
 

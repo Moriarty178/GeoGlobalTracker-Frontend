@@ -76,7 +76,7 @@ function logout() {
     fetch(`http://localhost:8080/api/logout`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+            // 'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ driverId })
