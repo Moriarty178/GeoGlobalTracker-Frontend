@@ -45,6 +45,8 @@ const DriverEdit = ({ driverId, onSubPageChange }) => {
 
     // Hảm xử lý sau khi ấn Save
     const handleSave = async (e) => {
+        e.preventDefault(); // Ngăn hành động mặc định của form
+
         try {
             await axios.put(`http://localhost:8080/trips/drivers/${driverId}`, formData);
             alert('Driver updated successfully with new formData.')
@@ -59,14 +61,15 @@ const DriverEdit = ({ driverId, onSubPageChange }) => {
 
     return (
         <div className="form-container">
-            <form className="form-content">
+            <h2>Edit Driver</h2>
+            <form className="form-content" onSubmit={handleSave}>
                 <div className="form-group">
                     <label className="form-label">Email</label>
                     <input className="form-input"
                         type="email"
                         placeholder="Email"
                         name="email"
-                        required /**phần có name để gán gia trị mới khi thay đổi */
+                        required 
                         value={formData.email}
                         onChange={handleInputChange}
                     />
@@ -116,7 +119,7 @@ const DriverEdit = ({ driverId, onSubPageChange }) => {
                     />
                 </div>
                 <div className="form-buttons">
-                    <button type="submit" onClick={handleSave}>Save</button>
+                    <button type="submit">Save</button>
                     <button type="button" onClick={handleBack}>Back</button>
                 </div>
             </form>

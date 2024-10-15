@@ -31,7 +31,7 @@ const DriverAdd = ({onSubPageChange}) => {
     return (
         <div className="form-container">
             <h2>Add Driver</h2>
-            <form className="form-content">
+            <form className="form-content" onSubmit={handleSave}> {/*onSubmit: browser check all form trước và chỉ call handleSave nếu all fields OK */}
                 <div className="form-group">
                     <label className="form-label">Email</label>
                     <input className="form-input"
@@ -83,8 +83,9 @@ const DriverAdd = ({onSubPageChange}) => {
                     />
                 </div>
                 <div className="form-buttons">
-                    <button type="submit" onClick={handleSave}>Save</button>
-                    <button type="button" onClick={handleBack}>Back</button>
+                    <button type="submit">Save</button> {/*Nếu chỉ có 'submit' kèm onClick=> browser ko check form được vì sự kiện onClick được chạy trước -> Lỗi kiểm tra các trường mà vẫn Call handleSave */}
+                    {/* Tóm lại: ưu tiên chech -> call function ====> dùng onSubmit, Còn onClick: ưu tiên call function hơn*/}
+                    <button type="button" onClick={handleBack}>Back</button> 
                 </div>
             </form>
         </div>

@@ -9,13 +9,12 @@ import RiderAdd from './Tabs/Riders/AddRider/RiderAdd';
 import RiderEdit from './Tabs/Riders/ColAction/RiderEdit';
 
 // Drivers
-import ApprovedDrivers from './Tabs/Drivers/ApprovedDrivers/ApprovedDrivers';
-import UnapprovedDrivers from './Tabs/Drivers/UnApprovedDrivers/UnapprovedDrivers';
 import DriverAdd from './Tabs/Drivers/ApprovedDrivers/AddDriver/DriverAdd'
 import DriverStatus from './Tabs/Drivers/ApprovedDrivers/ColStatus/DriverStatus'
 import RideHistoryOfDriver from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/RideHistoryOfDriver'
 import DriverStatement from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/DriverStatement'
 import DriverEdit from './Tabs/Drivers/ApprovedDrivers/ColAction/DriverEdit';
+import DriverList from './Tabs/Drivers/ApprovedDrivers/DriverList';
 
 
 function Content({ activeTab, subPage, onSubPageChange }) {
@@ -54,9 +53,21 @@ function Content({ activeTab, subPage, onSubPageChange }) {
             case 'riders':
               return <Rider onSubPageChange={onSubPageChange} />;
             case 'approvedDrivers':
-              return <ApprovedDrivers onSubPageChange={onSubPageChange} />;  // Hiển thị danh sách Drivers đã được phê duyệt
+              return <DriverList
+                title="Drivers"
+                apiUrl='http://localhost:8080/trips/drivers'
+                showOnlineOffline={true}
+                showOtherAction={true}
+                onSubPageChange={onSubPageChange}
+              />;  // Hiển thị danh sách Drivers đã được phê duyệt
             case 'unapprovedDrivers':
-              return <UnapprovedDrivers onSubPageChange={onSubPageChange} />;  // Hiển thị danh sách Drivers chưa được phê duyệt
+              return <DriverList
+                title="Un-approved Drivers"
+                apiUrl='http://localhost:8080/trips/drivers/un-approved'
+                showOnlineOffline={false}
+                showOtherAction={false}
+                onSubPageChange={onSubPageChange}
+              />;  // Hiển thị danh sách Drivers chưa được phê duyệt
             case 'trips':
               return <h2>Trips</h2>;
             // Thêm các trường hợp khác
@@ -74,9 +85,21 @@ function Content({ activeTab, subPage, onSubPageChange }) {
       case 'riders':
         return <Rider onSubPageChange={onSubPageChange} />;
       case 'approvedDrivers':
-        return <ApprovedDrivers onSubPageChange={onSubPageChange} />;  // Hiển thị danh sách Drivers đã được phê duyệt
+        return <DriverList
+          title="Drivers"
+          apiUrl='http://localhost:8080/trips/drivers'
+          showOnlineOffline={true}
+          showOtherAction={true}
+          onSubPageChange={onSubPageChange}
+        />;  // Hiển thị danh sách Drivers đã được phê duyệt
       case 'unapprovedDrivers':
-        return <UnapprovedDrivers onSubPageChange={onSubPageChange} />;  // Hiển thị danh sách Drivers chưa được phê duyệt
+        return <DriverList
+          title="Un-approved Drivers"
+          apiUrl='http://localhost:8080/trips/drivers/un-approved'
+          showOnlineOffline={false}
+          showOtherAction={false}
+          onSubPageChange={onSubPageChange}
+        />;  // Hiển thị danh sách Drivers chưa được phê duyệt
       case 'trips':
         return <h2>Trips</h2>;
       // Thêm các trường hợp khác

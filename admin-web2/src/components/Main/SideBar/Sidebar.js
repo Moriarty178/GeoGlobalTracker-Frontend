@@ -16,7 +16,9 @@ function Sidebar({ onTabChange }) {
     } else {
       setActiveTab(null);  // Khi chọn tab khác, ẩn options của drivers
     }
-    onTabChange(tab);
+    if (tab !== 'drivers') {
+      onTabChange(tab);
+    }
   };
 
   return (

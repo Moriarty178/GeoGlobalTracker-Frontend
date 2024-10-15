@@ -2,10 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import '../Drivers.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 
-const ApprovedDrivers = ({ onSubPageChange }) => {
+const DriverList = ({
+    title,
+    apiUrl,
+    showOnlineOffline,
+    showOtherAction,
+    onSubPageChange
+}) => {
     const [drivers, setDrivers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -15,7 +21,7 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
     // get Drivers for table
     const fetchDrivers = async (offset, limit) => {
         try {
-            const response = await axios.get('http://localhost:8080/trips/drivers', {
+            const response = await axios.get(apiUrl, {
                 params: {
                     offset: offset,
                     limit: limit,
@@ -34,10 +40,15 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
 
     const totalPages = Math.ceil(totalDrivers / driversPerPage);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [title]); // nếu title thay đổi -> reset currentPage
     // fetch dữ liệu mỗi khi currentPage thay đổi.
     useEffect(() => {
-        fetchDrivers((currentPage - 1) * driversPerPage, driversPerPage); // startRecord=? limit=? 
-    }, [currentPage]);
+        showOnlineOffline === true ? 
+        fetchDrivers((currentPage - 1) * driversPerPage, driversPerPage) 
+        : fetchDrivers(currentPage - 1, driversPerPage);
+    }, [currentPage, title]);
 
     if (loading) {
         return <h2>Loading...</h2>;
@@ -70,7 +81,7 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
 
     return (
         <div className="drivers">
-            <h2>Drivers</h2>
+            <h2>{title}</h2>
             <div className="form-buttons">
                 <button onClick={handleAddDriver}>Add Driver</button>
                 <button>Back</button>
@@ -83,9 +94,9 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
-                        <th>Online / Offline</th>
+                        {showOnlineOffline && <th>Online / Offline</th>}
                         <th>Status</th>
-                        <th>Other Action</th>
+                        {showOtherAction && <th>Other Action</th>}
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -93,26 +104,28 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
                     {drivers.map((driver) => (
                         <tr key={driver.driverId}>
                             <td>{driver.driverId}</td>
-                            <td>{driver.name}</td>
+                            {showOnlineOffline ? <td>{driver.name}</td> : <td>{driver.firstName}</td>}
                             <td>{driver.email}</td>
                             <td>{driver.phone}</td>
                             <td>{driver.email}</td>
-                            <td>
-                                {driver.online === 'online' ? (
-                                    <button className="btn-online" style={{backgroundColor: 'green', color: 'white'}}>
-                                        Online
-                                    </button>
-                                ) : (
-                                    <button className="btn-online" style={{backgroundColor: 'red', color: 'white'}}>
-                                        Offline
-                                    </button>
-                                )}
-                            </td>
+                            {showOnlineOffline && (
+                                <td>
+                                    {driver.online === 'online' ? (
+                                        <button className="btn-online" style={{ backgroundColor: 'green', color: 'white' }}>
+                                            Online
+                                        </button>
+                                    ) : (
+                                        <button className="btn-online" style={{ backgroundColor: 'red', color: 'white' }}>
+                                            Offline
+                                        </button>
+                                    )}
+                                </td>
+                            )}
                             <td>
                                 <div className="form-buttons">
                                     {/* <button className="btn-green" onClick={() => handleDriverStatus(driver.driverId, driver.status)}>{driver.status}</button> */}
 
-                                    {driver.status === 'Approved' ? (
+                                    {driver.status === 'Approved' || driver.status === 'Pending'? (
                                         <button className="btn-green" onClick={() => handleDriverStatus(driver.driverId, driver.status)}>
                                             {driver.status}
                                         </button>
@@ -123,16 +136,18 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
                                     )}
                                 </div>
                             </td>
-                            <td>
-                                <div className="form-buttons">
-                                    <button className="btn-yellow" onClick={() => handleRideHistoryOfDriver(driver.driverId)}>Ride History</button>
-                                    <button className="btn-green" onClick={() => handleDriverStatement(driver.driverId)}>Statement</button>
-                                </div>
-                            </td>
+                            {showOtherAction && (
+                                <td>
+                                    <div className="form-buttons">
+                                        <button className="btn-yellow" onClick={() => handleRideHistoryOfDriver(driver.driverId)}>Ride History</button>
+                                        <button className="btn-green" onClick={() => handleDriverStatement(driver.driverId)}>Statement</button>
+                                    </div>
+                                </td>
+                            )}
                             <td>
                                 <div className="form-buttons">
                                     <button className="btn-blue" onClick={() => handleDriverEdit(driver.driverId)}>
-                                        <FontAwesomeIcon icon={faEdit} style={{color: 'white'}}/>
+                                        <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
                                     </button>
                                 </div>
                             </td>
@@ -163,4 +178,4 @@ const ApprovedDrivers = ({ onSubPageChange }) => {
     );
 };
 
-export default ApprovedDrivers;
+export default DriverList;
