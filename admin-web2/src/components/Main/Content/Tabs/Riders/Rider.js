@@ -109,7 +109,7 @@ const Rider = ({ onSubPageChange }) => {
                             <td>
                                 <div className='form-buttons'>
                                     <button className='btn-yellow' onClick={() => handleRideHistory(rider.customerId)}>Ride History</button>
-                                    {rider.status === 'Active' ? (
+                                    {rider.status === 'Approved' ? (
                                         <button className='btn-green' onClick={() => handleRiderStatus(rider.customerId, rider.status)}>
                                             {rider.status}
                                         </button>

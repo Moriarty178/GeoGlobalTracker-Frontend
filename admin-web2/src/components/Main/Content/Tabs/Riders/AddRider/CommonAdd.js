@@ -3,23 +3,23 @@ import { useState } from "react";
 import './RiderAdd.css'
 
 
-const RiderAdd = ({ onSubPageChange }) => {
+const CommonAdd = ({ title, apiUrl, onSubPageChange }) => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSave = () => {
+    const handleSave = (e) => {
+        e.preventDefault(); // Ngăn hành động mặc định của form
         const newRider = { phone, email, password, firstName, lastName };
 
-        console.log("newRider ===>", newRider);
+        // console.log("newRider ===>", newRider);
 
-        axios.post('http://localhost:8080/trips/riders/add', newRider)
+        axios.post(apiUrl + '/add', newRider)
             .then(response => {
                 console.log("Rider added: ", response.data);
                 alert("Add rider successfully.");
-                // onSubPageChange();// quay về trang Riders
             }).catch(error => {
                 console.error('Error adding rider:', error);
             });
@@ -31,8 +31,8 @@ const RiderAdd = ({ onSubPageChange }) => {
 
     return (
         <div className="form-container">
-            <h2 className="form-title">Add New Rider</h2>
-            <form className="form-content">
+            <h2 className="form-title">{title}</h2>
+            <form className="form-content" onSubmit={handleSave}>
                 <div className="form-group">
                     <label className="form-label">Email:</label>
                     <input 
@@ -89,7 +89,7 @@ const RiderAdd = ({ onSubPageChange }) => {
                     />
                 </div>
                 <div className="form-buttons">
-                    <button type="submit" className="btn-primary" onClick={handleSave}>Save</button>
+                    <button type="submit" className="btn-primary">Save</button>
                     <button type="button" className="btn-secondary" onClick={handleBack}>Back</button>
                 </div>
             </form>
@@ -97,4 +97,4 @@ const RiderAdd = ({ onSubPageChange }) => {
     );
 };
 
-export default RiderAdd;
+export default CommonAdd;

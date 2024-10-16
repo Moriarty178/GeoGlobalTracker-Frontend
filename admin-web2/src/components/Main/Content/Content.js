@@ -3,18 +3,19 @@ import Dashboard from './Tabs/Dashboard/Dashboard';
 import './Content.css';
 // Riders
 import Rider from './Tabs/Riders/Rider';
-import RideHistory from './Tabs/Riders/ColState/RiderHistory';
-import RiderStatus from './Tabs/Riders/ColState/RiderStatus';
-import RiderAdd from './Tabs/Riders/AddRider/RiderAdd';
-import RiderEdit from './Tabs/Riders/ColAction/RiderEdit';
 
 // Drivers
-import DriverAdd from './Tabs/Drivers/ApprovedDrivers/AddDriver/DriverAdd'
-import DriverStatus from './Tabs/Drivers/ApprovedDrivers/ColStatus/DriverStatus'
-import RideHistoryOfDriver from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/RideHistoryOfDriver'
-import DriverStatement from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/DriverStatement'
-import DriverEdit from './Tabs/Drivers/ApprovedDrivers/ColAction/DriverEdit';
 import DriverList from './Tabs/Drivers/ApprovedDrivers/DriverList';
+import DriverStatement from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/DriverStatement'
+
+// Common component
+import CommonAdd from './Tabs/Riders/AddRider/CommonAdd';
+import CommonRideHistory from './Tabs/Riders/ColState/CommonRiderHistory';
+import CommonStatus from './Tabs/Riders/ColState/RiderStatus';
+import CommonEdit from './Tabs/Riders/ColAction/CommonEdit';
+
+const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
+const apiUrlRiders = 'http://localhost:8080/trips/riders'
 
 
 function Content({ activeTab, subPage, onSubPageChange }) {
@@ -25,25 +26,65 @@ function Content({ activeTab, subPage, onSubPageChange }) {
       switch (subPage.page) {
         // Riders
         case 'addRider':
-          return <RiderAdd onSubPageChange={onSubPageChange} />;
+          return <CommonAdd
+            title='Rider Add'
+            apiUrl={apiUrlRiders}
+            onSubPageChange={onSubPageChange}
+          />;
         case 'rideHistory':
-          return <RideHistory riderId={subPage.data.riderId} onSubPageChange={onSubPageChange} />
+          return <CommonRideHistory
+            title='Rider History'
+            apiUrl={apiUrlRiders}
+            historyId={subPage.data.riderId}
+            onSubPageChange={onSubPageChange}
+          />
         case 'riderStatus':
-          return <RiderStatus riderId={subPage.data.riderId} status={subPage.data.status} onSubPageChange={onSubPageChange} />
+          return <CommonStatus
+            title='Riders Status'
+            apiUrl={apiUrlRiders}
+            statusId={subPage.data.riderId}
+            status={subPage.data.status}
+            onSubPageChange={onSubPageChange}
+          />
         case 'editRider':
-          return <RiderEdit riderId={subPage.data.riderId} onSubPageChange={onSubPageChange} />;
+          return <CommonEdit
+            title='Rider Edit'
+            apiUrl={apiUrlRiders}
+            editId={subPage.data.riderId}
+            onSubPageChange={onSubPageChange}
+          />;
 
         // Drivers
         case 'addDriver':
-          return <DriverAdd onSubPageChange={onSubPageChange} />;
+          return <CommonAdd
+            title='Driver Add'
+            apiUrl={apiUrlDrivers}
+            onSubPageChange={onSubPageChange}
+          />;
         case 'driverStatus':
-          return <DriverStatus driverId={subPage.data.driverId} status={subPage.data.status} onSubPageChange={onSubPageChange} />
+          return <CommonStatus
+            title='Driver Status'
+            apiUrl={apiUrlDrivers}
+            statusId={subPage.data.driverId}
+            status={subPage.data.status}
+            onSubPageChange={onSubPageChange}
+          />
         case 'driverHistory':
-          return <RideHistoryOfDriver driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
+          return <CommonRideHistory
+            title='Driver History'
+            apiUrl={apiUrlDrivers}
+            historyId={subPage.data.driverId}
+            onSubPageChange={onSubPageChange}
+          />;
         case 'driverStatement':
           return <DriverStatement driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
         case 'driverEdit':
-          return <DriverEdit driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
+          return <CommonEdit
+            title='Driver Edit'
+            apiUrl={apiUrlDrivers}
+            editId={subPage.data.driverId}
+            onSubPageChange={onSubPageChange}
+          />;
 
 
         default:
@@ -55,7 +96,7 @@ function Content({ activeTab, subPage, onSubPageChange }) {
             case 'approvedDrivers':
               return <DriverList
                 title="Drivers"
-                apiUrl='http://localhost:8080/trips/drivers'
+                apiUrl={apiUrlDrivers}
                 showOnlineOffline={true}
                 showOtherAction={true}
                 onSubPageChange={onSubPageChange}
@@ -87,7 +128,7 @@ function Content({ activeTab, subPage, onSubPageChange }) {
       case 'approvedDrivers':
         return <DriverList
           title="Drivers"
-          apiUrl='http://localhost:8080/trips/drivers'
+          apiUrl={apiUrlDrivers}
           showOnlineOffline={true}
           showOtherAction={true}
           onSubPageChange={onSubPageChange}

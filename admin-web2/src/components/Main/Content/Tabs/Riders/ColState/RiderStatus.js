@@ -3,21 +3,17 @@ import { useState } from 'react';
 import axios from 'axios';
 import './RiderStatus.css'
 
-const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
-    const [status, setStatus] = useState(initialStatus || 'Active');
+const CommonStatus = ({ title, apiUrl, statusId, status: initialStatus, onSubPageChange }) => {
+    const [status, setStatus] = useState(initialStatus || 'Approved');
 
     const handleSave = () => {
-        // Gửi request để cập nhật trạng thái của Rider
-        axios.put(`http://localhost:8080/trips/riders/${riderId}/status`, { status })
+        axios.put(apiUrl + `/status/${statusId}`, { status }) // {status}: vì nó phải là object mà hiện tại đang là biến đơn => dùng {} để thành object.
             .then(response => {
                 console.log('Status updated:', response.data);
-                // Quay lại trang Rider sau khi lưu thành công
-                // onSubPageChange(null); // Quay lại trang chính (Rider)
-                alert(`${response.data} Changed the status of RiderID ${riderId} -> ${status}`);
+                alert(`${response.data} Changed the status of RiderID ${statusId} -> ${status}`);
             })
             .catch(error => {
                 console.error('Error updating rider status:', error);
-                // onSubPageChange(null); // Quay lại trang chính (Rider)
             });
     };
 
@@ -27,14 +23,14 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
 
     return (
         <div>
-            <h2>Change Status for RiderID: {riderId}</h2>
+            <h2>Change Status for {title}: {statusId}</h2>
             <div className='form-buttons'>
                 <button type='button' onClick={handleBack}>Back</button>
             </div>
             <div className='form-select-status'>
                 <span> Select status:</span>
                 <select className='select-status' value={status} onChange={(e) => setStatus(e.target.value)}>
-                    <option value="Active">Active</option>
+                    <option value="Approved">Approved</option>
                     <option value="Blocked">Block</option>
                 </select>
                 <div className='form-buttons'>
@@ -45,4 +41,4 @@ const RiderStatus = ({ riderId, status: initialStatus, onSubPageChange }) => {
     );
 };
 
-export default RiderStatus;
+export default CommonStatus;

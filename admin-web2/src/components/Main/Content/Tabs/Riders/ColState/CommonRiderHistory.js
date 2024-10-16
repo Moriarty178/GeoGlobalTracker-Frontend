@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 
-const RideHistory = ({ riderId, onSubPageChange }) => {
+const CommonRideHistory = ({ title, apiUrl, historyId, onSubPageChange }) => {
     // const { riderId } = useParams(); // Lấy riderId từ URL
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,15 +17,13 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
         const fetchRideHistory = async (offset, limit) => { // offset : pageNumber
             // console.log('offset : limit', offset, limit);
             try {
-                const response = await axios.get(`http://localhost:8080/trips/${riderId}/history`, {
+                const response = await axios.get(apiUrl + `/history/${historyId}`, {
                     params: {
                         offset: offset,
                         limit: limit,   
                     },
                 });
-
-                console.log("Data ------>:", response.data);
-                setTrips(response.data.rides);
+                setTrips(response.data.trips);
                 setTotalRides(response.data.total);
                 setLoading(false);
             } catch (error) {
@@ -37,12 +35,11 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
         fetchRideHistory((currentPage - 1) , ridePerPage); // pageNumber = ? limit = ?
     }, [currentPage]);
   
+    const totalPages = Math.ceil(totalRides / ridePerPage);
 
     if (loading) {
         return <div>Loading...</div>
     }
-
-    const totalPages = Math.ceil(totalRides / ridePerPage);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -55,7 +52,7 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
 
     return (
         <div>
-            <h2>Ride History for Rider {riderId}</h2>
+            <h2>{title} of ID: {historyId}</h2>
             <div className="form-buttons">
                 <button type="button" onClick={handleBack}>Back</button>
             </div>
@@ -111,4 +108,4 @@ const RideHistory = ({ riderId, onSubPageChange }) => {
     );
 };
 
-export default RideHistory;
+export default CommonRideHistory;
