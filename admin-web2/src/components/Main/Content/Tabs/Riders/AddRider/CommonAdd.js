@@ -19,6 +19,12 @@ const CommonAdd = ({ title, apiUrl, onSubPageChange }) => {
         axios.post(apiUrl + '/add', newRider)
             .then(response => {
                 console.log("Rider added: ", response.data);
+                // reset sau khi add xong
+                setEmail('');
+                setFirstName('');
+                setLastName('');
+                setPhone('');
+                setPassword('');
                 alert("Add rider successfully.");
             }).catch(error => {
                 console.error('Error adding rider:', error);

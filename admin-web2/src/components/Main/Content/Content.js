@@ -14,7 +14,8 @@ import CommonRideHistory from './Tabs/Riders/ColState/CommonRiderHistory';
 import CommonStatus from './Tabs/Riders/ColState/RiderStatus';
 import CommonEdit from './Tabs/Riders/ColAction/CommonEdit';
 import VehicleType from './Tabs/VehicleType/VehicleType';
-import AddVehicleType from './Tabs/VehicleType/VehicleAdd/AddVehicleType';
+import AddVehicleType from './Tabs/VehicleType/VehicleAction/AddVehicleType';
+import EditVehicleType from './Tabs/VehicleType/VehicleAction/EditVehicleType';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -87,8 +88,12 @@ function Content({ activeTab, subPage, onSubPageChange }) {
             editId={subPage.data.driverId}
             onSubPageChange={onSubPageChange}
           />;
+
+        // Vehicle
         case 'addVehicleType':
           return <AddVehicleType onSubPageChange={onSubPageChange}/>;
+        case 'editVehicleType':
+          return <EditVehicleType vehicleId={subPage.data.vehicleId} onSubPageChange={onSubPageChange} />;
 
 
         default:

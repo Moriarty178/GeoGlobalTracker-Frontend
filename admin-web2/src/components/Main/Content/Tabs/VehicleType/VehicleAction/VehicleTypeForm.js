@@ -1,47 +1,44 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AddVehicle.css'
 
-const AddVehicleType = ({ onSubPageChange }) => {
+
+const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
+    console.log("initial Data:", initialData);
+
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
-    const [status, setStatus] = useState('available'); // Mặc định là 'available'
+    const [status, setStatus] = useState('available');
     const [image, setImage] = useState(null);
-    const [previewImage, setPreviewImage] = useState(null);
+    const [previewImage, setPreviewImage] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
-    // Xử lý chọn ảnh từ input
+    console.log('name:', name);
+    console.log('cost:', cost);
+    console.log('initialdstatus:', status);
+
+    useEffect(() => {
+        if (initialData) {
+            setName(initialData.name);
+            setCost(initialData.cost);
+            setStatus(initialData.status);
+            setPreviewImage(`http://localhost:8080/images/${initialData.img}`);
+        }
+    }, [initialData]);
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImage(file);
-
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setPreviewImage(imageUrl);
-        } else {
-            setPreviewImage(null);
+            setImage(file);
+            setPreviewImage(URL.createObjectURL(file));
         }
-
-    };
-
-    // Xử lý sự kiện kéo-thả ảnh vào khu vực upload
-    const handleDrop = (e) => {
-        e.preventDefault();
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            setImage(e.dataTransfer.files[0]);
-        }
-    };
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!name || !cost || !image) {
+        if (!name || !cost || (!image && !previewImage)) {
             setMessage('Vui lòng điền đầy đủ thông tin!');
-            alert('Thiếu thông tin');
             return;
         }
 
@@ -49,22 +46,15 @@ const AddVehicleType = ({ onSubPageChange }) => {
         formData.append('name', name);
         formData.append('cost', cost);
         formData.append('status', status);
-        formData.append('image', image);
+        if (image) {
+            formData.append('image', image);
+        }
 
         setLoading(true);
 
         try {
-            await axios.post('http://localhost:8080/trips/vehicles', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            setMessage('Thêm loại xe thành công!');
-            setName('');
-            setCost('');
-            setStatus('available');
-            setImage(null);
-            setPreviewImage(null);
+            await onSubmit(formData);
+            setMessage('Lưu loại xe thành công!');
         } catch (error) {
             setMessage('Có lỗi xảy ra, vui lòng thử lại!');
             console.error(error);
@@ -73,15 +63,11 @@ const AddVehicleType = ({ onSubPageChange }) => {
         }
     };
 
-    const handleBack = () => {
-        onSubPageChange(null);
-    };
-
     return (
         <div className="add-vehicle-type">
-            <h2>Add Vehicle Type</h2>
+            <h2>{initialData ? 'Edit Vehicle Type' : 'Add Vehicle Type'}</h2>
             <div className='form-buttons'>
-                <button onClick={handleBack}>Back</button>
+                <button onClick={onBack}>Back</button>
             </div>
 
             {message && <p>{message}</p>}
@@ -99,7 +85,7 @@ const AddVehicleType = ({ onSubPageChange }) => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label className='form-label'>Cost</label>
+                        <label className='form-label'>Cost (USD-$)</label>
                         <input className='form-input'
                             type='number'
                             placeholder='Cost Per Km'
@@ -122,8 +108,11 @@ const AddVehicleType = ({ onSubPageChange }) => {
                         <label className='form-label'>Image</label>
                         <div
                             className='form-upload-area'
-                            onDragOver={handleDragOver}
-                            onDrop={handleDrop}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                handleImageChange(e);
+                            }}
                             onClick={() => document.getElementById('fileInput').click()}
                             style={{
                                 border: '2px dashed #ccc',
@@ -138,16 +127,11 @@ const AddVehicleType = ({ onSubPageChange }) => {
                                 className='form-img'
                                 type='file'
                                 accept='image/*'
-                                required
                                 onChange={handleImageChange}
-                                style={{ display: 'none' }} // Ẩn input để chỉ kích hoạt khi click vào vùng này
+                                style={{ display: 'none' }}
                             />
-
-                            {/* Hiển thị preview ảnh ngay trong vùng upload */}
                             {previewImage ? (
-                                <img
-                                    src={previewImage}
-                                    alt="Preview"
+                                <img src={previewImage} alt="Preview"
                                     style={{
                                         maxWidth: '100%',
                                         maxHeight: '100%',
@@ -163,7 +147,6 @@ const AddVehicleType = ({ onSubPageChange }) => {
                 </div>
 
             </form>
-
             <div className='form-buttons'>
                 <button type='submit' onClick={handleSubmit} disabled={loading}>
                     {loading ? 'Loading' : 'Save'}
@@ -173,4 +156,4 @@ const AddVehicleType = ({ onSubPageChange }) => {
     );
 };
 
-export default AddVehicleType;
+export default VehicleTypeForm;

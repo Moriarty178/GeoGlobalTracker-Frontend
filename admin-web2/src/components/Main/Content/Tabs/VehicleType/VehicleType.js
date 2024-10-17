@@ -43,6 +43,20 @@ const VehicleType = ({ onSubPageChange }) => {
         onSubPageChange('addVehicleType');
     };
 
+    const handleEditVehicle = (vehicleId) => {
+        onSubPageChange('editVehicleType', { vehicleId });
+    };
+
+    const handleDeleteVehicle = async (vehicleId) => {
+        try {
+            await axios.delete(`http://localhost:8080/trips/vehicles/delete/${vehicleId}`); // thêm asunc / await nếu không sẽ ko cập nhật (reload) lại bảng được sau khi xóa
+            fetchVehicles(currentPage - 1, vehiclesPerPage);
+        } catch (error) {
+            alert('Error deleting vehicleID:', vehicleId);
+        }
+
+    };
+
     return (
         <div className="vehicle-type">
             <h2>Vehicle Type</h2>
@@ -87,10 +101,15 @@ const VehicleType = ({ onSubPageChange }) => {
                                     <td>{vehicle.createdAt}</td>
                                     <td>
                                         <div className='form-buttons'>
-                                            <button className='btn-blue'>
+                                            <button className='btn-blue' onClick={() => handleEditVehicle(vehicle.vehicleId)}>
                                                 <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
                                             </button>
-                                            <button className="btn-red">
+                                            <button className="btn-red" onClick={() => {
+                                                // windows confirm
+                                                if (window.confirm(`Are you sure you want to delete vehicle type!`)) {
+                                                    handleDeleteVehicle(vehicle.vehicleId);
+                                                }
+                                            }}>
                                                 <FontAwesomeIcon icon={faTrash} style={{ color: 'white' }} />
                                             </button>
                                         </div>
