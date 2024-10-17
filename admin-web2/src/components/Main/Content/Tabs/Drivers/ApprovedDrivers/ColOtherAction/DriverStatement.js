@@ -37,7 +37,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
         };
 
         fetchStats();
-    }, []);// thêm [] tránh vòng l
+    }, []);// thêm [] tránh vòng lặp
 
 
     // fetch dữ liệu history 
@@ -340,6 +340,8 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
                     {currentPage > 2 && (
                         <button onClick={() => handlePageChange(currentPage - 1)}>{currentPage - 1}</button>
                     )}
+
+                    <span>{currentPage}</span>
 
                     {currentPage < totalPages - 1 && (
                         <button onClick={() => handlePageChange(currentPage + 1)}>{currentPage + 1}</button>

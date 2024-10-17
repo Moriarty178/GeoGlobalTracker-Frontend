@@ -1,0 +1,73 @@
+/* .add-vehicle-type {
+    margin: 20px;
+}
+
+.add-vehicle-type form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-vehicle-type div {
+    margin-bottom: 10px;
+}
+
+.add-vehicle-type label {
+    margin-bottom: 5px;
+}
+
+.add-vehicle-type input,
+.add-vehicle-type select {
+    padding: 8px;
+} */
+
+.add-vehicle-type .form-content {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    gap: 5%;
+    margin-bottom: 20px;
+}
+
+.form-enter {
+    flex: 1;
+}
+
+.form-group select {
+    width: 50%;
+    font-size: 24px;
+    padding: 8px;
+    border-radius: 8px;
+    border-color: #9f9797;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1);
+}
+
+.form-upload-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.form-upload-area:hover {
+    background-color: #e0e0e0;
+}
+
+.form-upload-area p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* ẩn đi vì chỉ cần logic upload file của nó thôi */
+.form-img {
+    display: none;
+}

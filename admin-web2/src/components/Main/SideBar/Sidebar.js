@@ -3,8 +3,8 @@ import './Sidebar.css';
 
 function Sidebar({ onTabChange }) {
   const tabs = [
-    'dashboard', 'riders', 'drivers', 'trips', 'manual-ride',
-    'vehicle-type', 'earning-reports', 'review-ratings', 'gods-view',
+    'dashboard', 'riders', 'drivers', 'vehicle-type', 'trips', 'manual-ride',
+    'earning-reports', 'review-ratings', 'gods-view',
     'statement', 'promo-code', 'push-notifications', 'site-setting', 'pages'
   ];
 

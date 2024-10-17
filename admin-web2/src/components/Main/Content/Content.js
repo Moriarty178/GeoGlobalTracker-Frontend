@@ -13,6 +13,8 @@ import CommonAdd from './Tabs/Riders/AddRider/CommonAdd';
 import CommonRideHistory from './Tabs/Riders/ColState/CommonRiderHistory';
 import CommonStatus from './Tabs/Riders/ColState/RiderStatus';
 import CommonEdit from './Tabs/Riders/ColAction/CommonEdit';
+import VehicleType from './Tabs/VehicleType/VehicleType';
+import AddVehicleType from './Tabs/VehicleType/VehicleAdd/AddVehicleType';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -85,6 +87,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
             editId={subPage.data.driverId}
             onSubPageChange={onSubPageChange}
           />;
+        case 'addVehicleType':
+          return <AddVehicleType onSubPageChange={onSubPageChange}/>;
 
 
         default:
@@ -109,8 +113,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
                 showOtherAction={false}
                 onSubPageChange={onSubPageChange}
               />;  // Hiển thị danh sách Drivers chưa được phê duyệt
-            case 'trips':
-              return <h2>Trips</h2>;
+            case 'vehicle-type':
+              return <VehicleType onSubPageChange={onSubPageChange} />;
             // Thêm các trường hợp khác
             default:
               return <h2>Welcome to Admin Dashboard</h2>;
@@ -141,8 +145,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
           showOtherAction={false}
           onSubPageChange={onSubPageChange}
         />;  // Hiển thị danh sách Drivers chưa được phê duyệt
-      case 'trips':
-        return <h2>Trips</h2>;
+      case 'vehicle-type':
+        return <VehicleType onSubPageChange={onSubPageChange} />;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;

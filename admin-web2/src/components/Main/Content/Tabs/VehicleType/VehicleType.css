@@ -1,0 +1,23 @@
+.table .form-buttons {
+    border: none;
+    padding: 0;
+}
+
+.img-container {
+    display: flex;
+    width: 20%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon-config-custom {
+    width: 30%;
+    height: 30%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
