@@ -9,7 +9,7 @@ const Rider = ({ onSubPageChange }) => {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRiders, setTotalRides] = useState(0);
-    const ridersPerPage = 1;
+    const ridersPerPage = 4;
 
     // const navigate = useNavigate(); // Hook dùng để điều hướng
 

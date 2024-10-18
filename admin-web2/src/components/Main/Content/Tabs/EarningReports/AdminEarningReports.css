@@ -1,12 +1,11 @@
-.form-total {
-    /* margin-top: 20px; */
+/* .form-total {
     width: 100%;
     border: 1px solid #ccc;
 }
 
 .form-total-group {
     display: flex;
-    /* justify-content: flex-end; */
+    justify-content: flex-end;
     width: 15%;
     padding: 10px;
     margin-left: auto;
@@ -21,7 +20,7 @@
 .form-total-group .form-value {
     flex: 1;
     text-align: left;
-}
+} */
 
 .admin-earning-report .statement-content {
     border: none;

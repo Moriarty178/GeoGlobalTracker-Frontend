@@ -6,7 +6,7 @@ import './AdminEarningReports.css'
 
 
 const AdminEarningReports = ({ onSubPageChange }) => {
-    const [resultReports, setResultEarning] = useState([]);
+    const [resultReports, setResultReports] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalResults, setTotalResults] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -21,7 +21,7 @@ const AdminEarningReports = ({ onSubPageChange }) => {
                     limit: limit,
                 },
             });
-            setResultEarning(response.data.resultReports);
+            setResultReports(response.data.resultReports);
             setTotalResults(response.data.total);
             setLoading(false);
         } catch (error) {
@@ -32,7 +32,7 @@ const AdminEarningReports = ({ onSubPageChange }) => {
     const totalPages = Math.ceil(totalResults / resultsPerPage);
 
     useEffect(() => {
-        fetchResultEarning(currentPage - 1, resultsPerPage);
+        fetchResultEarning((currentPage - 1) * resultsPerPage, resultsPerPage);
     }, [currentPage]);
 
     const handlePageChange = (page) => {

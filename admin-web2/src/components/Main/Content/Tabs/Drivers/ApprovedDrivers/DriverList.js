@@ -16,7 +16,7 @@ const DriverList = ({
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalDrivers, setTotalRides] = useState(0);
-    const driversPerPage = 3;
+    const driversPerPage = 4;
 
     // get Drivers for table
     const fetchDrivers = async (offset, limit) => {
