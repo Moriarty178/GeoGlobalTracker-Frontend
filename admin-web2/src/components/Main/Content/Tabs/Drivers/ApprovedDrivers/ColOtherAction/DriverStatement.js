@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './DriverStatement.css'
-import { faCar, faFlagCheckered, faMapMarkerAlt, faMoneyBillTrendUp, faRectangleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faFlagCheckered, faMapMarkerAlt, faMoneyBillTrendUp, faRectangleXmark, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { CSVLink } from "react-csv"; // Thư viện cho CSV
@@ -78,7 +78,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
     };
 
     // Hàm xuất CSV
-    const formattedTrips = trips.map(trip => ({ 
+    const formattedTrips = trips.map(trip => ({
         tripId: trip.tripId,
         pickedUp: JSON.parse(trip.source).display_name,
         dropped: JSON.parse(trip.destination).display_name,
@@ -87,7 +87,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
         status: trip.status
     }));
 
-        // Tạo dữ liệu CSV từ stats và trips
+    // Tạo dữ liệu CSV từ stats và trips
     const csvData = [
         ...formattedTrips.map((trip, index) => ({
             tripId: trip.tripId,
@@ -225,11 +225,11 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
 
         const text1 = trips.map(trip => `${trip.tripId}\t${JSON.parse(trip.source).display_name}\t${JSON.parse(trip.destination).display_name}\t${trip.createdAt}\t...\t${trip.status}`)
             .join('\n\t');
-        
+
         const line = '--------------------------------------------------------------';
-        
+
         const span2 = `Stats total`;
-        const text2 =  `\tTotal Rides: ${stats.totalTrips}\n\tCanceled Rides: ${stats.canceledTrips}\n\tCompleted Rides: ${stats.completedTrips}\n\tRevenue: ${stats.revenue} $`;
+        const text2 = `\tTotal Rides: ${stats.totalTrips}\n\tCanceled Rides: ${stats.canceledTrips}\n\tCompleted Rides: ${stats.completedTrips}\n\tRevenue: ${stats.revenue} $`;
 
         const textFinal = `${span1}\n\t${text1}\n\n${line}\n\n${span2}\n${text2}`;
 
@@ -301,7 +301,10 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
                         <button onClick={exportToPDF}>PDF</button>
                         <div className='form-search'>
                             <h4>Search:</h4>
-                            <input />
+                            <div className='input-container'>
+                                <input type='text' />
+                                <FontAwesomeIcon className='search-icon' icon={faSearch} />
+                            </div>
                         </div>
                     </div>
                     <table>

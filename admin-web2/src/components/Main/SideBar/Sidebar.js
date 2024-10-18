@@ -2,49 +2,57 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 
 function Sidebar({ onTabChange }) {
-  const tabs = [
-    'dashboard', 'riders', 'drivers', 'vehicle-type', 'trips', 'manual-ride',
-    'earning-reports', 'review-ratings', 'gods-view',
-    'statement', 'promo-code', 'push-notifications', 'site-setting', 'pages'
-  ];
+  // Cấu trúc đối tượng chứa các tab và sub-menu
+  const tabs = {
+    'dashboard': null,
+    'riders': null,
+    'drivers': ['approvedDrivers', 'unapprovedDrivers'],
+    'vehicle-type': null,
+    'earning-reports': ['Admin Earning Reports', 'Driver Payment Reports'],
+    'review-ratings': null,
+    'gods-view': null,
+    'manual-ride': null,
+    'trips': null,
+    'statement': null,
+    'promo-code': null,
+    'push-notifications': null,
+    'site-setting': null,
+    'pages': null
+  };
 
   const [activeTab, setActiveTab] = useState(null);
 
   const handleTabClick = (tab) => {
-    if (tab === 'drivers') {
-      setActiveTab((prevTab) => (prevTab === 'drivers' ? null : 'drivers'));  // Toggle tab con
+    if (tabs[tab]) {
+      // Nếu tab có sub-menu, thì toggle sub-menu
+      setActiveTab((prevTab) => (prevTab === tab ? null : tab));
     } else {
-      setActiveTab(null);  // Khi chọn tab khác, ẩn options của drivers
-    }
-    if (tab !== 'drivers') {
-      onTabChange(tab);
+      setActiveTab(null); // Ẩn sub-menu khi bấm vào tab không có sub-menu
+      onTabChange(tab); // Chuyển đổi trực tiếp tab nếu không có sub-menu
     }
   };
 
   return (
     <nav className="sidebar">
       <ul>
-        {tabs.map((tab) => (
+        {Object.keys(tabs).map((tab) => (
           <React.Fragment key={tab}>
             <li>
               <a href="#" onClick={() => handleTabClick(tab)}>
                 {tab.replace(/-/g, ' ')}
               </a>
             </li>
-            
-            {/* Hiển thị các options con ngay dưới tab "drivers" */}
-            {tab === 'drivers' && activeTab === 'drivers' && (
+
+            {/* Hiển thị sub-menu nếu tab có sub-menu và đang được mở */}
+            {tabs[tab] && activeTab === tab && (
               <ul className="sub-menu">
-                <li>
-                  <a href="#" onClick={() => onTabChange('approvedDrivers')}>
-                    Drivers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" onClick={() => onTabChange('unapprovedDrivers')}>
-                    Un-approved Drivers
-                  </a>
-                </li>
+                {tabs[tab].map((subTab) => (
+                  <li key={subTab}>
+                    <a href="#" onClick={() => onTabChange(subTab)}>
+                      {subTab}
+                    </a>
+                  </li>
+                ))}
               </ul>
             )}
           </React.Fragment>
@@ -55,5 +63,3 @@ function Sidebar({ onTabChange }) {
 }
 
 export default Sidebar;
-
-
