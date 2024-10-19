@@ -93,6 +93,21 @@ const DriverPaymentReports = ({ onSubPageChange }) => {
                         ))}
 
                         {/* Tính tổng */}
+                        <tr>
+                            <td colSpan="6"></td>
+                            <td><strong>Total Ride</strong></td>
+                            <td>{resultReports.reduce((acc, result) => acc + result.totalRevenue, 0).toFixed(2)} $</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="6"></td>
+                            <td><strong>Total Commission</strong></td>
+                            <td>- {resultReports.reduce((acc, result) => acc + result.commission, 0).toFixed(2)} $</td>
+                        </tr>
+                        <tr>
+                            <td colSpan="6"></td>
+                            <td><strong>Driver Payment Amount</strong></td>
+                            <td>{resultReports.reduce((acc, result) => acc + result.driverPaymentAmount, 0).toFixed(2)} $</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

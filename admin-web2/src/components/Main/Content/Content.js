@@ -20,6 +20,7 @@ import AddVehicleType from './Tabs/VehicleType/VehicleAction/AddVehicleType';
 import EditVehicleType from './Tabs/VehicleType/VehicleAction/EditVehicleType';
 import AdminEarningReports from './Tabs/EarningReports/AdminEarningReports';
 import DriverPaymentReports from './Tabs/EarningReports/DriverPaymentReports';
+import ReviewRating from './Tabs/ReviewRating/ReviewRating';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -160,6 +161,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         return <AdminEarningReports onSubPageChange={onSubPageChange} />;
       case 'Driver Payment Reports':
         return <DriverPaymentReports onSubPageChange={onSubPageChange} />;
+      case 'review-ratings':
+        return <ReviewRating onSubPageChange={onSubPageChange} />;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;
