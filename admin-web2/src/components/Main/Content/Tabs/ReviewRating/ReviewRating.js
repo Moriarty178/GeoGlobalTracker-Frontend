@@ -1,4 +1,4 @@
-import { faSearch, faStar, faStarHalfAlt, faTrash, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -39,10 +39,12 @@ const ReviewRating = () => {
 
     const handleDelete = async (ratingId) => {
         try {
-            axios.delete(`http://localhost:8080/trips/review-rating/delete/${ratingId}`);
+            await axios.delete(`http://localhost:8080/trips/review-rating/delete/${ratingId}`);
         } catch (error) {
             console.error('Error deleting review & rating:', error);
         }
+
+        fetchReviewRatings((currentPage - 1) * reviewRatingsPerPage, reviewRatingsPerPage);
     };
 
     return (

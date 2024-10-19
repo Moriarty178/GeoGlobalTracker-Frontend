@@ -1,4 +1,4 @@
-import React, { act } from 'react';
+import React from 'react';
 import Dashboard from './Tabs/Dashboard/Dashboard';
 import './Content.css';
 // Riders
@@ -21,6 +21,7 @@ import EditVehicleType from './Tabs/VehicleType/VehicleAction/EditVehicleType';
 import AdminEarningReports from './Tabs/EarningReports/AdminEarningReports';
 import DriverPaymentReports from './Tabs/EarningReports/DriverPaymentReports';
 import ReviewRating from './Tabs/ReviewRating/ReviewRating';
+import GodsView from './Tabs/GodView/GodsView';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -163,6 +164,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         return <DriverPaymentReports onSubPageChange={onSubPageChange} />;
       case 'review-ratings':
         return <ReviewRating onSubPageChange={onSubPageChange} />;
+      case 'gods-view':
+        return <GodsView />;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;
