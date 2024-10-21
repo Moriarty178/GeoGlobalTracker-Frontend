@@ -1,0 +1,9 @@
+.form-group select {
+    width: 100%;
+    border-color: #ccc;
+    font-size: 16px;
+}
+
+.input-custom {
+    width: 15%;
+}

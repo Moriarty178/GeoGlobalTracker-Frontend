@@ -47,7 +47,7 @@ const RideChart = () => {
         try {
             const response = await fetch(`http://localhost:8080/trips/api/ride-status-data?start=${start}&limit=${limit}`);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             return data;
         } catch (error) {
             console.error('Error fetching ride status data:', error);
@@ -65,7 +65,7 @@ const RideChart = () => {
                     return new Date(year, month - 1, 1).getTime(); // Chuyển đổi thành timestamp
                 });
 
-                console.log('InitiaData labels:', formattedLabels);
+                // console.log('InitiaData labels:', formattedLabels);
                 
                 setRideStatusData({
                     labels: formattedLabels, // Sử dụng timestamp cho nhãn
@@ -91,9 +91,9 @@ const RideChart = () => {
 
 
     // in ra console kết quả để kiểm tra
-    useEffect(() => {
-        console.log("Updated rideStatusData: ", rideStatusData);
-    }, [rideStatusData]);
+    // useEffect(() => {
+    //     console.log("Updated rideStatusData: ", rideStatusData);
+    // }, [rideStatusData]);
 
     const loadMoreData = async (direction) => {
         if (!loading) {

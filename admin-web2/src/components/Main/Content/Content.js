@@ -18,10 +18,20 @@ import CommonEdit from './Tabs/Riders/ColAction/CommonEdit';
 import VehicleType from './Tabs/VehicleType/VehicleType';
 import AddVehicleType from './Tabs/VehicleType/VehicleAction/AddVehicleType';
 import EditVehicleType from './Tabs/VehicleType/VehicleAction/EditVehicleType';
+
+// Earning Reports
 import AdminEarningReports from './Tabs/EarningReports/AdminEarningReports';
 import DriverPaymentReports from './Tabs/EarningReports/DriverPaymentReports';
+
+// Review & Ratings
 import ReviewRating from './Tabs/ReviewRating/ReviewRating';
+
+// God's View
 import GodsView from './Tabs/GodView/GodsView';
+import PromoCode from './Tabs/PromoCode/PromoCode';
+
+// Promo Code
+import AddPromoCode from './Tabs/PromoCode/AddPromoCode/AddPromoCode';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -101,6 +111,10 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         case 'editVehicleType':
           return <EditVehicleType vehicleId={subPage.data.vehicleId} onSubPageChange={onSubPageChange} />;
 
+        // Promo Code
+        case 'addPromoCode':
+          return <AddPromoCode onSubPageChange={onSubPageChange} />;
+
 
         default:
           switch (activeTab) {
@@ -119,13 +133,15 @@ function Content({ activeTab, subPage, onSubPageChange }) {
             case 'unapprovedDrivers':
               return <DriverList
                 title="Un-approved Drivers"
-                apiUrl='http://localhost:8080/trips/drivers/un-approved'
+                apiUrl={apiUrlDrivers + '/un-approved'}
                 showOnlineOffline={false}
                 showOtherAction={false}
                 onSubPageChange={onSubPageChange}
               />;  // Hiển thị danh sách Drivers chưa được phê duyệt
             case 'vehicle-type':
               return <VehicleType onSubPageChange={onSubPageChange} />;
+            case 'promo-code':
+              return <PromoCode onSubPageChange={onSubPageChange}/>;
             // Thêm các trường hợp khác
             default:
               return <h2>Welcome to Admin Dashboard</h2>;
@@ -147,15 +163,15 @@ function Content({ activeTab, subPage, onSubPageChange }) {
           showOnlineOffline={true}
           showOtherAction={true}
           onSubPageChange={onSubPageChange}
-        />;  // Hiển thị danh sách Drivers đã được phê duyệt
+        />;  
       case 'unapprovedDrivers':
         return <DriverList
           title="Un-approved Drivers"
-          apiUrl='http://localhost:8080/trips/drivers/un-approved'
+          apiUrl={apiUrlDrivers + '/un-approved'}// + 'http://localhost:8080/trips/drivers/un-approved'
           showOnlineOffline={false}
           showOtherAction={false}
           onSubPageChange={onSubPageChange}
-        />;  // Hiển thị danh sách Drivers chưa được phê duyệt
+        />;  
       case 'vehicle-type':
         return <VehicleType onSubPageChange={onSubPageChange} />;
       case 'Admin Earning Reports':
@@ -166,6 +182,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         return <ReviewRating onSubPageChange={onSubPageChange} />;
       case 'gods-view':
         return <GodsView />;
+      case 'promo-code':
+        return <PromoCode onSubPageChange={onSubPageChange} />;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;

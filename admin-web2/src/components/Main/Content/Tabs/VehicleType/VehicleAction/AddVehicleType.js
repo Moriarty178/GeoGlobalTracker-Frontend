@@ -4,6 +4,7 @@ import './AddVehicle.css'
 import VehicleTypeForm from './VehicleTypeForm';
 
 const AddVehicleType = ({ onSubPageChange }) => {
+    
     const handleBack = () => {
         onSubPageChange(null);
     };

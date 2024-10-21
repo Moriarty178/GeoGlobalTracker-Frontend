@@ -30,7 +30,6 @@ const DriverList = ({
 
             setDrivers(response.data.drivers);
             setTotalRides(response.data.total);
-            console.log('Total driver:', response.data.total);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching drivers:', error);

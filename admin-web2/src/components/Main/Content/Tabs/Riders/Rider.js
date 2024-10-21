@@ -24,7 +24,6 @@ const Rider = ({ onSubPageChange }) => {
             });
             setRiders(response.data.riders);
             setTotalRides(response.data.total);
-            console.log('Riders:', response.data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching riders:', error);

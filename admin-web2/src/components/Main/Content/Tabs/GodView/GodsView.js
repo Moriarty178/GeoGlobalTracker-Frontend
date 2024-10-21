@@ -3,20 +3,15 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Client as StompJsClient } from '@stomp/stompjs';
 
-// const customMarkerIcon = new L.Icon({
-//     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', // URL của biểu tượng marker mặc định
-//     iconSize: [25, 41], // Kích thước biểu tượng
-//     iconAnchor: [12, 41], // Điểm neo của biểu tượng (giữa phần đáy của biểu tượng)
-//     popupAnchor: [1, -34], // Điểm neo của popup so với biểu tượng
-//     shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png', // Đường dẫn tới bóng của biểu tượng
-//     shadowSize: [41, 41], // Kích thước bóng
-// });
 
 const carMarkerIcon = new L.Icon({
     iconUrl: 'http://localhost:8080/images/car-icon.png', // Đường dẫn tới hình xe ô tô
     iconSize: [100, 100], // Kích thước biểu tượng
     iconAnchor: [25, 50], // Điểm neo của biểu tượng (giữa phần đáy của biểu tượng)
     popupAnchor: [0, -50], // Điểm neo của popup so với biểu tượng
+    // shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png', // Đường dẫn tới bóng của biểu tượng
+    // shadowSize: [41, 41], // Kích thước bóng
+
 });
 
 const GodsView = () => {
@@ -107,7 +102,7 @@ const GodsView = () => {
     return (
         <div>
             <h1>God's View</h1>
-            <div id="map" style={{ height: '900px', width: '100%' }}></div>
+            <div id="map" style={{ height: '799px', width: '100%' }}></div>
         </div>
     );
 };

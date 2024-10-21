@@ -23,7 +23,6 @@ const RecentRide = () => {
         });
         setRecentRides(response.data.rides); // Giả định response.data chứa thông tin rides
         setTotalRides(response.data.total); // Giả định response.data có tổng số rides
-        console.log("Total = ", response.data.total);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching recent rides:', error);
@@ -39,7 +38,6 @@ const RecentRide = () => {
   }
 
   const totalPages = Math.ceil(totalRides / ridesPerPage);
-  console.log('TotalPages = ', totalPages);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
