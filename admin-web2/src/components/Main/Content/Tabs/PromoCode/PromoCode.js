@@ -61,7 +61,7 @@ const PromoCode = ({ onSubPageChange }) => {
         <div>
             <h1>Promo Code</h1>
             <div className="form-buttons">
-                <button onClick={handleAddPromoCode} className="bg-n-color-canceled">Add Promo Code</button>
+                <button onClick={handleAddPromoCode} className="btn-green">Add Promo Code</button>
                 <button>Back</button>
             </div>
             <div className="statement-content">

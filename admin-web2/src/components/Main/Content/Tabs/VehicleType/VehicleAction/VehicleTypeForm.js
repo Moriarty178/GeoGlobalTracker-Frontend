@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import './AddVehicle.css'
 
 
@@ -13,10 +12,6 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
     const [previewImage, setPreviewImage] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
-
-    console.log('name:', name);
-    console.log('cost:', cost);
-    console.log('initialdstatus:', status);
 
     useEffect(() => {
         if (initialData) {

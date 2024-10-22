@@ -10,7 +10,7 @@ const VehicleType = ({ onSubPageChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalVehicles, setTotalVehicles] = useState(0);
     const [loading, setLoading] = useState(true);
-    const vehiclesPerPage = 10;
+    const vehiclesPerPage = 4;
 
     // fetch dữ liệu vehicle type
     const fetchVehicles = async (offset, limit) => {

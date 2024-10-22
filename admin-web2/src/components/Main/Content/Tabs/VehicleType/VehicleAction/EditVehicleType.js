@@ -9,9 +9,8 @@ const EditVehicleType = ({ vehicleId, onSubPageChange }) => {
         const fetchVehicleData = async () => {
             const response = await axios.get(`http://localhost:8080/trips/vehicles/${vehicleId}`);
             setInitialData(response.data);
-
-            console.log('Initial Data:', response.data);
         };
+        
         fetchVehicleData();
     }, [vehicleId]);
 
