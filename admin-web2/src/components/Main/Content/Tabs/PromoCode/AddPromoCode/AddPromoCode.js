@@ -5,7 +5,7 @@ import './AddPromoCode.css'
 
 const AddPromoCode = ({ onSubPageChange }) => {
     const [name, setName] = useState('');
-    const [codeName, setCodeName] = useState('');
+    const [code, setCodeName] = useState('');
     const [type, setType] = useState('');
     const [value, setValue] = useState('');
     const [usageLimit, setUsageLimit] = useState('');
@@ -15,7 +15,7 @@ const AddPromoCode = ({ onSubPageChange }) => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // tránh reload trang khi ấn submit
 
-        const formData = { name, codeName, type, value, usageLimit, expiredDate, status };
+        const formData = { name, code, type, value, usageLimit, expiredDate, status };
         console.log('FORM DATA:', formData);
 
         try {
@@ -53,7 +53,7 @@ const AddPromoCode = ({ onSubPageChange }) => {
                     <input className="form-input"
                         type="text"
                         placeholder="Enter Code of Promo"
-                        value={codeName}
+                        value={code}
                         required
                         onChange={(e) => setCodeName(e.target.value)}
                     />
@@ -92,6 +92,7 @@ const AddPromoCode = ({ onSubPageChange }) => {
                         value={expiredDate}
                         required
                         onChange={(e) => setExpiredDate(e.target.value)}
+                        onFocus={(e) => e.target.showPicker()} // hiển thị lịch khi ấn vào input thay vì phải ấn icon lịch
                     />
                 </div>
                 <div className="form-group">

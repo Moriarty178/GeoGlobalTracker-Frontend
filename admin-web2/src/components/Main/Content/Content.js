@@ -32,6 +32,7 @@ import PromoCode from './Tabs/PromoCode/PromoCode';
 
 // Promo Code
 import AddPromoCode from './Tabs/PromoCode/AddPromoCode/AddPromoCode';
+import EditPromoCode from './Tabs/PromoCode/AddPromoCode/EditPromoCode';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -114,6 +115,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         // Promo Code
         case 'addPromoCode':
           return <AddPromoCode onSubPageChange={onSubPageChange} />;
+        case 'editPromoCode':
+          return <EditPromoCode promoId={subPage.data.promoId} onSubPageChange={onSubPageChange} />;
 
 
         default:

@@ -39,8 +39,22 @@ const PromoCode = ({ onSubPageChange }) => {
         onSubPageChange('addPromoCode');
     };
 
+    const handleEditPromoCode = (promoId) => {
+        onSubPageChange('editPromoCode', { promoId });
+    };
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    const handleDelete = async (promoId) => {
+        try {
+            await axios.delete(`http://localhost:8080/trips/promo-code/delete/${promoId}`);
+        } catch (error) {
+            console.error('Error deleting promo code:', error);
+        }
+
+        fetchPromoCode(currentPage - 1, resultsPerPage);
     };
 
     return (
@@ -67,8 +81,9 @@ const PromoCode = ({ onSubPageChange }) => {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Promo ID</th>
-                            <th>Name Code</th>
+                            {/* <th>Promo ID</th> */}
+                            <th>Name / Title</th>
+                            <th>Code</th>
                             <th>Type</th>
                             <th>Value</th>
                             <th>Usage Limit</th>
@@ -81,8 +96,9 @@ const PromoCode = ({ onSubPageChange }) => {
                     <tbody>
                         {promoCodes.map(promoCode => (
                             <tr key={promoCode.promoId}>
-                                <td>{promoCode.promoId}</td>
+                                {/* <td>{promoCode.promoId}</td> */}
                                 <td>{promoCode.name}</td>
+                                <td>{promoCode.code}</td>
                                 <td>{promoCode.type}</td>
                                 <td>
                                     {promoCode.type === 'flat' ? (
@@ -96,17 +112,21 @@ const PromoCode = ({ onSubPageChange }) => {
                                 <td>{promoCode.expiredDate}</td>
                                 <td>
                                     {promoCode.status === 'active' ? (
-                                        <button className="btn-online" style={{background: 'green', color: 'white'}}>{promoCode.status}</button>
+                                        <button className="btn-online" style={{ background: 'green', color: 'white' }}>{promoCode.status}</button>
                                     ) : (
-                                        <button className="btn-online" style={{background: 'red', color: 'white'}}>{promoCode.status}</button>
+                                        <button className="btn-online" style={{ background: 'red', color: 'white' }}>{promoCode.status}</button>
                                     )}
                                 </td>
                                 <td>
                                     <div className="form-buttons">
-                                        <button className="btn-blue">
+                                        <button onClick={() => handleEditPromoCode(promoCode.promoId)} className="btn-blue">
                                             <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
                                         </button>
-                                        <button className="btn-red">
+                                        <button className="btn-red" onClick={() => {
+                                            if (window.confirm('Are you sure want to delete this promo code!')) {
+                                                handleDelete(promoCode.promoId);
+                                            }
+                                        }}>
                                             <FontAwesomeIcon icon={faTrashCan} style={{ color: 'white' }} />
                                         </button>
                                     </div>

@@ -116,7 +116,7 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
                             onClick={() => document.getElementById('fileInput').click()}
                             style={{
                                 border: '2px dashed #ccc',
-                                padding: '20px',
+                                // padding: '20px',
                                 textAlign: 'center',
                                 cursor: 'pointer',
                                 position: 'relative', // Thêm position relative để căn ảnh preview
