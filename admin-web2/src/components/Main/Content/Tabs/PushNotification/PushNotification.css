@@ -1,0 +1,35 @@
+.notifications-header {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px 4px 0px 0px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #e0e0e0;
+    padding-left: 10px;
+    gap: 3%;
+}
+
+.notifications-header .form-buttons {
+    margin: 10px 0 10px;
+}
+
+.form-content-custom {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.form-content-custom .form-buttons {
+    margin-left: 9.5%;
+}
+
+.form-group-custom {
+    flex-direction: row;
+    align-items: center;
+}
+
+.form-label-custom {
+    width: 10%;
+    font-size: 20px;
+}

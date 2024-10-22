@@ -7,7 +7,7 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
-    const [status, setStatus] = useState('available');
+    const [status, setStatus] = useState('');
     const [image, setImage] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [loading, setLoading] = useState(false);
@@ -91,7 +91,8 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
                     </div>
                     <div className='form-group'>
                         <label className='form-label'>Status:</label>
-                        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        <select value={status} required onChange={(e) => setStatus(e.target.value)}>
+                            <option value="" disabled selected>Choose status promo code</option>
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>

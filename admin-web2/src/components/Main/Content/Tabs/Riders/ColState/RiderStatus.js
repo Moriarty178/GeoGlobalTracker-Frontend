@@ -4,7 +4,7 @@ import axios from 'axios';
 import './RiderStatus.css'
 
 const CommonStatus = ({ title, apiUrl, statusId, status: initialStatus, onSubPageChange }) => {
-    const [status, setStatus] = useState(initialStatus || 'Approved');
+    const [status, setStatus] = useState(initialStatus || '');
 
     const handleSave = () => {
         axios.put(apiUrl + `/status/${statusId}`, { status }) // {status}: vì nó phải là object mà hiện tại đang là biến đơn => dùng {} để thành object.
@@ -27,16 +27,17 @@ const CommonStatus = ({ title, apiUrl, statusId, status: initialStatus, onSubPag
             <div className='form-buttons'>
                 <button type='button' onClick={handleBack}>Back</button>
             </div>
-            <div className='form-select-status'>
+            <form className='form-select-status' onSubmit={handleSave}>
                 <span> Select status:</span>
-                <select className='select-status' value={status} onChange={(e) => setStatus(e.target.value)}>
+                <select className='select-status' value={status} required onChange={(e) => setStatus(e.target.value)}>
+                    <option value="" disabled selected>Choose status for driver</option>
                     <option value="Approved">Approved</option>
                     <option value="Blocked">Block</option>
                 </select>
                 <div className='form-buttons'>
-                    <button className="btn-green" onClick={handleSave}>Save</button>
+                    <button className="btn-green" type='submit'>Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };

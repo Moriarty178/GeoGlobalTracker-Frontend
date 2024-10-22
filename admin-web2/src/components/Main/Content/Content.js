@@ -33,6 +33,7 @@ import PromoCode from './Tabs/PromoCode/PromoCode';
 // Promo Code
 import AddPromoCode from './Tabs/PromoCode/AddPromoCode/AddPromoCode';
 import EditPromoCode from './Tabs/PromoCode/AddPromoCode/EditPromoCode';
+import { PushNotification } from './Tabs/PushNotification/PushNotification';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -187,6 +188,8 @@ function Content({ activeTab, subPage, onSubPageChange }) {
         return <GodsView />;
       case 'promo-code':
         return <PromoCode onSubPageChange={onSubPageChange} />;
+      case 'push-notifications':
+        return <PushNotification />;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;

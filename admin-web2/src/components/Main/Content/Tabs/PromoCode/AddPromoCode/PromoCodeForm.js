@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 const PromoCodeForm = ({ initialData, onSubmit, onBack }) => {
     const [name, setName] = useState('');
     const [code, setCodeName] = useState('');
-    const [type, setType] = useState('flat');
+    const [type, setType] = useState('');
     const [value, setValue] = useState('');
     const [usageLimit, setUsageLimit] = useState('');
     const [expiredDate, setExpiredDate] = useState('');
-    const [status, setStatus] = useState('active');
+    const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
 
     // set dữ liệu nếu có initialData(case 'eidt')
@@ -71,7 +71,8 @@ const PromoCodeForm = ({ initialData, onSubmit, onBack }) => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Type</label>
-                    <select value={type} onChange={(e) => setType(e.target.value)} className="form-select select-custom">
+                    <select value={type} required onChange={(e) => setType(e.target.value)} className="form-select select-custom">
+                        <option value="" disabled selected>Choose Type of Promo Code</option>
                         <option value='flat'>flat</option>
                         <option value='percentage'>percentage</option>
                     </select>
@@ -109,7 +110,8 @@ const PromoCodeForm = ({ initialData, onSubmit, onBack }) => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Select Status</label>
-                    <select value={status} onChange={(e) => setStatus(e.target.value)} className="form-select select-custom">
+                    <select value={status} onChange={(e) => setStatus(e.target.value)} required className="form-select select-custom">
+                        <option value="" disabled selected>Choose status</option>
                         <option value='active'>active</option>
                         <option value='inactive'>inactive</option>
                     </select>
