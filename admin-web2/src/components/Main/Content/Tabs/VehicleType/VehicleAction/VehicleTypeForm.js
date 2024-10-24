@@ -23,11 +23,27 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
     }, [initialData]);
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
+        // const file = e.target.files[0]; // truy cập này chỉ đúng với input, còn với drag & drop -> lấy, truy cập file từ DataTransfer Object = e.dataTransfer
+        // if (file) {
+        //     setImage(file);
+        //     setPreviewImage(URL.createObjectURL(file));
+        // }
+
+        let file;
+
+        if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            // Trường hợp drag & drop => truy cập tập tin từ đối tượng DataTransfer (e.dataTransfer)
+            file = e.dataTransfer.files[0];
+        } else if (e.target && e.target.files.length > 0) {
+            // Trường hợp input => truy cập tập tin từ sự kiện e.target
+            file = e.target.files[0];
+        }
+
         if (file) {
             setImage(file);
             setPreviewImage(URL.createObjectURL(file));
         }
+
     };
 
     const handleSubmit = async (e) => {
@@ -41,7 +57,7 @@ const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
         formData.append('name', name);
         formData.append('cost', cost);
         formData.append('status', status);
-        if (image) {
+        if (image) { // Nếu edit ko có img -> null -> be ko cập nhật image
             formData.append('image', image);
         }
 

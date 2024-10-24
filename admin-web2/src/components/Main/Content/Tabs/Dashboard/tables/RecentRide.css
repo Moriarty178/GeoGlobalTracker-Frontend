@@ -45,8 +45,9 @@ th {
     background-color: #f2f2f2;
 }
 
-.recent-rides td {
-    max-width: 150px;
+/* .recent-rides td { */
+td {
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
