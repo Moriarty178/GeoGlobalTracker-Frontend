@@ -1,13 +1,14 @@
 .sidebar {
   background-color: #444;
   color: white;
-  width: 200px;
+  width: 300px;
   /* padding: 20px; */
   position: fixed;
   top: 100px;
   left: 0;
   height: calc(100vh - 100px);
   overflow-y: auto;
+  overflow-x: hidden;
   transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
 }
@@ -25,8 +26,13 @@
 
 .sidebar ul li {
   /* margin-bottom: 15px; */
-  border: 1px solid #ccc;
+  border: 1px solid #6e6565;
+  border-radius: 16px;
   padding: 8px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  overflow: hidden;
 }
 
 .sidebar ul li a {
@@ -34,14 +40,16 @@
   text-decoration: none;
   display: block;
   padding: 10px;
+  border-radius: 16px;
   font-weight: bold;
   border-radius: 5px;
-  transition: background-color 0.3s ease, padding-left 0.3s ease;
+  transition: background-color 0.3s ease, padding-left 0.5s ease, transform 0.5s ease;
 }
 
 .sidebar ul li a:hover {
-  background-color: #555;
-  padding-left: 15px;
+  background-color: #4a44be;
+  padding-left: 65px;
+  transform: scale(1.4);
 }
 
 .sub-menu {
@@ -58,7 +66,7 @@
 
 .sub-menu li a:hover {
   background-color: #666;
-  color: #1abc9c;
+  color: #9bc902;
 }
 .collapse-button {
   background-color: #444; /* Màu nền khi chưa ấn */
@@ -82,7 +90,7 @@
 
 .collapse-button:hover {
   background-color: #555; /* Màu nền khi hover */
-  transform: scale(1.1); /* Tăng kích thước nút khi hover */
+  transform: scale(1.25); /* Tăng kích thước nút khi hover */
   color: rgb(12, 207, 12);
 }
 

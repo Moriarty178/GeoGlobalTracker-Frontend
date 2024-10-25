@@ -39,7 +39,7 @@ const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
 
 
-function Content({ activeTab, subPage, onSubPageChange, isCollapsed }) {
+function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent }) {
   const renderContent = () => {
     // console.log('Active tab is: ', activeTab);
 
@@ -197,7 +197,7 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed }) {
   };
 
   return (
-    <section className={`content ${isCollapsed ? 'collapsed' : ''}`}>
+    <section className={`content ${isCollapsed ? 'collapsed' : ''} ${fadeContent ? 'content-hidden' : ''}`}>
       <div id="content-display">
         {renderContent()}
       </div>

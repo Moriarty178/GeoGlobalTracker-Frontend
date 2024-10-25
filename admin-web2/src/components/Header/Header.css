@@ -20,12 +20,19 @@
 }
 
 .header-icon {
-  width: 40px;
-  margin-right: 10px;
+  width: 50px; /* Tăng kích thước icon */
+  border-radius: 5px; /* Thêm bo góc cho icon */
+  transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
+}
+
+.header-icon:hover {
+  transform: scale(1.1); /* Phóng to icon khi hover */
 }
 
 .header-title {
-  font-size: 24px;
+  font-size: 28px; /* Tăng kích thước font cho tiêu đề */
+  font-weight: bold; /* Đậm hơn */
+  margin-left: 10px; /* Tạo khoảng cách giữa icon và tiêu đề */
 }
 
 .header-right {
@@ -35,28 +42,43 @@
 .avatar {
   width: 40px;
   border-radius: 50%;
+  border: 2px solid white; /* Thêm viền trắng cho avatar */
+  transition: transform 0.3s ease; /* Thêm hiệu ứng khi hover */
+}
+
+.avatar:hover {
+  transform: scale(1.1); /* Phóng to avatar khi hover */
 }
 
 .dropdown-content {
-  display: none;
   position: absolute;
   right: 0;
   background-color: #f1f1f1;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
+  border-radius: 5px; /* Bo góc cho dropdown */
+  overflow: hidden; /* Đảm bảo nội dung không bị tràn */
+  opacity: 0; /* Khởi tạo độ mờ */
+  transform: translateY(-50px) scale(0.5); /* Di chuyển lên một chút và giảm kích thước */
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; /* Thêm hiệu ứng cho opacity, vị trí và kích thước */
+  visibility: hidden; /* Ẩn dropdown khi không hiển thị */
 }
 
 .dropdown:hover .dropdown-content {
-  display: block;
+  opacity: 1; /* Đặt độ mờ thành 1 khi hiển thị */
+  transform: translateY(0) scale(1); /* Đặt lại vị trí về 0 và tăng kích thước về 100% */
+  visibility: visible; /* Hiện dropdown khi hover */
 }
+
 
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  transition: background-color 0.3s ease; /* Thêm hiệu ứng khi hover */
 }
 
 .dropdown-content a:hover {
-  background-color: #ddd;
+  background-color: #ddd; /* Thay đổi màu nền khi hover */
 }
