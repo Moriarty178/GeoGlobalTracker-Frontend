@@ -60,13 +60,13 @@ const StatCards = () => {
                             <span>{stats.vehicleType}</span>
                         </div>
                     </div>
-                    <div className="card" style={{ backgroundColor: '#b70c8f' }}>
+                    <div className="card" style={{ backgroundColor: '#e40606' }}>
                         <div className='card-icon bg-n-color-revenue'>
                             <FontAwesomeIcon className='card-icon-config' icon={faMoneyBillTrendUp} /> {/* Biểu tượng cho Revenue */}
                         </div>
                         <div className='card-content'>
                             <h4>Revenue</h4>
-                            <span>{stats.revenue}</span>
+                            <span>{ new Intl.NumberFormat('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(stats.revenue)} $</span>
                         </div>
                     </div>
                 </div>
@@ -74,8 +74,8 @@ const StatCards = () => {
             <div className="stats-right">
                 <h3>Ride Statistics</h3> {/* Tiêu đề cho nhóm thẻ thống kê */}
                 <div className="stats-row">
-                    <div className="card" style={{ backgroundColor: '#F44336' }}>
-                        <div className='card-icon' style={{ backgroundColor: '#3f3838' }}>
+                    <div className="card" style={{ backgroundColor: '#1285c0' }}>
+                        <div className='card-icon' style={{ backgroundColor: '#075c69' }}>
                             <FontAwesomeIcon className='card-icon-config' icon={faRoad} style={{ color: 'white' }} /> {/* Biểu tượng cho Total Rides */}
                         </div>
                         <div className='card-content'>

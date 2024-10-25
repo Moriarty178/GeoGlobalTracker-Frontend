@@ -39,7 +39,7 @@ const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
 
 
-function Content({ activeTab, subPage, onSubPageChange }) {
+function Content({ activeTab, subPage, onSubPageChange, isCollapsed }) {
   const renderContent = () => {
     // console.log('Active tab is: ', activeTab);
 
@@ -122,11 +122,11 @@ function Content({ activeTab, subPage, onSubPageChange }) {
 
         default:
           switch (activeTab) {
-            case 'dashboard':
+            case 'Dashboard':
               return <Dashboard />;
-            case 'riders':
+            case 'Riders':
               return <Rider onSubPageChange={onSubPageChange} />;
-            case 'approvedDrivers':
+            case 'ApprovedDrivers':
               return <DriverList
                 title="Drivers"
                 apiUrl={apiUrlDrivers}
@@ -134,7 +134,7 @@ function Content({ activeTab, subPage, onSubPageChange }) {
                 showOtherAction={true}
                 onSubPageChange={onSubPageChange}
               />;  // Hiển thị danh sách Drivers đã được phê duyệt
-            case 'unapprovedDrivers':
+            case 'UnapprovedDrivers':
               return <DriverList
                 title="Un-approved Drivers"
                 apiUrl={apiUrlDrivers + '/un-approved'}
@@ -142,9 +142,9 @@ function Content({ activeTab, subPage, onSubPageChange }) {
                 showOtherAction={false}
                 onSubPageChange={onSubPageChange}
               />;  // Hiển thị danh sách Drivers chưa được phê duyệt
-            case 'vehicle-type':
+            case 'Vehicle-type':
               return <VehicleType onSubPageChange={onSubPageChange} />;
-            case 'promo-code':
+            case 'Promo-code':
               return <PromoCode onSubPageChange={onSubPageChange}/>;
             // Thêm các trường hợp khác
             default:
@@ -156,11 +156,11 @@ function Content({ activeTab, subPage, onSubPageChange }) {
     // Nếu không có subPage (trang phụ), render tab chính
     // Xử lý tab chính
     switch (activeTab) {
-      case 'dashboard':
+      case 'Dashboard':
         return <Dashboard />;
-      case 'riders':
+      case 'Riders':
         return <Rider onSubPageChange={onSubPageChange} />;
-      case 'approvedDrivers':
+      case 'ApprovedDrivers':
         return <DriverList
           title="Drivers"
           apiUrl={apiUrlDrivers}
@@ -168,7 +168,7 @@ function Content({ activeTab, subPage, onSubPageChange }) {
           showOtherAction={true}
           onSubPageChange={onSubPageChange}
         />;  
-      case 'unapprovedDrivers':
+      case 'UnapprovedDrivers':
         return <DriverList
           title="Un-approved Drivers"
           apiUrl={apiUrlDrivers + '/un-approved'}// + 'http://localhost:8080/trips/drivers/un-approved'
@@ -176,19 +176,19 @@ function Content({ activeTab, subPage, onSubPageChange }) {
           showOtherAction={false}
           onSubPageChange={onSubPageChange}
         />;  
-      case 'vehicle-type':
+      case 'Vehicle-type':
         return <VehicleType onSubPageChange={onSubPageChange} />;
       case 'Admin Earning Reports':
         return <AdminEarningReports onSubPageChange={onSubPageChange} />;
       case 'Driver Payment Reports':
         return <DriverPaymentReports onSubPageChange={onSubPageChange} />;
-      case 'review-ratings':
+      case 'Review-ratings':
         return <ReviewRating onSubPageChange={onSubPageChange} />;
-      case 'gods-view':
+      case 'Gods-view':
         return <GodsView />;
-      case 'promo-code':
+      case 'Promo-code':
         return <PromoCode onSubPageChange={onSubPageChange} />;
-      case 'push-notifications':
+      case 'Push-notifications':
         return <PushNotification />;
       // Thêm các trường hợp khác
       default:
@@ -197,7 +197,7 @@ function Content({ activeTab, subPage, onSubPageChange }) {
   };
 
   return (
-    <section className="content">
+    <section className={`content ${isCollapsed ? 'collapsed' : ''}`}>
       <div id="content-display">
         {renderContent()}
       </div>

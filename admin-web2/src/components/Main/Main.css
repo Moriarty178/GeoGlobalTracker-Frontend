@@ -9,4 +9,9 @@
   padding: 20px;
   flex: 1; /* Cho phép content chiếm hết không gian còn lại */
   overflow-y: auto; /* Cho phép cuộn riêng phần content */
+  transition: margin-left 0.3s ease; /* Thêm hiệu ứng chuyển tiếp */
+}
+
+.content.collapsed {
+  margin-left: 50px; /* Khi sidebar bị thu nhỏ */
 }

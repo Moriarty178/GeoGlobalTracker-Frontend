@@ -275,13 +275,13 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
                         </div>
                     </div>
 
-                    <div className="card" style={{ background: '#f631c7' }}>
+                    <div className="card" style={{ background: '#e83636' }}>
                         <div className="card-icon bg-n-color-revenue">
                             <FontAwesomeIcon className='card-icon-config' icon={faMoneyBillTrendUp} />
                         </div>
                         <div className="card-content">
                             <h4>Revenue</h4>
-                            <span>{stats.revenue} $</span>
+                            <span>{new Intl.NumberFormat('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(stats.revenue)} $</span>
                         </div>
                     </div>
                 </div>

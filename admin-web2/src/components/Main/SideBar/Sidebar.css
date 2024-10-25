@@ -1,35 +1,92 @@
 .sidebar {
-    background-color: #444;
-    color: white;
-    width: 200px;
-    padding: 20px;
-    position: fixed;
-    top: 100px;
-    left: 0;
-    height: 100vh; /*Chiếm full chiều dọc màn hinh*/
-    overflow-y: auto;
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 10px 0;
-  }
-  
-  .sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    display: block;
-  }
-  
-  .sidebar ul li a:hover {
-    background-color: #555;
-    padding-left: 10px;
-  }
-  
-  .sub-menu {
-    margin-left: 20px; /* Để tạo khoảng cách lệch vào so với tab chính */
-  }
+  background-color: #444;
+  color: white;
+  width: 200px;
+  /* padding: 20px; */
+  position: fixed;
+  top: 100px;
+  left: 0;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar.collapsed {
+  transform: translateX(-60%); /* Ẩn sidebar bằng cách dịch chuyển ra ngoài màn hình */
+  width: 110px; /* Đặt chiều rộng khi sidebar bị ẩn */
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.sidebar ul li {
+  /* margin-bottom: 15px; */
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.sidebar ul li a {
+  color: rgb(0, 145, 255);
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: #555;
+  padding-left: 15px;
+}
+
+.sub-menu {
+  margin-left: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.sub-menu li a {
+  font-size: 14px;
+  color: #cfd8dc;
+  padding: 8px;
+}
+
+.sub-menu li a:hover {
+  background-color: #666;
+  color: #1abc9c;
+}
+.collapse-button {
+  background-color: #444; /* Màu nền khi chưa ấn */
+  color: #ffffff; /* Màu biểu tượng */
+  font-weight: bold;
+  font-size: 36px;
+  border: none; /* Bỏ viền để trông sạch sẽ hơn */
+  padding: 10px; /* Tăng khoảng cách cho nút */
+  width: 50px; /* Thay đổi chiều rộng để nó không quá lớn */
+  height: 50px; /* Đặt chiều cao cho nút */
+  border-radius: 50%; /* Làm tròn nút */
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  justify-content: center; /* Căn giữa biểu tượng */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  right: 0;
+  bottom: 20px; /* Đưa nút lên một chút so với đáy */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Hiệu ứng chuyển đổi cho nút */
+}
+
+.collapse-button:hover {
+  background-color: #555; /* Màu nền khi hover */
+  transform: scale(1.1); /* Tăng kích thước nút khi hover */
+  color: rgb(12, 207, 12);
+}
+
+.collapse-button:hover .fa {
+  transform: scale(1.1); /* Tăng kích thước icon khi hover */
+  transition: transform 0.3s ease; /* Hiệu ứng chuyển đổi cho icon */
+}
