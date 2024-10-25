@@ -8,7 +8,7 @@ const ReviewRating = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRatings, setTotalRatings] = useState(0);
     const [loading, setLoading] = useState(true);
-    const reviewRatingsPerPage = 4;
+    const reviewRatingsPerPage = 10;
 
     // fetch dữ liệu cho reviewRatings
     const fetchReviewRatings = async (offset, limit) => {
@@ -85,7 +85,7 @@ const ReviewRating = () => {
                         <tbody>
                             {reviewRatings.map((result, index) => (
                                 <tr key={result.tripId}>
-                                    <td>{index + 1}</td>
+                                    <td>{(currentPage - 1) * reviewRatingsPerPage + index + 1}</td>
                                     <td>{result.tripId}</td>
                                     <td>{result.driverName}</td>
                                     <td>{result.customerName}</td>

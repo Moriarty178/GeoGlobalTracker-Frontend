@@ -10,7 +10,7 @@ const PromoCode = ({ onSubPageChange }) => {
     const [totalPromoCodes, setTotalPromoCodes] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    const resultsPerPage = 4;
+    const resultsPerPage = 11;
 
     //fetch dữ liêu cho promoCodes
     const fetchPromoCode = async (offset, limit) => {
@@ -82,6 +82,7 @@ const PromoCode = ({ onSubPageChange }) => {
                     <thead>
                         <tr>
                             {/* <th>Promo ID</th> */}
+                            <th>No.</th>
                             <th>Name / Title</th>
                             <th>Code</th>
                             <th>Type</th>
@@ -94,9 +95,9 @@ const PromoCode = ({ onSubPageChange }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {promoCodes.map(promoCode => (
+                        {promoCodes.map((promoCode, index) => (
                             <tr key={promoCode.promoId}>
-                                {/* <td>{promoCode.promoId}</td> */}
+                                <td>{(currentPage - 1) * resultsPerPage + index + 1}</td>
                                 <td>{promoCode.name}</td>
                                 <td>{promoCode.code}</td>
                                 <td>{promoCode.type}</td>

@@ -16,7 +16,7 @@ const DriverList = ({
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalDrivers, setTotalRides] = useState(0);
-    const driversPerPage = 4;
+    const driversPerPage = 12;
 
     // get Drivers for table
     const fetchDrivers = async (offset, limit) => {
@@ -88,7 +88,7 @@ const DriverList = ({
             <table id="driversTable">
                 <thead>
                     <tr>
-                        <th>DriverId</th>
+                        <th>No.</th>
                         <th>Driver Name</th>
                         <th>Email</th>
                         <th>Phone</th>
@@ -100,9 +100,9 @@ const DriverList = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {drivers.map((driver) => (
+                    {drivers.map((driver, index) => (
                         <tr key={driver.driverId}>
-                            <td>{driver.driverId}</td>
+                            <td>{(currentPage - 1) * driversPerPage + index + 1}</td>
                             {showOnlineOffline ? <td>{driver.name}</td> : <td>{driver.firstName}</td>}
                             <td>{driver.email}</td>
                             <td>{driver.phone}</td>

@@ -10,7 +10,7 @@ const VehicleType = ({ onSubPageChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalVehicles, setTotalVehicles] = useState(0);
     const [loading, setLoading] = useState(true);
-    const vehiclesPerPage = 4;
+    const vehiclesPerPage = 12;
 
     // fetch dữ liệu vehicle type
     const fetchVehicles = async (offset, limit) => {
@@ -85,9 +85,9 @@ const VehicleType = ({ onSubPageChange }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {vehicles.map(vehicle => (
+                            {vehicles.map((vehicle, index) => (
                                 <tr key={vehicle.vehicleId}>
-                                    <td>{vehicle.vehicleId}</td>
+                                    <td>{(currentPage - 1) * vehiclesPerPage + index + 1}</td>
                                     <td className="center">
                                         <img
                                             src={`http://localhost:8080/images/${vehicle.img}`} // Đường dẫn HTTP từ Spring Boot

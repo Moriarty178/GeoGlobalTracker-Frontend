@@ -10,7 +10,7 @@ const AdminEarningReports = ({ onSubPageChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalResults, setTotalResults] = useState(0);
     const [loading, setLoading] = useState(true);
-    const resultsPerPage = 5;
+    const resultsPerPage = 9;
 
     //fetch dữ liệu resultReports
     const fetchResultEarning = async (offset, limit) => {
@@ -67,6 +67,7 @@ const AdminEarningReports = ({ onSubPageChange }) => {
                     <table>
                         <thead>
                             <tr>
+                                <th>No.</th>
                                 <th>Trip ID</th>
                                 {/* <th>Ride Type</th> */}
                                 <th>Driver Name</th>
@@ -80,10 +81,10 @@ const AdminEarningReports = ({ onSubPageChange }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {resultReports.map(result => (
+                            {resultReports.map((result, index) => (
                                 <tr key={result.tripId}>
+                                    <td>{(currentPage - 1) * resultsPerPage + index + 1}</td>
                                     <td>{result.tripId}</td>
-                                    {/* <td>{result.type}</td> */}
                                     <td>{result.driverName}</td>
                                     <td>{result.customerName}</td>
                                     <td>{result.createdAt}</td>
@@ -97,17 +98,17 @@ const AdminEarningReports = ({ onSubPageChange }) => {
                             
                             {/* Thông tin tổng */}
                             <tr>
-                                <td colSpan="7"></td>
+                                <td colSpan="8"></td>
                                 <td><strong>Pay to Drivers</strong></td>
                                 <td>{resultReports.reduce((acc, result) => acc + result.driverPaymentAmount, 0).toFixed(2)} $</td>
                             </tr>
                             <tr>
-                                <td colSpan="7"></td>
+                                <td colSpan="8"></td>
                                 <td><strong>Total Earnings</strong></td>
                                 <td>{resultReports.reduce((acc, result) => acc + result.commission, 0).toFixed(2)} $</td>
                             </tr>
                             <tr>
-                                <td colSpan="7"></td>
+                                <td colSpan="8"></td>
                                 <td><strong>Total Ride Amount</strong></td>
                                 <td>{resultReports.reduce((acc, ref) => acc + ref.totalRevenue, 0).toFixed(2)} $</td>
                             </tr>

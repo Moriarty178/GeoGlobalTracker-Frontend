@@ -12,7 +12,7 @@ export const PushNotification = ({ onSubPageChange }) => {
     const [sentTo, setSentTo] = useState('');
     const [message, setMessage] = useState('');
 
-    const notificationsPerPage = 4;
+    const notificationsPerPage = 6;
 
     // fetch dữ liệu notifications
     async function fetchNotifications(offset, limit) {
@@ -54,6 +54,9 @@ export const PushNotification = ({ onSubPageChange }) => {
         try {
             await axios.post('http://localhost:8080/trips/notifications/send', formData);
             alert('Sending notification successfylly.');
+            setTitle('');
+            setSentTo('');
+            setMessage('');
         } catch (error) {
             console.error('Error sending new notification:', error);
         }
@@ -121,7 +124,8 @@ export const PushNotification = ({ onSubPageChange }) => {
                 <table>
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th>No.</th>
+                            <th>Notification ID</th>
                             <th>Title</th>
                             <th>Sent To</th>
                             <th>Message</th>
@@ -129,8 +133,9 @@ export const PushNotification = ({ onSubPageChange }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {notifications.map(notification => (
+                        {notifications.map((notification, index) => (
                             <tr key={notification.notificationId}>
+                                <td>{(currentPage - 1) * notificationsPerPage + index + 1}</td>
                                 <td>{notification.notificationId}</td>
                                 <td>{notification.title}</td>
                                 <td>{notification.sentTo}</td>

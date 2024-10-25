@@ -9,7 +9,7 @@ const Rider = ({ onSubPageChange }) => {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRiders, setTotalRides] = useState(0);
-    const ridersPerPage = 4;
+    const ridersPerPage = 12;
 
     // const navigate = useNavigate(); // Hook dùng để điều hướng
 
@@ -88,7 +88,7 @@ const Rider = ({ onSubPageChange }) => {
             <table id='ridersTable'>
                 <thead>
                     <tr>
-                        <th>Rider ID</th>
+                        <th>No.</th>
                         <th>Rider Name</th>
                         <th>Email</th>
                         <th>Phone</th>
@@ -98,9 +98,9 @@ const Rider = ({ onSubPageChange }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {riders.map((rider) => (
+                    {riders.map((rider, index) => (
                         <tr key={rider.customerId}>
-                            <td>{rider.customerId}</td>
+                            <td>{(currentPage - 1) * ridersPerPage + index + 1}</td>
                             <td>{rider.firstName}</td>
                             <td>{rider.email}</td>
                             <td>{rider.phone}</td>

@@ -38,7 +38,7 @@ th {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-    word-wrap: break-word;
+    word-wrap: break-word; /* xuống dòng khi đầy*/
 }
 
 .recent-rides th {
@@ -50,6 +50,7 @@ td {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap; /* ngăn xuống dòng khi đầy*/
 }
 
 

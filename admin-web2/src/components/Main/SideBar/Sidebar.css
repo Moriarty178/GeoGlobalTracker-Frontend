@@ -3,6 +3,11 @@
     color: white;
     width: 200px;
     padding: 20px;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    height: 100vh; /*Chiếm full chiều dọc màn hinh*/
+    overflow-y: auto;
   }
   
   .sidebar ul {

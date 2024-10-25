@@ -10,7 +10,7 @@ const DriverPaymentReports = ({ onSubPageChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalResults, setTotalResults] = useState(0);
     const [loading, setLoading] = useState(true);
-    const resultsPerPage = 4;
+    const resultsPerPage = 9;
 
     // fetch dữ liệu driverReports
     const fetchDriverReports = async (offset, limit) => {
@@ -66,6 +66,7 @@ const DriverPaymentReports = ({ onSubPageChange }) => {
                 <table className="statement-table">
                     <thead>
                         <tr>
+                            <td>No.</td>
                             <th>Driver Name</th>
                             <th>Driver Account No.</th>
                             <th>Driver Bank Name</th>
@@ -77,8 +78,9 @@ const DriverPaymentReports = ({ onSubPageChange }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {resultReports.map(result => (
+                        {resultReports.map((result, index) => (
                             <tr key={result.driverId}>
+                                <td>{(currentPage -1) * resultsPerPage + index + 1}</td>
                                 <td>{result.driverName}</td>
                                 <td>{result.driverAccountNo}</td>
                                 <td>{result.driverBankName}</td>
@@ -94,17 +96,17 @@ const DriverPaymentReports = ({ onSubPageChange }) => {
 
                         {/* Tính tổng */}
                         <tr>
-                            <td colSpan="6"></td>
+                            <td colSpan="7"></td>
                             <td><strong>Total Ride</strong></td>
                             <td>{resultReports.reduce((acc, result) => acc + result.totalRevenue, 0).toFixed(2)} $</td>
                         </tr>
                         <tr>
-                            <td colSpan="6"></td>
+                            <td colSpan="7"></td>
                             <td><strong>Total Commission</strong></td>
                             <td>- {resultReports.reduce((acc, result) => acc + result.commission, 0).toFixed(2)} $</td>
                         </tr>
                         <tr>
-                            <td colSpan="6"></td>
+                            <td colSpan="7"></td>
                             <td><strong>Driver Payment Amount</strong></td>
                             <td>{resultReports.reduce((acc, result) => acc + result.driverPaymentAmount, 0).toFixed(2)} $</td>
                         </tr>

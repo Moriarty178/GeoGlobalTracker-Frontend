@@ -1,5 +1,12 @@
 .main {
-    display: flex;
-    flex: 1;
-  }
-  
+  display: flex;
+  flex: 1;
+}
+
+.content {
+  margin-left: 230px; /* Đặt khoảng cách ngang với width của sidebar */
+  margin-top: 100px;
+  padding: 20px;
+  flex: 1; /* Cho phép content chiếm hết không gian còn lại */
+  overflow-y: auto; /* Cho phép cuộn riêng phần content */
+}

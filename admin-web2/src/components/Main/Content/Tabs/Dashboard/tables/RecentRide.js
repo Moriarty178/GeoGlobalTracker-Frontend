@@ -60,6 +60,7 @@ const RecentRide = () => {
       <table>
         <thead>
           <tr>
+            <th>No.</th>
             <th>Trip ID</th>
             <th>Customer Name</th>
             <th>Driver Name</th>
@@ -72,6 +73,7 @@ const RecentRide = () => {
         <tbody>
           {recentRides.map((ride, index) => (
             <tr key={ride.tripId}>
+              <td>{(currentPage - 1) * ridesPerPage + index + 1}</td>
               <td>{ride.tripId}</td>
               <td>{ride.customerName}</td>
               <td>{ride.driverName ? ride.driverName : 'N/A'}</td>
