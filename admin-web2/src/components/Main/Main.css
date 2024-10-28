@@ -3,36 +3,40 @@
   flex: 1;
 }
 
-/* .content {
+.content {
   margin-left: 300px;
   margin-top: 100px;
   padding: 20px;
   flex: 1;
   opacity: 1;
   overflow-y: auto;
-  transform: translateX(0);  Vị trí hiển thị mặc định 
-  transition: opacity 0.4s ease, transform 0.4s ease;  Tăng thời gian để hiệu ứng mượt 
+  transform: translateX(0);  /*Vị trí hiển thị mặc định */
+  transition: margin-left 0.4s, opacity 0.4s ease, transform 0.4s ease;  /*Tăng thời gian để hiệu ứng mượt */
 }
 
 .content-hidden {
-  opacity: 0;  Bắt đầu mờ đi 
-  transform: translateX(-30px);  Bắt đầu từ bên trái ngoài màn hình 
-} */
+  opacity: 0;  
+  transform: translateX(-30px);  /*Bắt đầu từ bên trái ngoài màn hình */
+}
 
 
-.content {
-  margin-left: 300px;  /*Đặt khoảng cách ngang với width của sidebar */
+/* .content {
+  margin-left: 300px;  
   margin-top: 100px;
   padding: 20px;
   flex: 1;
   opacity: 1;
   overflow-y: auto;
-  transform: scale(1);  /*Bắt đầu với kích thước nhỏ hơn */
-  transition: opacity 0.4s ease, transform 0.4s ease;  /*Thêm hiệu ứng mờ dần */
+  transform: scale(1);  
+  transition: margin-left 0.4s ease, opacity 0.4s ease, transform 0.4s ease;  
 }
 
 .content-hidden {
-  opacity: 0; /*Làm mờ đi*/ 
-  transform: scale(0.5);  /*Đặt kích thước nhỏ hơn khi ẩn */
-}
+  opacity: 0; 
+  transform: scale(0.5); 
+} */
  
+
+.content.collapsed {
+  margin-left: 50px; /* Khi sidebar bị thu nhỏ */
+}

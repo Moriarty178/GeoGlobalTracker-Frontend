@@ -34,6 +34,9 @@ import PromoCode from './Tabs/PromoCode/PromoCode';
 import AddPromoCode from './Tabs/PromoCode/AddPromoCode/AddPromoCode';
 import EditPromoCode from './Tabs/PromoCode/AddPromoCode/EditPromoCode';
 import { PushNotification } from './Tabs/PushNotification/PushNotification';
+import OverallStatemnent from './Tabs/Statement/OverallStatement';
+import TodayStatement from './Tabs/Statement/TodayStatement';
+import YearlyStatement from './Tabs/Statement/YearlyStatement';
 
 const apiUrlDrivers = 'http://localhost:8080/trips/drivers'
 const apiUrlRiders = 'http://localhost:8080/trips/riders'
@@ -98,7 +101,12 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
             onSubPageChange={onSubPageChange}
           />;
         case 'driverStatement':
-          return <DriverStatement driverId={subPage.data.driverId} onSubPageChange={onSubPageChange} />;
+          return <DriverStatement
+            urlStats={`http://localhost:8080/trips/drivers/stats/${subPage.data.driverId}`}
+            urlApiHistory={`http://localhost:8080/trips/drivers/history/${subPage.data.driverId}`}
+            // driverId={subPage.data.driverId}
+            onSubPageChange={onSubPageChange}
+          />;
         case 'driverEdit':
           return <CommonEdit
             title='Driver Edit'
@@ -119,7 +127,6 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
         case 'editPromoCode':
           return <EditPromoCode promoId={subPage.data.promoId} onSubPageChange={onSubPageChange} />;
 
-
         default:
           switch (activeTab) {
             case 'Dashboard':
@@ -133,7 +140,7 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
                 showOnlineOffline={true}
                 showOtherAction={true}
                 onSubPageChange={onSubPageChange}
-              />;  // Hiển thị danh sách Drivers đã được phê duyệt
+              />;
             case 'UnapprovedDrivers':
               return <DriverList
                 title="Un-approved Drivers"
@@ -141,11 +148,11 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
                 showOnlineOffline={false}
                 showOtherAction={false}
                 onSubPageChange={onSubPageChange}
-              />;  // Hiển thị danh sách Drivers chưa được phê duyệt
+              />;
             case 'Vehicle-type':
               return <VehicleType onSubPageChange={onSubPageChange} />;
             case 'Promo-code':
-              return <PromoCode onSubPageChange={onSubPageChange}/>;
+              return <PromoCode onSubPageChange={onSubPageChange} />;
             // Thêm các trường hợp khác
             default:
               return <h2>Welcome to Admin Dashboard</h2>;
@@ -167,15 +174,15 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
           showOnlineOffline={true}
           showOtherAction={true}
           onSubPageChange={onSubPageChange}
-        />;  
+        />;
       case 'UnapprovedDrivers':
         return <DriverList
           title="Un-approved Drivers"
-          apiUrl={apiUrlDrivers + '/un-approved'}// + 'http://localhost:8080/trips/drivers/un-approved'
+          apiUrl={apiUrlDrivers + '/un-approved'}
           showOnlineOffline={false}
           showOtherAction={false}
           onSubPageChange={onSubPageChange}
-        />;  
+        />;
       case 'Vehicle-type':
         return <VehicleType onSubPageChange={onSubPageChange} />;
       case 'Admin Earning Reports':
@@ -190,6 +197,14 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
         return <PromoCode onSubPageChange={onSubPageChange} />;
       case 'Push-notifications':
         return <PushNotification />;
+
+      // Statement
+      case 'Overall Ride Statement':
+        return <OverallStatemnent onSubPageChange={onSubPageChange}/>;
+      case 'Today Ride Statement':
+        return <TodayStatement onSubPageChange={onSubPageChange}/>;
+      case 'Yearly Ride Statement':
+        return <YearlyStatement onSubPageChange={onSubPageChange}/>;
       // Thêm các trường hợp khác
       default:
         return <h2>Welcome to Admin Dashboard</h2>;

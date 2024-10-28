@@ -15,7 +15,7 @@ function Sidebar({ onTabChange, isCollapsed, toggleSidebar }) {
     'Gods-view': null,
     'Manual-ride': null,
     'Trips': null,
-    'Statement': null,
+    'Statement': ['Overall Ride Statement', 'Today Ride Statement', 'Yearly Ride Statement'],
     'Promo-code': null,
     'Push-notifications': null,
     'Site-setting': null,

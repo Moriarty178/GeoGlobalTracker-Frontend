@@ -10,7 +10,7 @@ import 'jspdf-autotable'; // Hỗ trợ bảng trong PDF
 import { copyToClipboard } from 'clipboard';
 import { constructFromSymbol } from 'date-fns/constants';
 
-const DriverStatement = ({ driverId, onSubPageChange }) => {
+const DriverStatement = ({ urlStats, urlApiHistory, driverId, onSubPageChange }) => {
     const [trips, setTrips] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalTrips, setTotalTrips] = useState(0);
@@ -28,7 +28,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/trips/drivers/stats/${driverId}`);
+                const response = await axios.get(urlStats);
 
                 setStats(response.data);
             } catch (error) {
@@ -44,7 +44,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
     useEffect(() => {
         const fetchTripsHistory = async (offset, limit) => {
             try {
-                const response = await axios.get(`http://localhost:8080/trips/drivers/history/${driverId}`, {
+                const response = await axios.get(urlApiHistory, {
                     params: {
                         offset: offset,
                         limit: limit,
@@ -154,7 +154,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
         const worksheet = XLSX.utils.aoa_to_sheet(excelData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "DriverStatement");
-        XLSX.writeFile(workbook, `driver-statement_${driverId}.xlsx`);
+        XLSX.writeFile(workbook, `driver-statement.xlsx`);
     };
 
     // const exportToExcel = () => {
@@ -168,7 +168,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
     //     })));
     //     const workbook = XLSX.utils.book_new();
     //     XLSX.utils.book_append_sheet(workbook, worksheet, "Trips");
-    //     XLSX.writeFile(workbook, `DriverTrips_${driverId}.xlsx`);
+    //     XLSX.writeFile(workbook, `driver-statement_${driverId}.xlsx`);
     // };
 
     // Hàm xuất PDF
@@ -216,7 +216,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
             tableWidth: 70,         // Giới hạn độ rộng của bảng để không chiếm toàn bộ trang
         });
 
-        doc.save(`DriverTrips_${driverId}.pdf`);
+        doc.save(`driver-statement.pdf`);
     };
 
     // Hàm COPY
@@ -294,7 +294,7 @@ const DriverStatement = ({ driverId, onSubPageChange }) => {
 
                     <div className='form-buttons'>
                         <button onClick={copyToClipboard}>Copy</button>
-                        <CSVLink data={csvData2} headers={csvHeaders} filename={`DriverTrips_${driverId}.csv`}>
+                        <CSVLink data={csvData2} headers={csvHeaders} filename={`driver-statement.csv`}>
                             <button>CSV</button>
                         </CSVLink>
                         <button onClick={handleExcelExport}>Excel</button>

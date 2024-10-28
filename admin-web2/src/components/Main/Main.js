@@ -15,7 +15,7 @@ function Main() {
       setActiveTab(tab);
       setSubPage(null); // Reset trang phụ khi chuyển tab
       setFadeContent(false);
-    }, 400);
+    }, 250);
   };
 
   const handleSubPageChange = (page, data) => {
