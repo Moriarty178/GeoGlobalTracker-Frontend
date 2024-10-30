@@ -66,7 +66,7 @@ const Rider = ({ onSubPageChange }) => {
         try {
             const response = await axios.delete(`http://localhost:8080/trips/riders/${riderId}`);
             console.log("Status: ", response.data);
-            fetchRiders(currentPage, ridersPerPage);
+            fetchRiders(currentPage - 1, ridersPerPage);
         } catch (error) {
             console.error('Error deleting rider: ', error);
         };

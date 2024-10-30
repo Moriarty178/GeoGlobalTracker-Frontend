@@ -11,7 +11,7 @@ import DriverStatement from './Tabs/Drivers/ApprovedDrivers/ColOtherAction/Drive
 // Common component
 import CommonAdd from './Tabs/Riders/AddRider/CommonAdd';
 import CommonRideHistory from './Tabs/Riders/ColState/CommonRiderHistory';
-import CommonStatus from './Tabs/Riders/ColState/RiderStatus';
+import CommonStatus from './Tabs/Riders/ColState/CommonStatus';
 import CommonEdit from './Tabs/Riders/ColAction/CommonEdit';
 
 // Vehicle Type
@@ -67,7 +67,7 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
             title='Riders Status'
             apiUrl={apiUrlRiders}
             statusId={subPage.data.riderId}
-            status={subPage.data.status}
+            currentStatus={subPage.data.currentStatus}
             onSubPageChange={onSubPageChange}
           />
         case 'editRider':
@@ -90,7 +90,7 @@ function Content({ activeTab, subPage, onSubPageChange, isCollapsed, fadeContent
             title='Driver Status'
             apiUrl={apiUrlDrivers}
             statusId={subPage.data.driverId}
-            status={subPage.data.status}
+            currentStatus={subPage.data.currentStatus}
             onSubPageChange={onSubPageChange}
           />
         case 'driverHistory':

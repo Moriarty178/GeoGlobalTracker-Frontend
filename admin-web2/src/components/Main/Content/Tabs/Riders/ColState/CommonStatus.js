@@ -3,8 +3,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import './RiderStatus.css'
 
-const CommonStatus = ({ title, apiUrl, statusId, status: initialStatus, onSubPageChange }) => {
-    const [status, setStatus] = useState(initialStatus || '');
+const CommonStatus = ({ title, apiUrl, statusId, currentStatus, onSubPageChange }) => {
+    const [status, setStatus] = useState(currentStatus);
 
     const handleSave = () => {
         axios.put(apiUrl + `/status/${statusId}`, { status }) // {status}: vì nó phải là object mà hiện tại đang là biến đơn => dùng {} để thành object.
