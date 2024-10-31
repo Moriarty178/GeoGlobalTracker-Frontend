@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../GlobalTrackerGeo
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      # - "8081:8080" # host : port thay đỏi cổng bên trong là 8080 (cổng container - 'port') cổng ngoài là 8081 (cổng host)
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/globaltrackergeo
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 17082002
+      JWT_SECRET: your+256+bit+secret+key+that+is+long+enough
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      - db
+    volumes:
+      # - ../GlobalTrackerGeo/some_directory:/app/some_directory  # Ánh xạ mã nguồn backend
+      - D:/GlobalTrackerGeo/images:/app/static/images # mount (ánh xạ) thư mục D:.../images phục vụ file tĩnh trước đó của backend (laptop) vào -> /app/static/images trong container 'backend'
+      # Mount dữ liệu vào volums của container 'backend' -> sau đó nó sẽ đóng vai trò phục vụ static file tương tự như D:/../images trước đó.
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: globaltrackergeo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 17082002
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Giữ lại dữ liệu PostgreSQL
+
+  admin-web:
+    build:
+      context: admin-web2
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    # bỏ volums dưới vì nó đang ghi đè nên file đã build trong thư mục /usr/share/nginx/html tương tự như lỗi trên volums của backend ở trên
+    # volumes: 
+    #   - ./admin-web2:/usr/share/nginx/html  # Ánh xạ mã nguồn admin-web
+
+  driver-web:
+    build:
+      context: driver-web
+      dockerfile: Dockerfile
+    ports:
+      - "3001:80"
+    volumes:
+      - ./driver-web:/usr/share/nginx/html  # Ánh xạ mã nguồn driver-web
+
+  customer-web:
+    build:
+      context: customer-web
+      dockerfile: Dockerfile
+    ports:
+      - "3002:80"
+    volumes:
+      - ./customer-web:/usr/share/nginx/html  # Ánh xạ mã nguồn customer-web
+
+volumes:
+  pgdata:  # Định nghĩa volume cho PostgreSQL
