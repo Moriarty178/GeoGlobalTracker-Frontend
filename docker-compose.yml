@@ -12,14 +12,14 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/globaltrackergeo
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 17082002
-      JWT_SECRET: your+256+bit+secret+key+that+is+long+enough
+      JWT_SECRET: Ghd73mJ2mX9sR3pQ5L8vY2cS7kE4rT9fW1xQ7hN6bZ3pD2gF4uZ #your+256+bit+secret+key+that+is+long+enough
       JWT_EXPIRATION: 86400000
     depends_on:
       - db
     volumes:
-      # - ../GlobalTrackerGeo/some_directory:/app/some_directory  # Ánh xạ mã nguồn backend
       - D:/GlobalTrackerGeo/images:/app/static/images # mount (ánh xạ) thư mục D:.../images phục vụ file tĩnh trước đó của backend (laptop) vào -> /app/static/images trong container 'backend'
       # Mount dữ liệu vào volums của container 'backend' -> sau đó nó sẽ đóng vai trò phục vụ static file tương tự như D:/../images trước đó.
+      #  - ./images:/app/static/images # cho dễ di động (khi chạy trên các máy khác)
   db:
     image: postgres:16
     environment:
@@ -59,5 +59,24 @@ services:
     volumes:
       - ./customer-web:/usr/share/nginx/html  # Ánh xạ mã nguồn customer-web
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3100:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 volumes:
   pgdata:  # Định nghĩa volume cho PostgreSQL
+  grafana-data: # định nghĩa volumne của Grafana
