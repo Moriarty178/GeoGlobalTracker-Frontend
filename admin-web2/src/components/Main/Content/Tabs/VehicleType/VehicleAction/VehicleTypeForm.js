@@ -3,7 +3,7 @@ import './AddVehicle.css'
 
 
 const VehicleTypeForm = ({ initialData, onSubmit, onBack }) => {
-    console.log("initial Data:", initialData);
+    // console.log("initial Data:", initialData);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
